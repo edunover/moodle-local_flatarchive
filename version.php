@@ -6,7 +6,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_flatarchive';
-$plugin->version   = 2026011401;
+$plugin->version   = 2026032901;
 $plugin->requires  = 2024042200; // Moodle 4.4 minimum. Ajuste si tu veux 4.5 strict.
 $plugin->maturity  = MATURITY_ALPHA;
-$plugin->release   = '0.1.0';
+$plugin->release   = '0.2.0';
