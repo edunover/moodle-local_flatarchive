@@ -156,9 +156,11 @@ function local_flatarchive_copy_mod_icon(string $modname, string $sharedfolder):
     if (!is_dir($icondir)) {
         mkdir($icondir, 0755, true);
     }
-    foreach (['svg', 'png'] as $ext) {
-        $src = $CFG->dirroot . '/mod/' . $modname . '/pix/icon.' . $ext;
+    // Moodle 4.x uses monologo.svg; older versions used icon.svg / icon.png.
+    foreach (['monologo.svg', 'icon.svg', 'icon.png'] as $filename) {
+        $src = $CFG->dirroot . '/mod/' . $modname . '/pix/' . $filename;
         if (file_exists($src)) {
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
             $dest = $icondir . '/' . $modname . '.' . $ext;
             if (!file_exists($dest)) {
                 copy($src, $dest);
