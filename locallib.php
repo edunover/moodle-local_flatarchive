@@ -152,7 +152,9 @@ function local_flatarchive_get_release(): string {
     global $CFG;
     $plugin = new stdClass();
     include($CFG->dirroot . '/local/flatarchive/version.php');
-    return $plugin->release ?? (string) get_config('local_flatarchive', 'version');
+    $release = $plugin->release ?? '';
+    $build   = $plugin->version ?? get_config('local_flatarchive', 'version');
+    return $release ? $release . ' (' . $build . ')' : (string) $build;
 }
 
 /**
