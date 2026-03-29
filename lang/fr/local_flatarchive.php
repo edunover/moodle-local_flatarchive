@@ -28,3 +28,7 @@ $string['processing_archive'] = 'Traitement d\'archivage';
 $string['about_course'] = 'À propos de ce cours';
 $string['coursenotfound'] = 'Cours introuvable.';
 $string['footer_copyright'] = 'Flatarchive &#169; EDUNOVER';
+$string['visibility_hidden'] = 'caché';
+$string['visibility_stealth'] = 'caché de la page de cours';
+$string['visibility_section_hidden'] = 'section cachée';
+$string['visibility_chapter_hidden'] = 'chapitre caché';

@@ -13,9 +13,10 @@ defined('MOODLE_INTERNAL') || die();
  * @param string $title titre de la page
  * @param string $content contenu HTML déjà formaté (liens fichiers relatifs)
  * @param string $relativeshared chemin relatif vers shared/ (ex: '' ou '../')
+ * @param string $visibilitybadges badges HTML de visibilité (généré par local_flatarchive_visibility_badges)
  * @return string HTML complet
  */
-function local_flatarchive_render_page_template(stdClass $course, $cm, string $title, string $content, string $relativeshared = ''): string {
+function local_flatarchive_render_page_template(stdClass $course, $cm, string $title, string $content, string $relativeshared = '', string $visibilitybadges = ''): string {
     $coursetitle = s($course->fullname);
     $sitename = s($course->shortname ?: get_string('pluginname', 'local_flatarchive'));
     $csspath = $relativeshared . 'shared/moodle.css';
@@ -38,6 +39,7 @@ function local_flatarchive_render_page_template(stdClass $course, $cm, string $t
         <main class="container-fluid mt-2 flex-grow-1 flex-shrink-1">
             <div>
                 <h1>' . s($title) . '</h1>
+                ' . ($visibilitybadges ? '<div class="fa-vis-block">' . $visibilitybadges . '</div>' : '') . '
                 <div class="alert alert-info alert-block">
                     ' . get_string('archive_description', 'local_flatarchive') . '
                     <a href="' . $relativeshared . 'index.html">' . $coursetitle . '</a>.

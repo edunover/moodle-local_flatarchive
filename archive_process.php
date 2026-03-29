@@ -9,6 +9,7 @@
 
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/filelib.php');
+require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/archive_templates/index_template.php');
 require_once(__DIR__ . '/archive_templates/about_template.php');
 require_once(__DIR__ . '/archive_templates/page_template.php');
@@ -126,9 +127,11 @@ foreach ($cmids as $cmid) {
         }
         $pagefile = $shortname . '.html';
         $pagepath = $tempdir . '/' . $pagefile;
-        $html = local_flatarchive_render_page_template($course, $cm, $cm->name, $pagecontent, '');
+        $badges = local_flatarchive_visibility_badges($cm, $modinfo);
+        $html = local_flatarchive_render_page_template($course, $cm, $cm->name, $pagecontent, '', $badges);
         file_put_contents($pagepath, $html);
-        $page_links[] = '<li><a href="' . s($pagefile) . '">' . s($cm->name) . '</a></li>';
+        $page_links[] = '<li><a href="' . s($pagefile) . '">' . s($cm->name) . '</a>'
+            . ($badges ? ' ' . $badges : '') . '</li>';
         $zipfiles[$pagefile] = $pagepath;
         $DB->get_field_sql('SELECT 1'); // keepalive MySQL (wait_timeout=60s sur LWS).
         continue;
@@ -148,6 +151,7 @@ foreach ($cmids as $cmid) {
         }
         $relativeshared = '../';
         $pagecontext = context_module::instance($cm->id);
+        $bookbadges = local_flatarchive_visibility_badges($cm, $modinfo);
         $chapter_links = [];
         foreach ($chapters as $chapter) {
             $rawcontent = $chapter->content;
@@ -171,18 +175,24 @@ foreach ($cmids as $cmid) {
             $chpath = $bookdir . '/' . $chfile;
             $html = local_flatarchive_render_page_template($course, null, $chapter->title, $chaptercontent, $relativeshared);
             file_put_contents($chpath, $html);
-            $chapter_links[] = '<li><a href="' . s($chfile) . '">' . s($chapter->title) . '</a></li>';
+            $chbadge = !empty($chapter->hidden)
+                ? ' <span class="fa-vis-badge fa-vis-hidden">'
+                    . get_string('visibility_chapter_hidden', 'local_flatarchive') . '</span>'
+                : '';
+            $chapter_links[] = '<li><a href="' . s($chfile) . '">' . s($chapter->title) . '</a>'
+                . $chbadge . '</li>';
             $zipfiles[$bookshortname . '/' . $chfile] = $chpath;
             $DB->get_field_sql('SELECT 1'); // keepalive MySQL (wait_timeout=60s sur LWS).
         }
 
         // Table des matières du Livre (bookshortname/index.html).
-        $tochtml = local_flatarchive_render_book_toc_template($course, $cm->name, $chapter_links, $relativeshared);
+        $tochtml = local_flatarchive_render_book_toc_template($course, $cm->name, $chapter_links, $relativeshared, $bookbadges);
         file_put_contents($bookdir . '/index.html', $tochtml);
         $zipfiles[$bookshortname . '/index.html'] = $bookdir . '/index.html';
 
         // Une seule entrée dans l'index principal, pointant vers la TOC du Livre.
-        $page_links[] = '<li><a href="' . s($bookshortname . '/index.html') . '">' . s($cm->name) . '</a></li>';
+        $page_links[] = '<li><a href="' . s($bookshortname . '/index.html') . '">' . s($cm->name) . '</a>'
+            . ($bookbadges ? ' ' . $bookbadges : '') . '</li>';
         continue;
     }
 }

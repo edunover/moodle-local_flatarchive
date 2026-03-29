@@ -28,3 +28,7 @@ $string['processing_archive'] = 'Processing archive';
 $string['about_course'] = 'About this course';
 $string['coursenotfound'] = 'Course not found.';
 $string['footer_copyright'] = 'Flatarchive &#169; EDUNOVER';
+$string['visibility_hidden'] = 'hidden';
+$string['visibility_stealth'] = 'hidden from course page';
+$string['visibility_section_hidden'] = 'hidden section';
+$string['visibility_chapter_hidden'] = 'hidden chapter';

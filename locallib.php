@@ -109,3 +109,35 @@ function flatarchive_prepare_html_for_archive(
     // ------------------------------------------------------------------
     return $dom->saveHTML();
 }
+
+/**
+ * Génère les badges de visibilité HTML pour un module de cours.
+ *
+ * États couverts :
+ * - visible=0                          → badge "caché"
+ * - visibleoncoursepage=0, visible=1   → badge "caché de la page de cours" (stealth)
+ * - section parente visible=0          → badge "section cachée"
+ *
+ * @param cm_info          $cm
+ * @param course_modinfo   $modinfo
+ * @return string HTML des badges (vide si tout est visible)
+ */
+function local_flatarchive_visibility_badges(cm_info $cm, course_modinfo $modinfo): string {
+    $badges = [];
+
+    if (!$cm->visible) {
+        $badges[] = '<span class="fa-vis-badge fa-vis-hidden">'
+            . get_string('visibility_hidden', 'local_flatarchive') . '</span>';
+    } elseif (!$cm->visibleoncoursepage) {
+        $badges[] = '<span class="fa-vis-badge fa-vis-stealth">'
+            . get_string('visibility_stealth', 'local_flatarchive') . '</span>';
+    }
+
+    $section = $modinfo->get_section_info($cm->sectionnum);
+    if ($section && !$section->visible) {
+        $badges[] = '<span class="fa-vis-badge fa-vis-section">'
+            . get_string('visibility_section_hidden', 'local_flatarchive') . '</span>';
+    }
+
+    return implode(' ', $badges);
+}

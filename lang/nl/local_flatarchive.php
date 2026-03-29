@@ -18,3 +18,7 @@ $string['status_done'] = 'Klaar';
 $string['status_failed'] = 'Mislukt';
 $string['downloadzip'] = 'ZIP downloaden';
 $string['hidden'] = 'verborgen';
+$string['visibility_hidden'] = 'verborgen';
+$string['visibility_stealth'] = 'verborgen van cursuspagina';
+$string['visibility_section_hidden'] = 'verborgen sectie';
+$string['visibility_chapter_hidden'] = 'verborgen hoofdstuk';

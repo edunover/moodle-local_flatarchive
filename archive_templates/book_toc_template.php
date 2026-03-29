@@ -12,13 +12,15 @@ defined('MOODLE_INTERNAL') || die();
  * @param string   $booktitle    Titre du Livre (cm->name)
  * @param array    $chapter_links Tableau de chaînes <li>...</li> (liens relatifs vers chapitres)
  * @param string   $relativeshared Chemin vers shared/ (ex: '../')
+ * @param string   $visibilitybadges badges HTML de visibilité du Livre
  * @return string HTML complet
  */
 function local_flatarchive_render_book_toc_template(
     stdClass $course,
     string $booktitle,
     array $chapter_links,
-    string $relativeshared = '../'
+    string $relativeshared = '../',
+    string $visibilitybadges = ''
 ): string {
     $coursetitle = s($course->fullname);
     $sitename    = s($course->shortname ?: get_string('pluginname', 'local_flatarchive'));
@@ -43,6 +45,7 @@ function local_flatarchive_render_book_toc_template(
         <main class="container-fluid mt-2 flex-grow-1 flex-shrink-1">
             <div>
                 <h1>' . s($booktitle) . '</h1>
+                ' . ($visibilitybadges ? '<div class="fa-vis-block">' . $visibilitybadges . '</div>' : '') . '
                 <div class="alert alert-info alert-block">
                     ' . get_string('archive_description', 'local_flatarchive') . '
                     <a href="' . $relativeshared . 'index.html">' . $coursetitle . '</a>.
