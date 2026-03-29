@@ -1,4 +1,5 @@
-<div class="local-flatarchive" data-courseid="{{courseid}}">
+<div class="local-flatarchive" data-courseid="{{courseid}}" data-nothingselected="{{nothingselected}}">
+  <p class="text-muted">{{archive_description}}</p>
   <div class="d-flex flex-wrap gap-2 mb-3">
     <button type="button" class="btn btn-outline-secondary" data-action="selectall">{{selectall}}</button>
     <button type="button" class="btn btn-outline-secondary" data-action="deselectall">{{deselectall}}</button>
@@ -9,7 +10,7 @@
       <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
         <h3 class="h5 mb-0">{{archiveselection}}</h3>
         <div class="d-flex gap-2">
-          <button type="button" class="btn btn-primary" data-action="start-archive">{{archiveselection}}</button>
+          <button type="button" class="btn btn-primary" data-action="start-archive">{{generate_html_archive}}</button>
           <a class="btn btn-outline-primary disabled" href="#" data-action="download" aria-disabled="true">{{downloadzip}}</a>
         </div>
       </div>
@@ -45,5 +46,8 @@
   }
   .local-flatarchive .fa-item input[type="checkbox"] {
     transform: translateY(1px);
+  }
+  .local-flatarchive .fa-modicon {
+    flex-shrink: 0;
   }
 </style>
