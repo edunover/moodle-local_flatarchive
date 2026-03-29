@@ -21,4 +21,5 @@ $string['hidden'] = 'verborgen';
 $string['visibility_hidden'] = 'verborgen';
 $string['visibility_stealth'] = 'verborgen van cursuspagina';
 $string['visibility_section_hidden'] = 'verborgen sectie';
+$string['footer_copyright'] = 'Flatarchive {$a} &#169; EDUNOVER';
 $string['visibility_chapter_hidden'] = 'verborgen hoofdstuk';

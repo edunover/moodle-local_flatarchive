@@ -48,7 +48,7 @@ function local_flatarchive_render_page_template(stdClass $course, $cm, string $t
         </main>
         <footer id="page-footer" class="py-3">
             <div class="container">
-                <div>' . get_string('footer_copyright', 'local_flatarchive') . ' – ' . $coursetitle . '</div>
+                <div>' . get_string('footer_copyright', 'local_flatarchive', get_config('local_flatarchive', 'release')) . ' – ' . $coursetitle . '</div>
             </div>
         </footer>
     </div>
