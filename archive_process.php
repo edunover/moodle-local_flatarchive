@@ -130,6 +130,7 @@ foreach ($cmids as $cmid) {
         file_put_contents($pagepath, $html);
         $page_links[] = '<li><a href="' . s($pagefile) . '">' . s($cm->name) . '</a></li>';
         $zipfiles[$pagefile] = $pagepath;
+        $DB->get_field_sql('SELECT 1'); // keepalive MySQL (wait_timeout=60s sur LWS).
         continue;
     }
 
@@ -172,6 +173,7 @@ foreach ($cmids as $cmid) {
             file_put_contents($chpath, $html);
             $chapter_links[] = '<li><a href="' . s($chfile) . '">' . s($chapter->title) . '</a></li>';
             $zipfiles[$bookshortname . '/' . $chfile] = $chpath;
+            $DB->get_field_sql('SELECT 1'); // keepalive MySQL (wait_timeout=60s sur LWS).
         }
 
         // Table des matières du Livre (bookshortname/index.html).
@@ -211,6 +213,7 @@ $zipfiles['about.html'] = $tempdir . '/about.html';
 $timestamp = basename($tempdir);
 $zipname = 'archive_' . $courseid . '_' . preg_replace('/^.*_/', '', $timestamp) . '.zip';
 $zippath = $tempdir . '/' . $zipname;
+$DB->get_field_sql('SELECT 1'); // keepalive avant la création du ZIP.
 $packer = get_file_packer('application/zip');
 $packer->archive_to_pathname($zipfiles, $zippath, true);
 
