@@ -221,7 +221,8 @@ file_put_contents($tempdir . '/about.html', $abouthtml);
 $zipfiles['about.html'] = $tempdir . '/about.html';
 
 $timestamp = basename($tempdir);
-$zipname = 'archive_' . $courseid . '_' . preg_replace('/^.*_/', '', $timestamp) . '.zip';
+$shortname = clean_filename(clean_param($course->shortname, PARAM_FILE)) ?: 'course_' . $courseid;
+$zipname = 'archive_' . $shortname . '_' . date('YmdHi') . '.zip';
 $zippath = $tempdir . '/' . $zipname;
 $DB->get_field_sql('SELECT 1'); // keepalive avant la création du ZIP.
 $packer = get_file_packer('application/zip');
