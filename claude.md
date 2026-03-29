@@ -1,13 +1,21 @@
 # local_flatarchive — CLAUDE.md
 
 Plugin Moodle local pour archiver des ressources "Page" et "Livre" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.1.0 MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026032903) MATURITY_ALPHA. Requiert Moodle 4.4+.
+
+---
+
+## Règles de versionnage
+
+- À chaque changement déployé, incrémenter le numéro de build dans `version.php` : YYYYMMDDXX+1 (ex: 2026032903 → 2026032904)
+- Si le jour change, repartir à 01 (ex: 2026033001)
+- Incrémenter `$plugin->release` (mineur ou patch) uniquement sur demande explicite
 
 ---
 
 ## État d'avancement
 
-Le plugin est à ~60% de son objectif. L'archivage HTML (Pages + Livres) est fonctionnel de bout en bout.
+Le plugin est à ~70% de son objectif. L'archivage HTML (Pages + Livres) est fonctionnel de bout en bout.
 Reste à implémenter : la couche cron/jobs asynchrones et la génération PDF.
 
 ### Implémenté et fonctionnel
@@ -20,11 +28,21 @@ Reste à implémenter : la couche cron/jobs asynchrones et la génération PDF.
 - `ajax/get_tree.php` + `ajax/start_job.php` — endpoints AJAX (non-AMD, actifs)
 - `ajax/generate_pdf.php` — endpoint PDF via mPDF (Phase 1, un seul module)
 - `archive_process.php` — traitement synchrone : génère HTML + ZIP et redirige vers téléchargement
+  - MySQL keepalive (`SELECT 1`) après chaque module et avant création ZIP (LWS wait_timeout=60s)
+  - Icônes modules copiées depuis `mod/{modname}/pix/monologo.svg` vers `shared/icons/`
+  - Badges de visibilité (caché / stealth / section cachée)
+  - Nom ZIP : `archive_{shortname}_{YYYYMMDDHHmm}.zip`
 - `serve_temp.php` — sert le ZIP depuis tempdir puis supprime le dossier
-- `locallib.php` — `flatarchive_prepare_html_for_archive()` : normalise HTML (emojis, icônes, images)
-- `archive_templates/` — templates HTML autonomes (index, about, page)
-- `style/moodle.css` — CSS minimal pour les archives HTML générées
-- `templates/index.mustache` — template UI
+- `locallib.php` — helpers :
+  - `flatarchive_prepare_html_for_archive()` : normalise HTML (emojis, icônes, images)
+  - `local_flatarchive_visibility_badges()` : badges HTML de visibilité
+  - `local_flatarchive_copy_mod_icon()` : copie l'icône SVG/PNG du module (Moodle 4.x : monologo.svg)
+  - `local_flatarchive_get_release()` : lit `version.php` pour obtenir la release (ex: `0.2.0 (2026032903)`)
+- `archive_templates/` — 4 templates HTML autonomes : index, about, page, book_toc
+  - Footer : `Flatarchive {release} © EDUNOVER – {coursetitle}`
+  - Badges de visibilité sur page individuelle et TOC livre
+- `style/moodle.css` — CSS minimal pour les archives HTML générées (badges, icônes, layout)
+- `templates/index.mustache` — template UI (bouton "Générer l'archive HTML" uniquement)
 - `lang/fr|en|nl/` — i18n 3 langues
 - `version.php`, `composer.json`, `composer.lock` (mpdf v8.2.7)
 
@@ -87,8 +105,9 @@ Il existe deux fichiers JS qui font la même chose. **Seul l'AMD doit subsister 
 1. **Sélecteur cassé dans l'AMD** — `archive: '[data-action="archive"]'` doit être `'[data-action="start-archive"]'`
 2. **`[data-region="hint"]` absent du template** — le supprimer de `amd/src/selectors.js` ou l'ajouter au template
 3. **CSS inline dans `index.mustache`** — `style/moodle.css` existe désormais, extraire les styles dans ce fichier
-4. **`ajax/generate_pdf.php` ligne 18** — `$PAGE->set_context($contextmodule)` appelé avant que `$contextmodule` soit défini (variable utilisée avant assignation)
+4. **`ajax/generate_pdf.php` ligne 18** — `$PAGE->set_context($contextmodule)` appelé avant que `$contextmodule` soit défini
 5. **`render.php` vide** — orphelin, à supprimer
+6. **`js/selectors.js`** — contient `console.log` debug et cache-buster `time()` — à remplacer par AMD
 
 ---
 
