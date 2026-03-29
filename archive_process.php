@@ -12,6 +12,7 @@ require_once($CFG->libdir . '/filelib.php');
 require_once(__DIR__ . '/archive_templates/index_template.php');
 require_once(__DIR__ . '/archive_templates/about_template.php');
 require_once(__DIR__ . '/archive_templates/page_template.php');
+require_once(__DIR__ . '/archive_templates/book_toc_template.php');
 
 global $DB;
 
@@ -146,6 +147,7 @@ foreach ($cmids as $cmid) {
         }
         $relativeshared = '../';
         $pagecontext = context_module::instance($cm->id);
+        $chapter_links = [];
         foreach ($chapters as $chapter) {
             $rawcontent = $chapter->content;
             $rawcontent = local_flatarchive_copy_pluginfiles_and_rewrite(
@@ -168,9 +170,17 @@ foreach ($cmids as $cmid) {
             $chpath = $bookdir . '/' . $chfile;
             $html = local_flatarchive_render_page_template($course, null, $chapter->title, $chaptercontent, $relativeshared);
             file_put_contents($chpath, $html);
-            $page_links[] = '<li><a href="' . s($bookshortname . '/' . $chfile) . '">' . s($chapter->title) . '</a></li>';
+            $chapter_links[] = '<li><a href="' . s($chfile) . '">' . s($chapter->title) . '</a></li>';
             $zipfiles[$bookshortname . '/' . $chfile] = $chpath;
         }
+
+        // Table des matières du Livre (bookshortname/index.html).
+        $tochtml = local_flatarchive_render_book_toc_template($course, $cm->name, $chapter_links, $relativeshared);
+        file_put_contents($bookdir . '/index.html', $tochtml);
+        $zipfiles[$bookshortname . '/index.html'] = $bookdir . '/index.html';
+
+        // Une seule entrée dans l'index principal, pointant vers la TOC du Livre.
+        $page_links[] = '<li><a href="' . s($bookshortname . '/index.html') . '">' . s($cm->name) . '</a></li>';
         continue;
     }
 }
