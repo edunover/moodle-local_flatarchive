@@ -46,10 +46,6 @@ function local_flatarchive_render_book_toc_template(
             <div>
                 <h1>' . s($booktitle) . '</h1>
                 ' . ($visibilitybadges ? '<div class="fa-vis-block">' . $visibilitybadges . '</div>' : '') . '
-                <div class="alert alert-info alert-block">
-                    ' . get_string('archive_description', 'local_flatarchive') . '
-                    <a href="' . $relativeshared . 'index.html">' . $coursetitle . '</a>.
-                </div>
                 <hr>
                 <ul>
                     ' . $linkshtml . '

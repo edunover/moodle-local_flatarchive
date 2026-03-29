@@ -37,12 +37,6 @@ function local_flatarchive_render_index_template(stdClass $course, int $courseid
         <main class="container-fluid mt-2 flex-grow-1 flex-shrink-1">
             <div>
                 <h1>' . $coursetitle . '</h1>
-                <div class="alert alert-info alert-block">
-                    ' . get_string('archive_description', 'local_flatarchive') . '
-                </div>
-                <div>
-                    <a href="about.html">' . get_string('about_course', 'local_flatarchive') . '</a>
-                </div>
                 <hr>
                 <ul>
                     ' . $linkshtml . '

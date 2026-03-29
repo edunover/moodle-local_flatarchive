@@ -40,13 +40,6 @@ function local_flatarchive_render_page_template(stdClass $course, $cm, string $t
             <div>
                 <h1>' . s($title) . '</h1>
                 ' . ($visibilitybadges ? '<div class="fa-vis-block">' . $visibilitybadges . '</div>' : '') . '
-                <div class="alert alert-info alert-block">
-                    ' . get_string('archive_description', 'local_flatarchive') . '
-                    <a href="' . $relativeshared . 'index.html">' . $coursetitle . '</a>.
-                </div>
-                <div>
-                    <a href="' . $relativeshared . 'about.html">' . get_string('about_course', 'local_flatarchive') . '</a>
-                </div>
                 <hr>
                 <div class="card">
                     <div class="card-body">' . $content . '</div>

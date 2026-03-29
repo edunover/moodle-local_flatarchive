@@ -40,12 +40,6 @@ function local_flatarchive_render_about_template(stdClass $course): string {
         <main class="container-fluid mt-2 flex-grow-1 flex-shrink-1">
             <div>
                 <h1>' . $coursetitle . '</h1>
-                <div class="alert alert-info alert-block">
-                    ' . get_string('archive_description', 'local_flatarchive') . '
-                </div>
-                <div>
-                    <a href="index.html">' . get_string('archive_success', 'local_flatarchive') . '</a>
-                </div>
                 <hr>
                 <div class="card">
                     <div class="card-body">' . $summary . '</div>
