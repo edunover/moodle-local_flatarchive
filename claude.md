@@ -5,6 +5,14 @@ Version : 0.2.0 (2026032903) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
+## Documentation à maintenir
+
+À chaque évolution significative du projet, mettre à jour **les deux fichiers** :
+- `README.md` — documentation publique (fonctionnalités, installation, usage, limitations)
+- `CLAUDE.md` — état technique interne (fichiers, bugs connus, conventions)
+
+---
+
 ## Règles de versionnage
 
 - À chaque changement déployé, incrémenter le numéro de build dans `version.php` : YYYYMMDDXX+1 (ex: 2026032903 → 2026032904)
