@@ -54,7 +54,7 @@ function local_flatarchive_render_book_toc_template(
         </main>
         <footer id="page-footer" class="py-3">
             <div class="container">
-                <div>' . get_string('footer_copyright', 'local_flatarchive', get_config('local_flatarchive', 'release')) . ' – ' . $coursetitle . '</div>
+                <div>' . get_string('footer_copyright', 'local_flatarchive', local_flatarchive_get_release()) . ' – ' . $coursetitle . '</div>
             </div>
         </footer>
     </div>

@@ -143,6 +143,19 @@ function local_flatarchive_visibility_badges(cm_info $cm, course_modinfo $modinf
 }
 
 /**
+ * Retourne la chaîne de release du plugin (ex: '0.1.0') lue depuis version.php.
+ * Fallback sur le numéro de version numérique si absent.
+ *
+ * @return string
+ */
+function local_flatarchive_get_release(): string {
+    global $CFG;
+    $plugin = new stdClass();
+    include($CFG->dirroot . '/local/flatarchive/version.php');
+    return $plugin->release ?? (string) get_config('local_flatarchive', 'version');
+}
+
+/**
  * Copie l'icône d'un module Moodle (SVG ou PNG) dans shared/icons/ et retourne
  * le chemin relatif depuis la racine de l'archive.
  *
