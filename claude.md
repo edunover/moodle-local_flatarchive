@@ -1,35 +1,43 @@
 # local_flatarchive — CLAUDE.md
 
-Plugin Moodle local pour archiver des ressources "Page" d'un cours en PDF regroupés dans un ZIP.
+Plugin Moodle local pour archiver des ressources "Page" et "Livre" d'un cours en HTML statique + ZIP téléchargeable.
 Version : 0.1.0 MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
 ## État d'avancement
 
-Le plugin est à ~30% de son objectif. La couche sécurité/navigation/API est en place,
-le cœur fonctionnel (archivage, PDF, ZIP, téléchargement) reste à implémenter.
+Le plugin est à ~60% de son objectif. L'archivage HTML (Pages + Livres) est fonctionnel de bout en bout.
+Reste à implémenter : la couche cron/jobs asynchrones et la génération PDF.
 
 ### Implémenté et fonctionnel
 - `index.php` — page d'entrée avec auth + capability
 - `lib.php` — hook navigation cours
 - `db/access.php` — capability `local/flatarchive:archive`
 - `db/services.php` — déclaration des 3 web services
+- `db/install.xml` + `db/upgrade.php` — table `local_flatarchive_job`
 - `classes/external/get_tree.php` — API externe complète
+- `ajax/get_tree.php` + `ajax/start_job.php` — endpoints AJAX (non-AMD, actifs)
+- `ajax/generate_pdf.php` — endpoint PDF via mPDF (Phase 1, un seul module)
+- `archive_process.php` — traitement synchrone : génère HTML + ZIP et redirige vers téléchargement
+- `serve_temp.php` — sert le ZIP depuis tempdir puis supprime le dossier
+- `locallib.php` — `flatarchive_prepare_html_for_archive()` : normalise HTML (emojis, icônes, images)
+- `archive_templates/` — templates HTML autonomes (index, about, page)
+- `style/moodle.css` — CSS minimal pour les archives HTML générées
 - `templates/index.mustache` — template UI
 - `lang/fr|en|nl/` — i18n 3 langues
-- `version.php`, `vendor/mpdf/` (autoloader)
+- `version.php`, `composer.json`, `composer.lock` (mpdf v8.2.7)
 
-### Fichiers vides à implémenter
-- `classes/external/start_job.php` — démarrer un job
+### Fichiers vides (à implémenter ou supprimer)
+- `classes/external/start_job.php` — version web service de start_job (doublon de ajax/start_job.php)
 - `classes/external/get_status.php` — état d'un job
-- `classes/task/process_job.php` — tâche cron de traitement
+- `classes/task/process_job.php` — tâche cron de traitement asynchrone
 - `classes/task/purge_temp.php` — tâche cron de nettoyage
-- `classes/pdf/mpdf_engine.php` — génération PDF via mPDF
+- `classes/pdf/mpdf_engine.php` — moteur PDF réutilisable (remplacera ajax/generate_pdf.php)
 - `classes/output/renderer.php` — renderer Moodle
 - `db/tasks.php` — déclaration des tâches cron
-- `pluginfile.php` — servir les fichiers archivés
-- `render.php` — à clarifier (probablement à supprimer)
+- `pluginfile.php` — servir les fichiers archivés via l'API fichiers Moodle
+- `render.php` — orphelin, à supprimer
 
 ---
 
@@ -78,16 +86,17 @@ Il existe deux fichiers JS qui font la même chose. **Seul l'AMD doit subsister 
 
 1. **Sélecteur cassé dans l'AMD** — `archive: '[data-action="archive"]'` doit être `'[data-action="start-archive"]'`
 2. **`[data-region="hint"]` absent du template** — le supprimer de `amd/src/selectors.js` ou l'ajouter au template
-3. **`render.php` et `pluginfile.php` vides** — implémenter ou supprimer selon besoin
-4. **CSS inline dans `index.mustache`** — extraire dans `styles.css`
+3. **CSS inline dans `index.mustache`** — `style/moodle.css` existe désormais, extraire les styles dans ce fichier
+4. **`ajax/generate_pdf.php` ligne 18** — `$PAGE->set_context($contextmodule)` appelé avant que `$contextmodule` soit défini (variable utilisée avant assignation)
+5. **`render.php` vide** — orphelin, à supprimer
 
 ---
 
 ## Dépendances
 
-- **mPDF** : embarqué dans `vendor/mpdf/`, chargé via `vendor/autoload.php`
-  - À terme : migrer vers Composer + `thirdpartylibs.xml` selon les standards Moodle
-  - Pour l'instant : vérifier que `vendor/autoload.php` est bien appelé avant tout usage de `\Mpdf\Mpdf`
+- **mPDF v8.2.7** : géré via Composer (`composer.json` + `composer.lock`)
+- `vendor/` est dans `.gitignore` — recréer avec `composer install` sur un nouveau serveur
+- Appel systématique : `require_once(__DIR__ . '/vendor/autoload.php');` avant tout usage de `\Mpdf\Mpdf`
 
 ---
 
