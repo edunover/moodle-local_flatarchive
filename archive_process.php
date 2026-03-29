@@ -130,7 +130,12 @@ foreach ($cmids as $cmid) {
         $badges = local_flatarchive_visibility_badges($cm, $modinfo);
         $html = local_flatarchive_render_page_template($course, $cm, $cm->name, $pagecontent, '', $badges);
         file_put_contents($pagepath, $html);
-        $page_links[] = '<li><a href="' . s($pagefile) . '">' . s($cm->name) . '</a>'
+        $iconpath = local_flatarchive_copy_mod_icon('page', $sharedfolder);
+        $iconimg = $iconpath ? '<img class="fa-modicon" src="' . s($iconpath) . '" alt=""> ' : '';
+        if ($iconpath && !isset($zipfiles[$iconpath])) {
+            $zipfiles[$iconpath] = $tempdir . '/' . $iconpath;
+        }
+        $page_links[] = '<li>' . $iconimg . '<a href="' . s($pagefile) . '">' . s($cm->name) . '</a>'
             . ($badges ? ' ' . $badges : '') . '</li>';
         $zipfiles[$pagefile] = $pagepath;
         $DB->get_field_sql('SELECT 1'); // keepalive MySQL (wait_timeout=60s sur LWS).
@@ -191,7 +196,12 @@ foreach ($cmids as $cmid) {
         $zipfiles[$bookshortname . '/index.html'] = $bookdir . '/index.html';
 
         // Une seule entrée dans l'index principal, pointant vers la TOC du Livre.
-        $page_links[] = '<li><a href="' . s($bookshortname . '/index.html') . '">' . s($cm->name) . '</a>'
+        $bookiconpath = local_flatarchive_copy_mod_icon('book', $sharedfolder);
+        $bookiconimg = $bookiconpath ? '<img class="fa-modicon" src="' . s($bookiconpath) . '" alt=""> ' : '';
+        if ($bookiconpath && !isset($zipfiles[$bookiconpath])) {
+            $zipfiles[$bookiconpath] = $tempdir . '/' . $bookiconpath;
+        }
+        $page_links[] = '<li>' . $bookiconimg . '<a href="' . s($bookshortname . '/index.html') . '">' . s($cm->name) . '</a>'
             . ($bookbadges ? ' ' . $bookbadges : '') . '</li>';
         continue;
     }

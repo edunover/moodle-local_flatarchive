@@ -141,3 +141,30 @@ function local_flatarchive_visibility_badges(cm_info $cm, course_modinfo $modinf
 
     return implode(' ', $badges);
 }
+
+/**
+ * Copie l'icône d'un module Moodle (SVG ou PNG) dans shared/icons/ et retourne
+ * le chemin relatif depuis la racine de l'archive.
+ *
+ * @param string $modname      Nom du module (ex: 'page', 'book')
+ * @param string $sharedfolder Chemin absolu vers shared/
+ * @return string Chemin relatif (ex: 'shared/icons/page.svg') ou '' si absent
+ */
+function local_flatarchive_copy_mod_icon(string $modname, string $sharedfolder): string {
+    global $CFG;
+    $icondir = $sharedfolder . '/icons';
+    if (!is_dir($icondir)) {
+        mkdir($icondir, 0755, true);
+    }
+    foreach (['svg', 'png'] as $ext) {
+        $src = $CFG->dirroot . '/mod/' . $modname . '/pix/icon.' . $ext;
+        if (file_exists($src)) {
+            $dest = $icondir . '/' . $modname . '.' . $ext;
+            if (!file_exists($dest)) {
+                copy($src, $dest);
+            }
+            return 'shared/icons/' . $modname . '.' . $ext;
+        }
+    }
+    return '';
+}
