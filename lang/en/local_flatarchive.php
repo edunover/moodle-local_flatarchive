@@ -35,3 +35,5 @@ $string['visibility_chapter_hidden'] = 'hidden chapter';
 $string['noresources'] = 'No Pages or Books are available to archive.';
 $string['archivefailed'] = 'The archive could not be created. Check available disk space and file permissions.';
 $string['invalidselection'] = 'The selection contains an unsupported resource or a resource outside this course.';
+
+$string['flatarchive:archive'] = 'Archive course resources';

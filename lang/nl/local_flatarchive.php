@@ -26,3 +26,5 @@ $string['visibility_chapter_hidden'] = 'verborgen hoofdstuk';
 $string['noresources'] = 'Er zijn geen pagina’s of boeken om te archiveren.';
 $string['archivefailed'] = 'Het archief kon niet worden gemaakt. Controleer de vrije schijfruimte en schrijfrechten.';
 $string['invalidselection'] = 'De selectie bevat een niet-ondersteunde bron of een bron uit een andere cursus.';
+
+$string['flatarchive:archive'] = 'Cursusbronnen archiveren';

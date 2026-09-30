@@ -35,3 +35,5 @@ $string['visibility_chapter_hidden'] = 'chapitre caché';
 $string['noresources'] = 'Aucune Page ni aucun Livre à archiver dans ce cours.';
 $string['archivefailed'] = 'Impossible de créer l’archive. Vérifie l’espace disque et les droits d’écriture.';
 $string['invalidselection'] = 'La sélection contient une ressource non prise en charge ou extérieure à ce cours.';
+
+$string['flatarchive:archive'] = 'Archiver les ressources du cours';
