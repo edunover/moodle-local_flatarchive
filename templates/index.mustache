@@ -1,52 +1,33 @@
 <div class="local-flatarchive" data-courseid="{{courseid}}" data-nothingselected="{{nothingselected}}">
-  <p class="text-muted">{{archive_description}}</p>
-  <div class="d-flex flex-wrap gap-2 mb-3">
-    <button type="button" class="btn btn-outline-secondary" data-action="selectall">{{selectall}}</button>
-    <button type="button" class="btn btn-outline-secondary" data-action="deselectall">{{deselectall}}</button>
-  </div>
+  <form method="post" action="{{archiveurl}}" data-region="archive-form">
+    <input type="hidden" name="id" value="{{courseid}}">
+    <input type="hidden" name="sesskey" value="{{sesskey}}">
+    <p class="text-muted">{{archive_description}}</p>
+    <div class="d-flex flex-wrap gap-2 mb-3">
+      <button type="button" class="btn btn-outline-secondary" data-action="selectall" disabled>{{selectall}}</button>
+      <button type="button" class="btn btn-outline-secondary" data-action="deselectall" disabled>{{deselectall}}</button>
+    </div>
 
-  <div class="card mb-3">
-    <div class="card-body">
-      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-        <h3 class="h5 mb-0">{{archiveselection}}</h3>
-        <div class="d-flex gap-2">
-          <button type="button" class="btn btn-primary" data-action="start-archive">{{generate_html_archive}}</button>
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <h3 class="h5 mb-0">{{archiveselection}}</h3>
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary" data-action="start-archive" disabled>{{generate_html_archive}}</button>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <div class="small text-muted" data-region="status" role="status" aria-live="polite">{{status_idle}}</div>
         </div>
       </div>
+    </div>
 
-      <div class="mt-3">
-        <div class="small text-muted" data-region="status">{{status_idle}}</div>
+    <div class="card">
+      <div class="card-body">
+        <div class="small text-muted mb-2 flatarchive-loading" data-region="loading">{{loading}}...</div>
+        <div data-region="tree"></div>
       </div>
     </div>
-  </div>
-
-  <div class="card">
-    <div class="card-body">
-      <div class="small text-muted mb-2 flatarchive-loading" data-region="loading">{{loading}}...</div>
-      <div data-region="tree"></div>
-    </div>
-  </div>
+  </form>
 </div>
-
-<style>
-  .local-flatarchive .fa-section-title {
-    font-weight: 700;
-    margin-top: 1rem;
-    margin-bottom: .5rem;
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-  }
-  .local-flatarchive .fa-item {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    padding: .35rem 0;
-  }
-  .local-flatarchive .fa-item input[type="checkbox"] {
-    transform: translateY(1px);
-  }
-  .local-flatarchive .fa-modicon {
-    flex-shrink: 0;
-  }
-</style>

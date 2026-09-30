@@ -25,23 +25,14 @@ $PAGE->set_pagelayout('incourse');
 $PAGE->set_title(get_string('archivecourse', 'local_flatarchive'));
 $PAGE->set_heading($course->fullname);
 
-// $PAGE->requires->js(new moodle_url('/local/flatarchive/js/selectors.js'));
-// DEBUG ONLY
-$PAGE->requires->js(
-    new moodle_url(
-        '/local/flatarchive/js/selectors.js',
-        ['v' => time()]
-    )
-);
-// END DEBUG
-$PAGE->requires->js_init_code(
-    'window.FLATARCHIVE = { courseid: ' . (int)$course->id . ' };'
-);
+$PAGE->requires->js_call_amd('local_flatarchive/selectors', 'init', [['courseid' => $course->id]]);
 
 echo $OUTPUT->header();
 
 $templatecontext = [
     'courseid' => $course->id,
+    'archiveurl' => (new moodle_url('/local/flatarchive/archive_process.php'))->out(false),
+    'sesskey' => sesskey(),
     'selectall' => get_string('selectall', 'local_flatarchive'),
     'deselectall' => get_string('deselectall', 'local_flatarchive'),
     'archiveselection' => get_string('archiveselection', 'local_flatarchive'),

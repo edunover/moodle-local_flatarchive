@@ -1,142 +1,121 @@
+/**
+ * Course resource selection and synchronous HTML export.
+ *
+ * @module local_flatarchive/selectors
+ * @copyright 2025 Edunover
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 define(['core/ajax', 'core/notification', 'core/str'], function(Ajax, Notification, Str) {
-
     const selectors = {
         root: '.local-flatarchive',
+        form: '[data-region="archive-form"]',
         tree: '[data-region="tree"]',
+        loading: '[data-region="loading"]',
         status: '[data-region="status"]',
-        hint: '[data-region="hint"]',
         selectAll: '[data-action="selectall"]',
         deselectAll: '[data-action="deselectall"]',
-        archive: '[data-action="archive"]',
-        download: '[data-action="download"]',
+        archive: '[data-action="start-archive"]',
+        inputs: 'input[name="cmid[]"]',
     };
 
-    const state = {
-        courseid: null,
-    };
-
-    function setStatus(root, text) {
-        root.querySelector(selectors.status).textContent = text;
-    }
-
-    function setHint(root, text) {
-        root.querySelector(selectors.hint).textContent = text;
-    }
-
-    function renderTree(root, sections) {
-        const container = root.querySelector(selectors.tree);
-        container.innerHTML = '';
-
-        Str.get_string('hidden', 'local_flatarchive').then(hiddenLabel => {
-
-            sections.forEach(section => {
-
-                const title = document.createElement('div');
-                title.className = 'fa-section-title';
-                title.textContent = section.name;
-                if (!section.visible) {
-                    title.classList.add('text-muted');
-                }
-                container.appendChild(title);
-
-                section.modules.forEach(item => {
-                    const row = document.createElement('div');
-                    row.className = 'fa-item';
-
-                    if (!item.visible) {
-                        row.classList.add('text-muted');
-                    }
-
-                    const cb = document.createElement('input');
-                    cb.type = 'checkbox';
-                    cb.dataset.cmid = item.cmid;
-
-                    const label = document.createElement('span');
-                    label.textContent = item.name;
-
-                    if (!item.visible) {
-                        const badge = document.createElement('span');
-                        badge.className = 'badge bg-secondary ms-2';
-                        badge.textContent = hiddenLabel;
-                        label.appendChild(badge);
-                    }
-
-                    row.appendChild(cb);
-                    row.appendChild(label);
-                    container.appendChild(row);
-                });
-            });
-        });
-    }
-
-    function getSelectedCmids(root) {
-        const checkboxes = root.querySelectorAll(`${selectors.tree} input[type="checkbox"][data-cmid]`);
-        const selected = [];
-        checkboxes.forEach(cb => {
-            if (cb.checked) {
-                selected.push(parseInt(cb.dataset.cmid, 10));
-            }
-        });
-        return selected;
-    }
-
-    function setAll(root, checked) {
-        const checkboxes = root.querySelectorAll(`${selectors.tree} input[type="checkbox"][data-cmid]`);
-        checkboxes.forEach(cb => {
-            cb.checked = checked;
-        });
-    }
-
-    async function loadTree(root) {
-        setHint(root, '...');
-
-        try {
-            const requests = Ajax.call([{
-                methodname: 'local_flatarchive_get_tree',
-                args: {courseid: state.courseid}
-            }]);
-
-            const result = await requests[0];
-            renderTree(root, result.sections || []);
-            setHint(root, '');
-
-        } catch (e) {
-            const msg = await Str.get_string('backendnotready', 'local_flatarchive');
-            setHint(root, msg);
-        }
-    }
-
-    async function init(params) {
-        state.courseid = params.courseid;
-
+    const init = async function(params) {
         const root = document.querySelector(selectors.root);
-        if (!root) {
+        if (!root || root.dataset.initialized) {
             return;
         }
+        root.dataset.initialized = 'true';
+        const form = root.querySelector(selectors.form);
+        const tree = root.querySelector(selectors.tree);
+        const loading = root.querySelector(selectors.loading);
+        const status = root.querySelector(selectors.status);
+        const controls = [selectors.selectAll, selectors.deselectAll, selectors.archive].map(s => root.querySelector(s));
+        let ready = false;
+        let submitting = false;
+        let strings;
 
-        setStatus(root, await Str.get_string('status_idle', 'local_flatarchive'));
-        await loadTree(root);
-
-        root.querySelector(selectors.selectAll).addEventListener('click', () => setAll(root, true));
-        root.querySelector(selectors.deselectAll).addEventListener('click', () => setAll(root, false));
-
-        root.querySelector(selectors.archive).addEventListener('click', async () => {
-            const cmids = getSelectedCmids(root);
-
-            if (cmids.length === 0) {
-                Notification.alert(
-                    await Str.get_string('flatarchive', 'local_flatarchive'),
-                    await Str.get_string('nothingselected', 'local_flatarchive')
-                );
+        const setDisabled = disabled => controls.forEach(control => { control.disabled = disabled; });
+        setDisabled(true);
+        form.addEventListener('submit', event => {
+            if (!ready || submitting) {
+                event.preventDefault();
                 return;
             }
-
-            Notification.alert(
-                await Str.get_string('flatarchive', 'local_flatarchive'),
-                'Sélection enregistrée. Étape suivante : start_job.'
-            );
+            if (!tree.querySelector(`${selectors.inputs}:checked`)) {
+                event.preventDefault();
+                Notification.alert(strings.flatarchive, strings.nothingselected);
+                return;
+            }
+            submitting = true;
+            setDisabled(true);
+            status.textContent = strings.status_running;
         });
-    }
 
+        [selectors.selectAll, selectors.deselectAll].forEach((selector, index) => {
+            root.querySelector(selector).addEventListener('click', () => {
+                tree.querySelectorAll(selectors.inputs).forEach(input => { input.checked = index === 0; });
+            });
+        });
+
+        // A restored browser page must allow another export.
+        window.addEventListener('pageshow', event => {
+            if (event.persisted && ready) {
+                submitting = false;
+                setDisabled(false);
+                status.textContent = strings.status_idle;
+            }
+        });
+
+        try {
+            const keys = ['flatarchive', 'nothingselected', 'hidden', 'loading', 'status_idle',
+                'status_running', 'status_failed', 'noresources'];
+            const values = await Str.get_strings(keys.map(key => ({key: key, component: 'local_flatarchive'})));
+            strings = Object.fromEntries(keys.map((key, index) => [key, values[index]]));
+            status.textContent = strings.loading;
+            const result = await Ajax.call([{
+                methodname: 'local_flatarchive_get_tree',
+                args: {courseid: params.courseid}
+            }])[0];
+            tree.textContent = '';
+            const addHidden = element => {
+                const badge = document.createElement('span');
+                badge.className = 'badge badge-secondary ml-2';
+                badge.textContent = strings.hidden;
+                element.classList.add('text-muted');
+                element.appendChild(badge);
+            };
+            (result.sections || []).forEach(section => {
+                const heading = document.createElement('h4');
+                heading.className = 'fa-section-title h5';
+                heading.textContent = section.name;
+                if (!section.visible) {
+                    addHidden(heading);
+                }
+                tree.appendChild(heading);
+                section.modules.forEach(item => {
+                    const label = document.createElement('label');
+                    label.className = 'fa-item';
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'cmid[]';
+                    checkbox.value = item.cmid;
+                    const title = document.createElement('span');
+                    title.textContent = item.name;
+                    if (!item.visible) {
+                        addHidden(title);
+                    }
+                    label.append(checkbox, title);
+                    tree.appendChild(label);
+                });
+            });
+            ready = Boolean(tree.querySelector(selectors.inputs));
+            status.textContent = ready ? strings.status_idle : strings.noresources;
+            setDisabled(!ready);
+        } catch (error) {
+            status.textContent = strings ? strings.status_failed : '';
+            Notification.exception(error);
+        } finally {
+            loading.hidden = true;
+        }
+    };
     return {init: init};
 });

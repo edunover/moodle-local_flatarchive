@@ -1,7 +1,7 @@
 # local_flatarchive — CLAUDE.md
 
 Plugin Moodle local pour archiver des ressources "Page" et "Livre" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.2.0 (2026032903) MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026093001) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
@@ -15,7 +15,7 @@ Version : 0.2.0 (2026032903) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ## Règles de versionnage
 
-- À chaque changement déployé, incrémenter le numéro de build dans `version.php` : YYYYMMDDXX+1 (ex: 2026032903 → 2026032904)
+- À chaque changement déployé, incrémenter le numéro de build dans `version.php` : YYYYMMDDXX+1 (ex: 2026093001 → 2026032904)
 - Si le jour change, repartir à 01 (ex: 2026033001)
 - Incrémenter `$plugin->release` (mineur ou patch) uniquement sur demande explicite
 
@@ -30,22 +30,22 @@ Reste à implémenter : la couche cron/jobs asynchrones et la génération PDF.
 - `index.php` — page d'entrée avec auth + capability
 - `lib.php` — hook navigation cours
 - `db/access.php` — capability `local/flatarchive:archive`
-- `db/services.php` — déclaration des 3 web services
+- `db/services.php` — déclaration du service get_tree ; les services de jobs non implémentés ne sont pas enregistrés
 - `db/install.xml` + `db/upgrade.php` — table `local_flatarchive_job`
 - `classes/external/get_tree.php` — API externe complète
-- `ajax/get_tree.php` + `ajax/start_job.php` — endpoints AJAX (non-AMD, actifs)
+- `ajax/get_tree.php` + `ajax/start_job.php` — anciens endpoints conservés, non utilisés par l’interface AMD
 - `ajax/generate_pdf.php` — endpoint PDF via mPDF (Phase 1, un seul module)
 - `archive_process.php` — traitement synchrone : génère HTML + ZIP et redirige vers téléchargement
   - MySQL keepalive (`SELECT 1`) après chaque module et avant création ZIP (LWS wait_timeout=60s)
   - Icônes modules copiées depuis `mod/{modname}/pix/monologo.svg` vers `shared/icons/`
   - Badges de visibilité (caché / stealth / section cachée)
   - Nom ZIP : `archive_{shortname}_{YYYYMMDDHHmm}.zip`
-- `serve_temp.php` — sert le ZIP depuis tempdir puis supprime le dossier
+- `serve_temp.php` — résout un token de session, vérifie propriétaire et capacité du cours, sert le ZIP puis supprime uniquement ce dossier
 - `locallib.php` — helpers :
   - `flatarchive_prepare_html_for_archive()` : normalise HTML (emojis, icônes, images)
   - `local_flatarchive_visibility_badges()` : badges HTML de visibilité
   - `local_flatarchive_copy_mod_icon()` : copie l'icône SVG/PNG du module (Moodle 4.x : monologo.svg)
-  - `local_flatarchive_get_release()` : lit `version.php` pour obtenir la release (ex: `0.2.0 (2026032903)`)
+  - `local_flatarchive_get_release()` : lit `version.php` pour obtenir la release (ex: `0.2.0 (2026093001)`)
 - `archive_templates/` — 4 templates HTML autonomes : index, about, page, book_toc
   - Footer : `Flatarchive {release} © EDUNOVER – {coursetitle}`
   - Badges de visibilité sur page individuelle et TOC livre
@@ -67,19 +67,21 @@ Reste à implémenter : la couche cron/jobs asynchrones et la génération PDF.
 
 ---
 
-## Architecture JS : migration AMD en cours
+## Architecture JS : AMD
 
-Il existe deux fichiers JS qui font la même chose. **Seul l'AMD doit subsister à terme.**
-
-| Fichier | Statut | Chargé par |
-|---|---|---|
-| `js/selectors.js` | Non-AMD, DEBUG, à supprimer | `index.php` (actuellement) |
-| `amd/src/selectors.js` | AMD standard Moodle, à finaliser | Personne (orphelin) |
-
-### Actions requises
-1. Finaliser `amd/src/selectors.js` et le brancher dans `index.php` via `$PAGE->requires->js_call_amd()`
-2. Supprimer `js/selectors.js` et le dossier `js/`
-3. Supprimer le bloc `// DEBUG ONLY` dans `index.php` et restaurer le require AMD propre
+- `index.php` charge `local_flatarchive/selectors` via `js_call_amd()`.
+- `amd/src/selectors.js` charge Pages et Livres via `core/ajax`, affiche les erreurs avec
+  `core/notification` et charge ses chaînes avec `core/str`.
+- `templates/index.mustache` contient un formulaire POST vers `archive_process.php`,
+  avec `id`, `sesskey` et les cases `cmid[]`. Aucun job asynchrone n’est créé par l’interface.
+- `styles.css` contient le style de l’interface Moodle ; `style/moodle.css` reste réservé aux archives.
+- L’ancien `js/selectors.js` a été supprimé.
+- `npm ci && npm run build` produit le module AMD nommé et sa source map dans `amd/build/`.
+- `npm test` vérifie source et build avec Node test + jsdom.
+- `tests/external/get_tree_test.php` contient les tests PHPUnit Moodle du service d’arborescence.
+  Exécution depuis Moodle, après initialisation PHPUnit :
+  `vendor/bin/phpunit local/flatarchive/tests`.
+- Le build 2026093001 reste à valider dans un Moodle de test avant déploiement.
 
 ---
 
@@ -108,14 +110,13 @@ Il existe deux fichiers JS qui font la même chose. **Seul l'AMD doit subsister 
 
 ---
 
-## Bugs connus à corriger avant la prochaine release
+## Points restant à traiter avant une release
 
-1. **Sélecteur cassé dans l'AMD** — `archive: '[data-action="archive"]'` doit être `'[data-action="start-archive"]'`
-2. **`[data-region="hint"]` absent du template** — le supprimer de `amd/src/selectors.js` ou l'ajouter au template
-3. **CSS inline dans `index.mustache`** — `style/moodle.css` existe désormais, extraire les styles dans ce fichier
-4. **`ajax/generate_pdf.php` ligne 18** — `$PAGE->set_context($contextmodule)` appelé avant que `$contextmodule` soit défini
-5. **`render.php` vide** — orphelin, à supprimer
-6. **`js/selectors.js`** — contient `console.log` debug et cache-buster `time()` — à remplacer par AMD
+1. `ajax/generate_pdf.php` appelle `$PAGE->set_context($contextmodule)` avant la définition du contexte.
+2. `render.php` reste vide et orphelin.
+3. Les services de jobs et tâches cron sont encore vides : ne pas les appeler depuis l’interface.
+4. L’export ZIP et son téléchargement nécessitent des tests d’intégration Moodle supplémentaires.
+5. Les archives jamais téléchargées ont encore besoin d’une politique de purge ; leur téléchargement exige la session de création.
 
 ---
 
@@ -134,7 +135,7 @@ Il existe deux fichiers JS qui font la même chose. **Seul l'AMD doit subsister 
 - Ne pas hardcoder de texte français dans le PHP ou le JS
 - Ne pas bypasser la vérification de capability dans les web services
 - Ne pas commiter de code de debug (`console.log`, `// DEBUG ONLY`, cache-buster `time()`)
-  
+
   ## Ressources de référence
   - 'docs/moodle 4.0 e-learning.md'
   - 'docs/Brand guidelines.md
@@ -144,4 +145,27 @@ Il existe deux fichiers JS qui font la même chose. **Seul l'AMD doit subsister 
   - 'docs/Moodle Dispensez vos formations en ligne.md'
   - 'docs/moodle security.md'
   - 'docs/moodle_4_0_e_learning.md'
-  - 'docs/moodle.DB.relationships.implied.large.png'  
+  - 'docs/moodle.DB.relationships.implied.large.png'
+
+## Optimisations 2026093001
+
+- `classes/archive/paths.php` : noms lisibles limités à 40 caractères avec suffixe de type/ID,
+  chemins des pièces jointes isolés par module/filearea/itemid ; liens HTML encodés.
+- `classes/archive/temporary_archive.php` : dossiers aléatoires et registre en session ;
+  contrôle propriétaire, fichier ZIP fixe et rejet des chemins/liens symboliques non conformes.
+- Helper de copie déplacé dans `locallib.php` et basé sur `stored_file::copy_content_to()`.
+- Chapitres parcourus par recordset fermé dans `finally` ; résultat de génération ZIP vérifié.
+- Sélection dédupliquée et validée avant création du workspace ; nettoyage en cas d’exception.
+- Release mise en cache pour la durée de la requête.
+- Tests : 7 arborescence + 4 chemins + 6 archives temporaires + 1 fichiers/ZIP = 18 tests PHPUnit.
+- Aucune exécution PHPUnit dans cet espace sans Moodle/base de test ; essai réel indispensable.
+
+
+## GitHub Actions
+
+`.github/workflows/tests.yml` lance PHPUnit avec Moodle 4.5 et MariaDB 10.11 sur PHP 8.1 et 8.3,
+ainsi que les tests JavaScript et le contrôle du build AMD. Déclenchement à chaque push,
+pull request ou lancement manuel. Moodle et la base sont créés dans le runner jetable :
+aucun accès à l’instance sandbox ni secret serveur n’est nécessaire.
+
+Référence : https://moodlehq.github.io/moodle-plugin-ci/

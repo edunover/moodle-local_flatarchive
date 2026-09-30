@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages & Livres) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026032903) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026093001) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -33,13 +33,13 @@ archive_SHORTNAME_202603291200.zip
 │   └── icons/
 │       ├── page.svg
 │       └── book.svg
-├── Titre de la page.html   ← un fichier par activité Page
-├── Titre du livre/
+├── Titre--page-12.html   ← un fichier par activité Page
+├── Titre--book-34/
 │   ├── index.html          ← table des matières du livre
-│   ├── Chapitre un.html
-│   └── Chapitre deux.html
+│   ├── Chapitre un--chapter-56.html
+│   └── Chapitre deux--chapter-57.html
 └── files/
-    └── {cmid}/             ← images et fichiers embarqués
+    └── {cmid}/{filearea}/{itemid}/ ← images et fichiers embarqués
 ```
 
 ### Installation
@@ -90,7 +90,7 @@ archive_SHORTNAME_202603291200.zip
 
 - La génération est **synchrone** — les cours très volumineux peuvent dépasser le `max_execution_time` PHP sur hébergement mutualisé
 - `wait_timeout=60s` MySQL (LWS) compensé par des requêtes keepalive entre chaque module
-- L'interface JS utilise un script non-AMD (migration AMD en cours)
+- L’interface utilise AMD et envoie la sélection au générateur HTML synchrone. Les jobs asynchrones et le PDF restent incomplets.
 
 ---
 
@@ -98,7 +98,7 @@ archive_SHORTNAME_202603291200.zip
 
 Moodle local plugin — Archive course resources (Pages & Books) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026032903) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026093001) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -123,13 +123,13 @@ archive_SHORTNAME_202603291200.zip
 │   └── icons/
 │       ├── page.svg
 │       └── book.svg
-├── Page title.html         ← one file per Page activity
-├── Book title/
+├── Title--page-12.html         ← one file per Page activity
+├── Title--book-34/
 │   ├── index.html          ← book table of contents
-│   ├── Chapter one.html
-│   └── Chapter two.html
+│   ├── Chapter one--chapter-56.html
+│   └── Chapter two--chapter-57.html
 └── files/
-    └── {cmid}/             ← embedded images & files
+    └── {cmid}/{filearea}/{itemid}/ ← embedded images & files
 ```
 
 ### Installation
@@ -180,7 +180,7 @@ archive_SHORTNAME_202603291200.zip
 
 - Archive generation is **synchronous** — very large courses may hit PHP `max_execution_time` on shared hosting
 - MySQL `wait_timeout=60s` (LWS) mitigated by keepalive queries between modules
-- JS interface uses a non-AMD script (AMD migration pending)
+- The AMD interface submits the selection to the synchronous HTML generator. Background jobs and PDF support remain incomplete.
 
 ---
 
@@ -189,3 +189,83 @@ archive_SHORTNAME_202603291200.zip
 GNU GPL v3 or later — http://www.gnu.org/copyleft/gpl.html
 
 © 2025 [Edunover](https://edunover.eu)
+
+
+## Développement et tests / Development and tests
+
+Le build AMD est livré dans `amd/build/`. Après une modification JavaScript :
+The AMD build is included in `amd/build/`. After editing JavaScript:
+
+```bash
+npm ci
+npm run build
+npm test
+```
+
+Les tests JavaScript vérifient la sélection, les paramètres POST, les erreurs, les cours vides,
+les titres contenant du HTML et le retour navigateur, sur la source et le build livré.
+JavaScript tests exercise selection, POST parameters, errors, empty courses, HTML in titles,
+and browser restoration against both the source and the distributed build.
+
+Les tests PHPUnit utilisent les générateurs et la base de test de Moodle. Depuis la racine
+**d’une installation Moodle de développement dont PHPUnit est configuré**, avec ce plugin
+installé dans `local/flatarchive` :
+PHPUnit tests use Moodle's generators and test database. From the root of a **development
+Moodle installation with PHPUnit configured**, with this plugin in `local/flatarchive`:
+
+```bash
+php admin/tool/phpunit/cli/init.php
+vendor/bin/phpunit local/flatarchive/tests
+```
+
+La suite couvre Pages/Livres, ordre et noms des sections, visibilité, cours vides,
+isolation des cours, droits d’accès et cours inexistant. Les réponses passent aussi par
+la validation du schéma de l’API externe Moodle.
+The suite covers Pages/Books, section ordering and names, visibility, empty courses,
+course isolation, capabilities and missing courses, including external API response validation.
+
+Cette suite ne valide pas encore la génération complète du ZIP ni son téléchargement.
+Un essai sur Moodle reste nécessaire : Pages et Livres avec images, sélection partielle,
+export, téléchargement et ouverture hors ligne du ZIP.
+This suite does not yet validate complete ZIP generation or downloading. Test the full
+workflow on Moodle with Pages and Books containing images, partial selection, export,
+download and offline viewing.
+
+Après installation de cette mise à jour, exécuter la mise à niveau Moodle et purger les caches.
+After installing this update, run the Moodle upgrade and purge caches.
+
+
+### Optimisations du build 2026093001 / Build 2026093001 improvements
+
+- Copie des pièces jointes via l’API de fichiers Moodle, sans charger leur contenu complet dans une chaîne PHP.
+- Parcours des chapitres par recordset avec fermeture garantie ; suppression d’une requête Livre inutile.
+- Noms de pages/livres/chapitres avec identifiant stable et dossiers de fichiers séparés par chapitre.
+- Déduplication et validation de la sélection avant toute génération ; échecs d’écriture et de ZIP signalés.
+- Dossier aléatoire distinct pour chaque export. Téléchargement réservé au créateur, dans sa session,
+  avec vérification des droits du cours. Les anciens liens `?path=` ne sont plus acceptés.
+- Nettoyage après génération échouée ou téléchargement complet. Les exports jamais téléchargés
+  restent temporaires ; aucune tâche de purge propre au plugin n’est encore implémentée.
+
+Attachments use Moodle's file-copy API instead of loading complete contents into PHP strings.
+Chapters use a recordset that is closed reliably. Resource IDs prevent title collisions, and
+chapter attachments have separate directories. Selection is deduplicated and validated, and
+write/ZIP errors are reported. Each export has its own random workspace; only its owner in the
+same session can download it, subject to course permissions. Legacy `?path=` links are rejected.
+Failed exports and completed downloads are cleaned up. Undownloaded exports remain temporary;
+a plugin-specific purge task is still pending.
+
+La suite PHPUnit comprend désormais 18 tests, dont les collisions, les fichiers embarqués,
+leur conservation dans un ZIP, les sessions/propriétaires, les traversées de chemins et les liens symboliques.
+Ces tests nécessitent Moodle : les contrôles de syntaxe locaux ne remplacent pas leur exécution.
+The PHPUnit suite now includes 18 tests covering these cases and requires a Moodle test installation.
+Local syntax checks do not replace executing that suite.
+
+
+## GitHub Actions
+
+`.github/workflows/tests.yml` lance PHPUnit avec Moodle 4.5 et MariaDB 10.11 sur PHP 8.1 et 8.3,
+ainsi que les tests JavaScript et le contrôle du build AMD. Déclenchement à chaque push,
+pull request ou lancement manuel. Moodle et la base sont créés dans le runner jetable :
+aucun accès à l’instance sandbox ni secret serveur n’est nécessaire.
+
+Référence : https://moodlehq.github.io/moodle-plugin-ci/

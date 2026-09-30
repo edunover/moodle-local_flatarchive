@@ -1,0 +1,12 @@
+{
+  "name": "moodle-local-flatarchive",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build-amd.cjs",
+    "test": "node --test tests/selectors.test.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0",
+    "terser": "^5.39.0"
+  }
+}

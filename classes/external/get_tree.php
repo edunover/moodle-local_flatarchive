@@ -1,7 +1,7 @@
 <?php
 // This file is part of Moodle - http://moodle.org/
 //
-// External function to return course sections and Page modules (visible and hidden).
+// External function to return course sections and Page/Book modules (visible and hidden).
 
 namespace local_flatarchive\external;
 
@@ -11,7 +11,6 @@ use external_value;
 use external_single_structure;
 use external_multiple_structure;
 use context_course;
-use invalid_parameter_exception;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -31,7 +30,7 @@ class get_tree extends external_api {
     }
 
     /**
-     * Retourne l’arborescence des sections et des modules Page du cours,
+     * Retourne l’arborescence des sections et des modules Page et Livre du cours,
      * incluant les éléments visibles et cachés.
      *
      * @param int $courseid
@@ -46,9 +45,7 @@ class get_tree extends external_api {
 
         // Chargement du cours.
         $course = get_course($params['courseid']);
-        if (!$course) {
-            throw new invalid_parameter_exception('Cours introuvable.');
-        }
+        require_login($course);
 
         // Contexte et sécurité.
         $context = context_course::instance($course->id);
@@ -59,38 +56,39 @@ class get_tree extends external_api {
         $modinfo = get_fast_modinfo($course);
 
         $sections = [];
+        $sectionmodules = $modinfo->get_sections();
 
         // Parcours des sections dans l’ordre réel du cours.
         foreach ($modinfo->get_section_info_all() as $sectioninfo) {
 
             $sectiondata = [
                 'id' => $sectioninfo->id,
-                'name' => $sectioninfo->name,
+                'name' => get_section_name($course, $sectioninfo),
                 'visible' => (bool) $sectioninfo->visible,
                 'modules' => [],
             ];
 
             // CMIDs de la section.
-            $cmids = $modinfo->get_sections()[$sectioninfo->section] ?? [];
+            $cmids = $sectionmodules[$sectioninfo->section] ?? [];
 
             foreach ($cmids as $cmid) {
                 $cm = $modinfo->get_cm($cmid);
 
-                // Phase 1: uniquement les ressources Page.
-                if ($cm->modname !== 'page') {
+                // The HTML exporter supports Pages and Books.
+                if (!in_array($cm->modname, ['page', 'book'], true)) {
                     continue;
                 }
 
                 $sectiondata['modules'][] = [
                     'cmid' => $cm->id,
                     'name' => $cm->name,
-                    'type' => 'page',
+                    'type' => $cm->modname,
                     'visible' => (bool) $cm->visible,
                     'available' => (bool) $cm->available,
                 ];
             }
 
-            // On ajoute la section uniquement si elle contient au moins une Page.
+            // On ajoute la section uniquement si elle contient au moins une Page ou un Livre.
             if (!empty($sectiondata['modules'])) {
                 $sections[] = $sectiondata;
             }

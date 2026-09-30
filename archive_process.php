@@ -17,8 +17,11 @@ require_once(__DIR__ . '/archive_templates/book_toc_template.php');
 
 global $DB;
 
+use local_flatarchive\archive\paths;
+use local_flatarchive\archive\temporary_archive;
+
 $courseid = required_param('id', PARAM_INT);
-$cmids = optional_param_array('cmid', [], PARAM_INT);
+$cmids = array_values(array_unique(optional_param_array('cmid', [], PARAM_INT)));
 require_sesskey();
 
 $course = get_course($courseid);
@@ -38,208 +41,163 @@ $PAGE->set_heading($course->fullname);
 $modinfo = get_fast_modinfo($course);
 $cms = $modinfo->get_cms();
 
-$tempdir = make_temp_directory('flatarchive/' . $courseid . '_' . time());
-$sharedfolder = $tempdir . '/shared';
-mkdir($sharedfolder, 0755, true);
-
-$stylecss = __DIR__ . '/style/moodle.css';
-if (file_exists($stylecss)) {
-    copy($stylecss, $sharedfolder . '/moodle.css');
-}
-
-$page_links = [];
-$zipfiles = [];
-$zipfiles['shared/moodle.css'] = $sharedfolder . '/moodle.css';
-
-/**
- * Copie les fichiers du file area du module vers tempdir/files/$cmid/ et réécrit le contenu.
- *
- * @param string $content contenu brut (avec @@PLUGINFILE@@)
- * @param context_module $context
- * @param string $component ex: mod_page, mod_book
- * @param string $filearea ex: content
- * @param int $itemid ex: 0 ou chapterid
- * @param string $tempdir répertoire temporaire racine
- * @param int $cmid id du cm (pour sous-dossier files/$cmid)
- * @param string $relativeprefix préfixe pour les URLs ('' ou '../')
- * @return string contenu avec URLs réécrites en relatifs
- */
-function local_flatarchive_copy_pluginfiles_and_rewrite(
-    string $content,
-    context_module $context,
-    string $component,
-    string $filearea,
-    int $itemid,
-    string $tempdir,
-    int $cmid,
-    string $relativeprefix = ''
-): string {
-    global $CFG;
-    $fs = get_file_storage();
-    $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, false, false);
-    $filesdir = $tempdir . '/files/' . $cmid;
-    if (!is_dir($filesdir)) {
-        mkdir($filesdir, 0755, true);
-    }
-    foreach ($files as $f) {
-        if ($f->is_directory()) {
-            continue;
-        }
-        $path = $f->get_filepath() . $f->get_filename();
-        $dest = $filesdir . '/' . ltrim($path, '/');
-        $fulldir = dirname($dest);
-        if (!is_dir($fulldir)) {
-            mkdir($fulldir, 0755, true);
-        }
-        file_put_contents($dest, $f->get_content());
-    }
-    // Rewrite @@PLUGINFILE@@/ to relative path (files/$cmid/) for static archive.
-    // We do not use file_rewrite_pluginfile_urls() as it expects 6+ params and produces absolute URLs.
-    $content = str_replace('@@PLUGINFILE@@/', $relativeprefix . 'files/' . $cmid . '/', $content);
-    return $content;
-}
-
+// Validate the whole selection before creating any files.
 foreach ($cmids as $cmid) {
-    if (!isset($cms[$cmid])) {
-        continue;
+    if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, ['page', 'book'], true)) {
+        throw new moodle_exception('invalidselection', 'local_flatarchive');
     }
-    $cm = $cms[$cmid];
+}
+$workspace = temporary_archive::create();
+$tempdir = $workspace['directory'];
+try {
+    $sharedfolder = $tempdir . '/shared';
+    mkdir($sharedfolder, 0755, true);
 
-    if ($cm->modname === 'page') {
-        $pageinstance = $DB->get_record('page', ['id' => $cm->instance], '*', MUST_EXIST);
-        $pagecontext = context_module::instance($cm->id);
-        $rawcontent = $pageinstance->content;
-        $rawcontent = local_flatarchive_copy_pluginfiles_and_rewrite(
-            $rawcontent,
-            $pagecontext,
-            'mod_page',
-            'content',
-            0,
-            $tempdir,
-            (int) $cm->id,
-            ''
-        );
-        $pagecontent = format_text($rawcontent, $pageinstance->contentformat, ['context' => $pagecontext]);
-        $shortname = clean_param($cm->name, PARAM_FILE) ?: 'page_' . $cm->id;
-        $shortname = clean_filename($shortname);
-        if ($shortname === '') {
-            $shortname = 'page_' . $cm->id;
-        }
-        $pagefile = $shortname . '.html';
-        $pagepath = $tempdir . '/' . $pagefile;
-        $badges = local_flatarchive_visibility_badges($cm, $modinfo);
-        $html = local_flatarchive_render_page_template($course, $cm, $cm->name, $pagecontent, '', $badges);
-        file_put_contents($pagepath, $html);
-        $iconpath = local_flatarchive_copy_mod_icon('page', $sharedfolder);
-        $iconimg = $iconpath ? '<img class="fa-modicon" src="' . s($iconpath) . '" alt=""> ' : '';
-        if ($iconpath && !isset($zipfiles[$iconpath])) {
-            $zipfiles[$iconpath] = $tempdir . '/' . $iconpath;
-        }
-        $page_links[] = '<li>' . $iconimg . '<a href="' . s($pagefile) . '">' . s($cm->name) . '</a>'
-            . ($badges ? ' ' . $badges : '') . '</li>';
-        $zipfiles[$pagefile] = $pagepath;
-        $DB->get_field_sql('SELECT 1'); // keepalive MySQL (wait_timeout=60s sur LWS).
-        continue;
+    $stylecss = __DIR__ . '/style/moodle.css';
+    if (!copy($stylecss, $sharedfolder . '/moodle.css')) {
+        throw new moodle_exception('archivefailed', 'local_flatarchive');
     }
 
-    if ($cm->modname === 'book') {
-        $book = $DB->get_record('book', ['id' => $cm->instance], '*', MUST_EXIST);
-        $chapters = $DB->get_records('book_chapters', ['bookid' => $book->id], 'pagenum');
-        $bookshortname = clean_param($cm->name, PARAM_FILE) ?: 'book_' . $cm->id;
-        $bookshortname = clean_filename($bookshortname);
-        if ($bookshortname === '') {
-            $bookshortname = 'book_' . $cm->id;
-        }
-        $bookdir = $tempdir . '/' . $bookshortname;
-        if (!is_dir($bookdir)) {
-            mkdir($bookdir, 0755, true);
-        }
-        $relativeshared = '../';
-        $pagecontext = context_module::instance($cm->id);
-        $bookbadges = local_flatarchive_visibility_badges($cm, $modinfo);
-        $chapter_links = [];
-        foreach ($chapters as $chapter) {
-            $rawcontent = $chapter->content;
+    $page_links = [];
+    $zipfiles = [];
+    $zipfiles['shared/moodle.css'] = $sharedfolder . '/moodle.css';
+
+    foreach ($cmids as $cmid) {
+        $cm = $cms[$cmid];
+
+        if ($cm->modname === 'page') {
+            $pageinstance = $DB->get_record('page', ['id' => $cm->instance], '*', MUST_EXIST);
+            $pagecontext = context_module::instance($cm->id);
+            $rawcontent = $pageinstance->content;
             $rawcontent = local_flatarchive_copy_pluginfiles_and_rewrite(
                 $rawcontent,
                 $pagecontext,
-                'mod_book',
-                'chapter',
-                (int) $chapter->id,
+                'mod_page',
+                'content',
+                0,
                 $tempdir,
                 (int) $cm->id,
-                $relativeshared
+                ''
             );
-            $chaptercontent = format_text($rawcontent, $chapter->contentformat, ['context' => $pagecontext]);
-            $chshortname = clean_param($chapter->title, PARAM_FILE) ?: 'ch_' . $chapter->id;
-            $chshortname = clean_filename($chshortname);
-            if ($chshortname === '') {
-                $chshortname = 'ch_' . $chapter->id;
+            $pagecontent = format_text($rawcontent, $pageinstance->contentformat, ['context' => $pagecontext]);
+            $pagefile = paths::stem($cm->name, 'page', (int)$cm->id) . '.html';
+            $pagepath = $tempdir . '/' . $pagefile;
+            $badges = local_flatarchive_visibility_badges($cm, $modinfo);
+            $html = local_flatarchive_render_page_template($course, $cm, $cm->name, $pagecontent, '', $badges);
+            local_flatarchive_write_file($pagepath, $html);
+            $iconpath = local_flatarchive_copy_mod_icon('page', $sharedfolder);
+            $iconimg = $iconpath ? '<img class="fa-modicon" src="' . s($iconpath) . '" alt=""> ' : '';
+            if ($iconpath && !isset($zipfiles[$iconpath])) {
+                $zipfiles[$iconpath] = $tempdir . '/' . $iconpath;
             }
-            $chfile = $chshortname . '.html';
-            $chpath = $bookdir . '/' . $chfile;
-            $html = local_flatarchive_render_page_template($course, null, $chapter->title, $chaptercontent, $relativeshared);
-            file_put_contents($chpath, $html);
-            $chbadge = !empty($chapter->hidden)
-                ? ' <span class="fa-vis-badge fa-vis-hidden">'
-                    . get_string('visibility_chapter_hidden', 'local_flatarchive') . '</span>'
-                : '';
-            $chapter_links[] = '<li><a href="' . s($chfile) . '">' . s($chapter->title) . '</a>'
-                . $chbadge . '</li>';
-            $zipfiles[$bookshortname . '/' . $chfile] = $chpath;
+            $page_links[] = '<li>' . $iconimg . '<a href="' . s(rawurlencode($pagefile)) . '">' . s($cm->name) . '</a>'
+                . ($badges ? ' ' . $badges : '') . '</li>';
+            $zipfiles[$pagefile] = $pagepath;
             $DB->get_field_sql('SELECT 1'); // keepalive MySQL (wait_timeout=60s sur LWS).
+            continue;
         }
 
-        // Table des matières du Livre (bookshortname/index.html).
-        $tochtml = local_flatarchive_render_book_toc_template($course, $cm->name, $chapter_links, $relativeshared, $bookbadges);
-        file_put_contents($bookdir . '/index.html', $tochtml);
-        $zipfiles[$bookshortname . '/index.html'] = $bookdir . '/index.html';
+        if ($cm->modname === 'book') {
+            $bookshortname = paths::stem($cm->name, 'book', (int)$cm->id);
+            $bookdir = $tempdir . '/' . $bookshortname;
+            if (!is_dir($bookdir)) {
+                mkdir($bookdir, 0755, true);
+            }
+            $relativeshared = '../';
+            $pagecontext = context_module::instance($cm->id);
+            $bookbadges = local_flatarchive_visibility_badges($cm, $modinfo);
+            $chapter_links = [];
+            $chapters = $DB->get_recordset('book_chapters', ['bookid' => $cm->instance], 'pagenum, id');
+            try {
+                foreach ($chapters as $chapter) {
+                    $rawcontent = $chapter->content;
+                    $rawcontent = local_flatarchive_copy_pluginfiles_and_rewrite(
+                        $rawcontent,
+                        $pagecontext,
+                        'mod_book',
+                        'chapter',
+                        (int) $chapter->id,
+                        $tempdir,
+                        (int) $cm->id,
+                        $relativeshared
+                    );
+                    $chaptercontent = format_text($rawcontent, $chapter->contentformat, ['context' => $pagecontext]);
+                    $chfile = paths::stem($chapter->title, 'chapter', (int)$chapter->id) . '.html';
+                    $chpath = $bookdir . '/' . $chfile;
+                    $html = local_flatarchive_render_page_template($course, null, $chapter->title, $chaptercontent, $relativeshared);
+                    local_flatarchive_write_file($chpath, $html);
+                    $chbadge = !empty($chapter->hidden)
+                        ? ' <span class="fa-vis-badge fa-vis-hidden">'
+                            . get_string('visibility_chapter_hidden', 'local_flatarchive') . '</span>'
+                        : '';
+                    $chapter_links[] = '<li><a href="' . s(rawurlencode($chfile)) . '">' . s($chapter->title) . '</a>'
+                        . $chbadge . '</li>';
+                    $zipfiles[$bookshortname . '/' . $chfile] = $chpath;
+                    $DB->get_field_sql('SELECT 1'); // keepalive MySQL (wait_timeout=60s sur LWS).
+                }
 
-        // Une seule entrée dans l'index principal, pointant vers la TOC du Livre.
-        $bookiconpath = local_flatarchive_copy_mod_icon('book', $sharedfolder);
-        $bookiconimg = $bookiconpath ? '<img class="fa-modicon" src="' . s($bookiconpath) . '" alt=""> ' : '';
-        if ($bookiconpath && !isset($zipfiles[$bookiconpath])) {
-            $zipfiles[$bookiconpath] = $tempdir . '/' . $bookiconpath;
+            } finally {
+                $chapters->close();
+            }
+
+            // Table des matières du Livre (bookshortname/index.html).
+            $tochtml = local_flatarchive_render_book_toc_template($course, $cm->name, $chapter_links, $relativeshared, $bookbadges);
+            local_flatarchive_write_file($bookdir . '/index.html', $tochtml);
+            $zipfiles[$bookshortname . '/index.html'] = $bookdir . '/index.html';
+
+            // Une seule entrée dans l'index principal, pointant vers la TOC du Livre.
+            $bookiconpath = local_flatarchive_copy_mod_icon('book', $sharedfolder);
+            $bookiconimg = $bookiconpath ? '<img class="fa-modicon" src="' . s($bookiconpath) . '" alt=""> ' : '';
+            if ($bookiconpath && !isset($zipfiles[$bookiconpath])) {
+                $zipfiles[$bookiconpath] = $tempdir . '/' . $bookiconpath;
+            }
+            $page_links[] = '<li>' . $bookiconimg . '<a href="' . s(rawurlencode($bookshortname) . '/index.html') . '">' . s($cm->name) . '</a>'
+                . ($bookbadges ? ' ' . $bookbadges : '') . '</li>';
+            continue;
         }
-        $page_links[] = '<li>' . $bookiconimg . '<a href="' . s($bookshortname . '/index.html') . '">' . s($cm->name) . '</a>'
-            . ($bookbadges ? ' ' . $bookbadges : '') . '</li>';
-        continue;
     }
-}
 
-// Fichiers dans files/ (images, etc.) à inclure dans le ZIP.
-$filesdir = $tempdir . '/files';
-if (is_dir($filesdir)) {
-    $iterator = new RecursiveIteratorIterator(
-        new RecursiveDirectoryIterator($filesdir, RecursiveDirectoryIterator::SKIP_DOTS),
-        RecursiveIteratorIterator::SELF_FIRST
-    );
-    foreach ($iterator as $item) {
-        if ($item->isFile()) {
-            $rel = str_replace($tempdir . '/', '', $item->getPathname());
-            $zipfiles[$rel] = $item->getPathname();
+    // Fichiers dans files/ (images, etc.) à inclure dans le ZIP.
+    $filesdir = $tempdir . '/files';
+    if (is_dir($filesdir)) {
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($filesdir, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+        foreach ($iterator as $item) {
+            if ($item->isFile()) {
+                $rel = str_replace($tempdir . '/', '', $item->getPathname());
+                $zipfiles[$rel] = $item->getPathname();
+            }
         }
     }
+
+    $indexhtml = local_flatarchive_render_index_template($course, $courseid, $page_links, $course->shortname);
+    local_flatarchive_write_file($tempdir . '/index.html', $indexhtml);
+    $zipfiles['index.html'] = $tempdir . '/index.html';
+
+    $abouthtml = local_flatarchive_render_about_template($course);
+    local_flatarchive_write_file($tempdir . '/about.html', $abouthtml);
+    $zipfiles['about.html'] = $tempdir . '/about.html';
+
+    $shortname = clean_filename(clean_param($course->shortname, PARAM_FILE)) ?: 'course_' . $courseid;
+    $zipname = 'archive_' . $shortname . '_' . date('YmdHi') . '.zip';
+    $zippath = $tempdir . '/archive.zip';
+    $DB->get_field_sql('SELECT 1'); // keepalive avant la création du ZIP.
+    $packer = get_file_packer('application/zip');
+    if (!$packer->archive_to_pathname($zipfiles, $zippath, true)) {
+        throw new moodle_exception('archivefailed', 'local_flatarchive');
+    }
+    temporary_archive::register($workspace['token'], $courseid, $zipname);
+
+} catch (Throwable $error) {
+    remove_directory($tempdir);
+    throw $error;
 }
-
-$indexhtml = local_flatarchive_render_index_template($course, $courseid, $page_links, $course->shortname);
-file_put_contents($tempdir . '/index.html', $indexhtml);
-$zipfiles['index.html'] = $tempdir . '/index.html';
-
-$abouthtml = local_flatarchive_render_about_template($course);
-file_put_contents($tempdir . '/about.html', $abouthtml);
-$zipfiles['about.html'] = $tempdir . '/about.html';
-
-$timestamp = basename($tempdir);
-$shortname = clean_filename(clean_param($course->shortname, PARAM_FILE)) ?: 'course_' . $courseid;
-$zipname = 'archive_' . $shortname . '_' . date('YmdHi') . '.zip';
-$zippath = $tempdir . '/' . $zipname;
-$DB->get_field_sql('SELECT 1'); // keepalive avant la création du ZIP.
-$packer = get_file_packer('application/zip');
-$packer->archive_to_pathname($zipfiles, $zippath, true);
 
 $downloadurl = new moodle_url('/local/flatarchive/serve_temp.php', [
-    'path' => 'flatarchive/' . $timestamp . '/' . $zipname,
+    'token' => $workspace['token'],
+    'sesskey' => sesskey(),
 ]);
 
 echo $OUTPUT->header();
