@@ -163,7 +163,7 @@ Reste à implémenter : la couche cron/jobs asynchrones et la génération PDF.
 
 ## GitHub Actions
 
-`.github/workflows/tests.yml` lance PHPUnit avec Moodle 4.5 et MariaDB 10.11 sur PHP 8.1 et 8.3,
+`.github/workflows/tests.yml` lance PHPUnit sur les dernières révisions des branches Moodle 4.4 à 5.2 avec MariaDB 10.11,
 ainsi que les tests JavaScript et le contrôle du build AMD. Déclenchement à chaque push,
 pull request ou lancement manuel. Moodle et la base sont créés dans le runner jetable :
 aucun accès à l’instance sandbox ni secret serveur n’est nécessaire.
@@ -171,3 +171,7 @@ aucun accès à l’instance sandbox ni secret serveur n’est nécessaire.
 Référence : https://moodlehq.github.io/moodle-plugin-ci/
 
 Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation finale en cours.
+
+Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 18 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
+
+Références des prérequis : https://moodledev.io/general/releases/4.4 ; https://moodledev.io/general/releases/4.5 ; https://moodledev.io/general/releases/5.0 ; https://moodledev.io/general/releases/5.1 ; https://moodledev.io/general/releases/5.2
