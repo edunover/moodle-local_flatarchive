@@ -269,3 +269,5 @@ pull request ou lancement manuel. Moodle et la base sont créés dans le runner 
 aucun accès à l’instance sandbox ni secret serveur n’est nécessaire.
 
 Référence : https://moodlehq.github.io/moodle-plugin-ci/
+
+Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()` ; nouvelle exécution en cours.

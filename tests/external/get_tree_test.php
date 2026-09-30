@@ -37,7 +37,7 @@ final class get_tree_test extends \externallib_advanced_testcase {
      * @return array Validated response.
      */
     private function read_tree(int $courseid): array {
-        return \external_api::clean_returnvalue(get_tree::execute_returns(), get_tree::execute($courseid));
+        return \core_external\external_api::clean_returnvalue(get_tree::execute_returns(), get_tree::execute($courseid));
     }
 
     /** Pages and Books are selectable; unsupported resources and other courses are excluded. */

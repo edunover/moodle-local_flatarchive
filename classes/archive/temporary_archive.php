@@ -63,9 +63,10 @@ final class temporary_archive {
      * @param string $token Workspace token.
      */
     public static function delete(string $token): void {
-        global $SESSION;
+        global $CFG, $SESSION;
+        require_once($CFG->libdir . '/filelib.php');
         $entry = self::resolve($token);
-        remove_directory($entry['directory']);
+        fulldelete($entry['directory']);
         unset($SESSION->local_flatarchive_archives[$token]);
     }
 

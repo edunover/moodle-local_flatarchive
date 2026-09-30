@@ -191,7 +191,7 @@ try {
     temporary_archive::register($workspace['token'], $courseid, $zipname);
 
 } catch (Throwable $error) {
-    remove_directory($tempdir);
+    fulldelete($tempdir);
     throw $error;
 }
 
