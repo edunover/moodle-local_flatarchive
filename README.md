@@ -254,10 +254,10 @@ same session can download it, subject to course permissions. Legacy `?path=` lin
 Failed exports and completed downloads are cleaned up. Undownloaded exports remain temporary;
 a plugin-specific purge task is still pending.
 
-La suite PHPUnit comprend désormais 20 tests, dont les collisions, les fichiers embarqués,
+La suite PHPUnit comprend désormais 24 tests, dont les collisions, les fichiers embarqués,
 leur conservation dans un ZIP, les sessions/propriétaires, les traversées de chemins et les liens symboliques.
 Ces tests nécessitent Moodle : les contrôles de syntaxe locaux ne remplacent pas leur exécution.
-The PHPUnit suite now includes 20 tests covering these cases and requires a Moodle test installation.
+The PHPUnit suite now includes 24 tests covering these cases and requires a Moodle test installation.
 Local syntax checks do not replace executing that suite.
 
 
@@ -272,7 +272,7 @@ Référence : https://moodlehq.github.io/moodle-plugin-ci/
 
 Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation réussie sur les 14 combinaisons Moodle/PHP.
 
-Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 20 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
+Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 24 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
 
 Références des prérequis : https://moodledev.io/general/releases/4.4 ; https://moodledev.io/general/releases/4.5 ; https://moodledev.io/general/releases/5.0 ; https://moodledev.io/general/releases/5.1 ; https://moodledev.io/general/releases/5.2
 
@@ -321,6 +321,5 @@ isolated per course module and linked locally; remote media and Moodle filters a
 Quatre tests PHPUnit supplémentaires couvrent la sélection par un enseignant, l’isolation entre
 cours, le contenu inline et son ordre, les fichiers de même nom et les chemins avec espaces dans
 le ZIP, le format texte brut et le rejet d’un autre type de module. Le test JavaScript de soumission
-inclut maintenant une zone texte et média. Le contrôle Moodle CodeSniffer du nouvel exporteur et
-de son fichier de tests est ajouté à GitHub Actions ; il ne certifie pas encore tout le code historique.
+inclut maintenant une zone texte et média. Le contrôle Moodle CodeSniffer des fichiers PHP touchés par cette évolution est ajouté à GitHub Actions ; il ne certifie pas encore tout le code historique.
 Validation de la matrice CI en cours. Non déployé sur la sandbox.

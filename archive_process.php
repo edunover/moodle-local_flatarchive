@@ -1,11 +1,26 @@
 <?php
 // This file is part of Moodle - http://moodle.org/
 //
-// Archive processing: generates HTML pages and ZIP (local_flatarchive).
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// @package    local_flatarchive
-// @copyright  2025 Edunover
-// @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * Generate a static HTML course archive and its download link.
+ *
+ * @package local_flatarchive
+ * @copyright 2025 Edunover
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/filelib.php');
@@ -59,7 +74,7 @@ try {
         throw new moodle_exception('archivefailed', 'local_flatarchive');
     }
 
-    $page_links = [];
+    $indexitems = [];
     $zipfiles = [];
     $zipfiles['shared/moodle.css'] = $sharedfolder . '/moodle.css';
 
@@ -67,7 +82,7 @@ try {
         $cm = $cms[$cmid];
 
         if ($cm->modname === 'label') {
-            $page_links[$cmid] = label_exporter::render($cm, $modinfo, $tempdir);
+            $indexitems[$cmid] = label_exporter::render($cm, $modinfo, $tempdir);
             continue;
         }
 
@@ -96,10 +111,10 @@ try {
             if ($iconpath && !isset($zipfiles[$iconpath])) {
                 $zipfiles[$iconpath] = $tempdir . '/' . $iconpath;
             }
-            $page_links[$cmid] = '<li>' . $iconimg . '<a href="' . s(rawurlencode($pagefile)) . '">' . s($cm->name) . '</a>'
+            $indexitems[$cmid] = '<li>' . $iconimg . '<a href="' . s(rawurlencode($pagefile)) . '">' . s($cm->name) . '</a>'
                 . ($badges ? ' ' . $badges : '') . '</li>';
             $zipfiles[$pagefile] = $pagepath;
-            $DB->get_field_sql('SELECT 1'); // keepalive MySQL (wait_timeout=60s sur LWS).
+            $DB->get_field_sql('SELECT 1'); // Keepalive MySQL (wait_timeout=60s sur LWS).
             continue;
         }
 
@@ -112,7 +127,7 @@ try {
             $relativeshared = '../';
             $pagecontext = context_module::instance($cm->id);
             $bookbadges = local_flatarchive_visibility_badges($cm, $modinfo);
-            $chapter_links = [];
+            $chapterlinks = [];
             $chapters = $DB->get_recordset('book_chapters', ['bookid' => $cm->instance], 'pagenum, id');
             try {
                 foreach ($chapters as $chapter) {
@@ -130,24 +145,29 @@ try {
                     $chaptercontent = format_text($rawcontent, $chapter->contentformat, ['context' => $pagecontext]);
                     $chfile = paths::stem($chapter->title, 'chapter', (int)$chapter->id) . '.html';
                     $chpath = $bookdir . '/' . $chfile;
-                    $html = local_flatarchive_render_page_template($course, null, $chapter->title, $chaptercontent, $relativeshared);
+                    $html = local_flatarchive_render_page_template(
+                        $course,
+                        null,
+                        $chapter->title,
+                        $chaptercontent,
+                        $relativeshared
+                    );
                     local_flatarchive_write_file($chpath, $html);
                     $chbadge = !empty($chapter->hidden)
                         ? ' <span class="fa-vis-badge fa-vis-hidden">'
                             . get_string('visibility_chapter_hidden', 'local_flatarchive') . '</span>'
                         : '';
-                    $chapter_links[] = '<li><a href="' . s(rawurlencode($chfile)) . '">' . s($chapter->title) . '</a>'
+                    $chapterlinks[] = '<li><a href="' . s(rawurlencode($chfile)) . '">' . s($chapter->title) . '</a>'
                         . $chbadge . '</li>';
                     $zipfiles[$bookshortname . '/' . $chfile] = $chpath;
-                    $DB->get_field_sql('SELECT 1'); // keepalive MySQL (wait_timeout=60s sur LWS).
+                    $DB->get_field_sql('SELECT 1'); // Keepalive MySQL (wait_timeout=60s sur LWS).
                 }
-
             } finally {
                 $chapters->close();
             }
 
             // Table des matières du Livre (bookshortname/index.html).
-            $tochtml = local_flatarchive_render_book_toc_template($course, $cm->name, $chapter_links, $relativeshared, $bookbadges);
+            $tochtml = local_flatarchive_render_book_toc_template($course, $cm->name, $chapterlinks, $relativeshared, $bookbadges);
             local_flatarchive_write_file($bookdir . '/index.html', $tochtml);
             $zipfiles[$bookshortname . '/index.html'] = $bookdir . '/index.html';
 
@@ -157,7 +177,8 @@ try {
             if ($bookiconpath && !isset($zipfiles[$bookiconpath])) {
                 $zipfiles[$bookiconpath] = $tempdir . '/' . $bookiconpath;
             }
-            $page_links[$cmid] = '<li>' . $bookiconimg . '<a href="' . s(rawurlencode($bookshortname) . '/index.html') . '">' . s($cm->name) . '</a>'
+            $indexitems[$cmid] = '<li>' . $bookiconimg . '<a href="' . s(rawurlencode($bookshortname) . '/index.html')
+                . '">' . s($cm->name) . '</a>'
                 . ($bookbadges ? ' ' . $bookbadges : '') . '</li>';
             continue;
         }
@@ -178,7 +199,7 @@ try {
         }
     }
 
-    $sections = local_flatarchive_group_index_links($course, $modinfo, $page_links);
+    $sections = local_flatarchive_group_index_links($course, $modinfo, $indexitems);
     $indexhtml = local_flatarchive_render_index_template($course, $courseid, $sections, $course->shortname);
     local_flatarchive_write_file($tempdir . '/index.html', $indexhtml);
     $zipfiles['index.html'] = $tempdir . '/index.html';
@@ -190,13 +211,12 @@ try {
     $shortname = clean_filename(clean_param($course->shortname, PARAM_FILE)) ?: 'course_' . $courseid;
     $zipname = 'archive_' . $shortname . '_' . date('YmdHi') . '.zip';
     $zippath = $tempdir . '/archive.zip';
-    $DB->get_field_sql('SELECT 1'); // keepalive avant la création du ZIP.
+    $DB->get_field_sql('SELECT 1'); // Keepalive avant la création du ZIP.
     $packer = get_file_packer('application/zip');
     if (!$packer->archive_to_pathname($zipfiles, $zippath, true)) {
         throw new moodle_exception('archivefailed', 'local_flatarchive');
     }
     temporary_archive::register($workspace['token'], $courseid, $zipname);
-
 } catch (Throwable $error) {
     fulldelete($tempdir);
     throw $error;
@@ -210,10 +230,15 @@ $downloadurl = new moodle_url('/local/flatarchive/serve_temp.php', [
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('archive_success', 'local_flatarchive'));
 echo html_writer::div(get_string('archive_success', 'local_flatarchive'), 'alert alert-success');
-echo html_writer::tag('p',
+echo html_writer::tag(
+    'p',
     html_writer::link($downloadurl, get_string('archive_success_download', 'local_flatarchive'), ['class' => 'btn btn-primary'])
 );
-echo html_writer::tag('p',
-    html_writer::link(new moodle_url('/local/flatarchive/index.php', ['id' => $courseid]), get_string('backtoflatarchive', 'local_flatarchive'))
+echo html_writer::tag(
+    'p',
+    html_writer::link(
+        new moodle_url('/local/flatarchive/index.php', ['id' => $courseid]),
+        get_string('backtoflatarchive', 'local_flatarchive')
+    )
 );
 echo $OUTPUT->footer();

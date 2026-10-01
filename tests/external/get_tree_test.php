@@ -5,6 +5,14 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace local_flatarchive\external;
 
@@ -23,7 +31,9 @@ require_once($CFG->dirroot . '/course/lib.php');
  * @covers \local_flatarchive\external\get_tree
  */
 final class get_tree_test extends \externallib_advanced_testcase {
-    /** Set up independent Moodle fixtures for each test. */
+    /**
+     * Set up independent Moodle fixtures for each test.
+     */
     protected function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();
@@ -40,7 +50,9 @@ final class get_tree_test extends \externallib_advanced_testcase {
         return \core_external\external_api::clean_returnvalue(get_tree::execute_returns(), get_tree::execute($courseid));
     }
 
-    /** Pages and Books are selectable; unsupported resources and other courses are excluded. */
+    /**
+     * Pages and Books are selectable; unsupported resources and other courses are excluded.
+     */
     public function test_supported_modules_and_course_isolation(): void {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course(['format' => 'topics', 'numsections' => 2]);
@@ -58,7 +70,9 @@ final class get_tree_test extends \externallib_advanced_testcase {
         $this->assertSame(['Page A', 'Book B'], array_column($modules, 'name'));
     }
 
-    /** A course containing only a hidden text and media area remains archivable by a teacher. */
+    /**
+     * A course containing only a hidden text and media area remains archivable by a teacher.
+     */
     public function test_text_and_media_only_course(): void {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
@@ -77,7 +91,9 @@ final class get_tree_test extends \externallib_advanced_testcase {
         $this->assertFalse((bool)$module['visible']);
     }
 
-    /** Course section order is preserved even when activities are created out of order. */
+    /**
+     * Course section order is preserved even when activities are created out of order.
+     */
     public function test_section_order_and_default_names(): void {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course(['format' => 'topics', 'numsections' => 3]);
@@ -93,7 +109,9 @@ final class get_tree_test extends \externallib_advanced_testcase {
         $this->assertSame(get_section_name($course, 2), $sections[1]['name']);
     }
 
-    /** Hidden resources and sections remain selectable by an authorised teacher. */
+    /**
+     * Hidden resources and sections remain selectable by an authorised teacher.
+     */
     public function test_hidden_resources_for_teacher(): void {
         global $DB;
         $generator = $this->getDataGenerator();
@@ -115,7 +133,9 @@ final class get_tree_test extends \externallib_advanced_testcase {
         $this->assertFalse((bool)$sections[1]['visible']);
     }
 
-    /** Courses without supported resources return an empty tree. */
+    /**
+     * Courses without supported resources return an empty tree.
+     */
     public function test_empty_and_unsupported_only_courses(): void {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
@@ -124,7 +144,9 @@ final class get_tree_test extends \externallib_advanced_testcase {
         $this->assertSame(['sections' => []], $this->read_tree($course->id));
     }
 
-    /** Enrolment alone must not grant archive access. */
+    /**
+     * Enrolment alone must not grant archive access.
+     */
     public function test_student_without_archive_capability_is_rejected(): void {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
@@ -135,7 +157,9 @@ final class get_tree_test extends \externallib_advanced_testcase {
         get_tree::execute($course->id);
     }
 
-    /** A teacher's archive capability in one course must not apply to a second course. */
+    /**
+     * A teacher's archive capability in one course must not apply to a second course.
+     */
     public function test_capability_is_scoped_to_requested_course(): void {
         $generator = $this->getDataGenerator();
         $first = $generator->create_course();
@@ -149,7 +173,9 @@ final class get_tree_test extends \externallib_advanced_testcase {
         get_tree::execute($second->id);
     }
 
-    /** Invalid IDs must fail instead of returning a misleading empty course. */
+    /**
+     * Invalid IDs must fail instead of returning a misleading empty course.
+     */
     public function test_missing_course_is_rejected(): void {
         $this->expectException(\dml_missing_record_exception::class);
         get_tree::execute(-1);
