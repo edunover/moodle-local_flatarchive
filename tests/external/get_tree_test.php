@@ -58,6 +58,25 @@ final class get_tree_test extends \externallib_advanced_testcase {
         $this->assertSame(['Page A', 'Book B'], array_column($modules, 'name'));
     }
 
+    /** A course containing only a hidden text and media area remains archivable by a teacher. */
+    public function test_text_and_media_only_course(): void {
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $label = $generator->create_module('label', ['course' => $course->id, 'visible' => 0]);
+        $other = $generator->create_course();
+        $generator->create_module('label', ['course' => $other->id]);
+        $teacher = $generator->create_user();
+        $generator->enrol_user($teacher->id, $course->id, 'editingteacher');
+        $this->setUser($teacher);
+        $sections = $this->read_tree($course->id)['sections'];
+        $this->assertCount(1, $sections);
+        $this->assertCount(1, $sections[0]['modules']);
+        $module = $sections[0]['modules'][0];
+        $this->assertEquals($label->cmid, $module['cmid']);
+        $this->assertSame('label', $module['type']);
+        $this->assertFalse((bool)$module['visible']);
+    }
+
     /** Course section order is preserved even when activities are created out of order. */
     public function test_section_order_and_default_names(): void {
         $generator = $this->getDataGenerator();

@@ -33,7 +33,7 @@ $string['visibility_hidden'] = 'caché';
 $string['visibility_stealth'] = 'caché de la page de cours';
 $string['visibility_section_hidden'] = 'section cachée';
 $string['visibility_chapter_hidden'] = 'chapitre caché';
-$string['noresources'] = 'Aucune Page ni aucun Livre à archiver dans ce cours.';
+$string['noresources'] = 'Aucune ressource prise en charge à archiver dans ce cours.';
 $string['archivefailed'] = 'Impossible de créer l’archive. Vérifie l’espace disque et les droits d’écriture.';
 $string['invalidselection'] = 'La sélection contient une ressource non prise en charge ou extérieure à ce cours.';
 

@@ -41,3 +41,17 @@ hr { margin: 1rem 0; border: 0; border-top: 1px solid #dee2e6; }
 
 .fa-course-section { margin: 1.5rem 0; }
 .fa-course-section h2 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+
+.fa-course-section > ul > .fa-textmedia {
+    list-style: none;
+    margin: 1rem 0;
+    overflow-wrap: anywhere;
+}
+.fa-textmedia img,
+.fa-textmedia video {
+    max-width: 100%;
+    height: auto;
+}
+.fa-textmedia audio {
+    max-width: 100%;
+}

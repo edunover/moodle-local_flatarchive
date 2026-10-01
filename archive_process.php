@@ -17,6 +17,7 @@ require_once(__DIR__ . '/archive_templates/book_toc_template.php');
 
 global $DB;
 
+use local_flatarchive\archive\label_exporter;
 use local_flatarchive\archive\paths;
 use local_flatarchive\archive\temporary_archive;
 
@@ -43,7 +44,7 @@ $cms = $modinfo->get_cms();
 
 // Validate the whole selection before creating any files.
 foreach ($cmids as $cmid) {
-    if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, ['page', 'book'], true)) {
+    if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, ['page', 'book', 'label'], true)) {
         throw new moodle_exception('invalidselection', 'local_flatarchive');
     }
 }
@@ -64,6 +65,11 @@ try {
 
     foreach ($cmids as $cmid) {
         $cm = $cms[$cmid];
+
+        if ($cm->modname === 'label') {
+            $page_links[$cmid] = label_exporter::render($cm, $modinfo, $tempdir);
+            continue;
+        }
 
         if ($cm->modname === 'page') {
             $pageinstance = $DB->get_record('page', ['id' => $cm->instance], '*', MUST_EXIST);

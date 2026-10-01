@@ -6,7 +6,7 @@
 
 ## Français
 
-Plugin local Moodle — Archive les ressources d'un cours (Pages & Livres) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
+Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres et Zones texte et média) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
 **Version :** 0.2.0 (2026100101) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
@@ -14,7 +14,7 @@ Plugin local Moodle — Archive les ressources d'un cours (Pages & Livres) en pa
 
 Flatarchive permet aux enseignants d'exporter des ressources de cours vers une archive portable utilisable hors ligne :
 
-- Sélection des activités **Page** et **Livre** depuis l'arborescence du cours
+- Sélection des activités **Page**, **Livre** et **Zone texte et média** depuis l'arborescence du cours
 - Génération d'un **site HTML statique** — aucune dépendance Moodle après téléchargement
 - Réécriture des liens `@@PLUGINFILE@@` en chemins relatifs et copie des fichiers embarqués
 - **Badges de visibilité** (caché / caché de la page de cours / section cachée) sur chaque page et dans l'index
@@ -58,7 +58,7 @@ archive_SHORTNAME_202603291200.zip
 ### Utilisation
 
 1. Ouvrir un cours → le lien **Flat archive** apparaît dans la navigation du cours
-2. Sélectionner les Pages et/ou Livres à archiver
+2. Sélectionner les Pages, Livres et/ou Zones texte et média à archiver
 3. Cliquer sur **Générer l'archive HTML**
 4. Télécharger le ZIP depuis la page de succès
 
@@ -96,7 +96,7 @@ archive_SHORTNAME_202603291200.zip
 
 ## English
 
-Moodle local plugin — Archive course resources (Pages & Books) as self-contained static HTML pages bundled in a downloadable ZIP.
+Moodle local plugin — Archive course resources (Pages, Books and Text and media areas) as self-contained static HTML pages bundled in a downloadable ZIP.
 
 **Version:** 0.2.0 (2026100101) · MATURITY_ALPHA · Requires Moodle 4.4+
 
@@ -104,7 +104,7 @@ Moodle local plugin — Archive course resources (Pages & Books) as self-contain
 
 Flatarchive lets teachers export selected course resources to a portable offline archive:
 
-- Selects **Page** and **Book** activities from the course tree
+- Selects **Page**, **Book** and **Text and media area** resources from the course tree
 - Generates a **static HTML website** — no Moodle dependency after download
 - Rewrites all `@@PLUGINFILE@@` links to relative paths and copies embedded files
 - Adds **visibility badges** (hidden / stealth / hidden section) on each page and in the index
@@ -148,7 +148,7 @@ archive_SHORTNAME_202603291200.zip
 ### Usage
 
 1. Open a course → the **Flat archive** link appears in the course navigation
-2. Select the Pages and/or Books to archive
+2. Select the Pages, Books and/or Text and media areas to archive
 3. Click **Générer l'archive HTML**
 4. Download the ZIP from the success page
 
@@ -304,3 +304,23 @@ L’index regroupe les ressources exportées sous les noms des sections Moodle, 
 ### Validation du build 2026100101
 
 Les 20 tests PHPUnit passent sur les 14 combinaisons Moodle/PHP, ainsi que les 6 tests JavaScript : https://github.com/edunover/moodle-local-flatarchive/actions/runs/36889554729 (code `1575049`). Le build 2026100101 regroupe l’index par sections et le lien de retour traduit ; le numéro de build et cette documentation ont été mis à jour après ces tests. Paquet préparé pour installation ; la sandbox reste au build 2026093001.
+
+### Zones texte et média — build 2026100102
+
+Les zones texte et média (`mod_label`) sont sélectionnables et affichées directement dans
+`index.html`, à leur position dans la section du cours. Le contenu conserve son format Moodle
+et les badges de visibilité. Les pièces jointes du champ introduction sont copiées dans
+`files/{cmid}/intro/0/`, avec leurs sous-dossiers ; les liens deviennent relatifs.
+Deux zones peuvent donc utiliser le même nom de fichier sans écrasement.
+Les fichiers distants ne sont pas téléchargés. Les filtres Moodle sont désactivés pour éviter
+une dépendance à leurs scripts ou services ; les intégrations externes restent dépendantes du réseau.
+
+Text and media areas are rendered inline in the course index. Introduction attachments are
+isolated per course module and linked locally; remote media and Moodle filters are not captured.
+
+Quatre tests PHPUnit supplémentaires couvrent la sélection par un enseignant, l’isolation entre
+cours, le contenu inline et son ordre, les fichiers de même nom et les chemins avec espaces dans
+le ZIP, le format texte brut et le rejet d’un autre type de module. Le test JavaScript de soumission
+inclut maintenant une zone texte et média. Le contrôle Moodle CodeSniffer du nouvel exporteur et
+de son fichier de tests est ajouté à GitHub Actions ; il ne certifie pas encore tout le code historique.
+Validation de la matrice CI en cours. Non déployé sur la sandbox.

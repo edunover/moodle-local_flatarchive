@@ -1,7 +1,7 @@
 # local_flatarchive — CLAUDE.md
 
 Plugin Moodle local pour archiver des ressources "Page" et "Livre" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.2.0 (2026100101) MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026100102) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
@@ -201,3 +201,23 @@ L’index regroupe les ressources exportées sous les noms des sections Moodle, 
 ### Validation du build 2026100101
 
 Les 20 tests PHPUnit passent sur les 14 combinaisons Moodle/PHP, ainsi que les 6 tests JavaScript : https://github.com/edunover/moodle-local-flatarchive/actions/runs/36889554729 (code `1575049`). Le build 2026100101 regroupe l’index par sections et le lien de retour traduit ; le numéro de build et cette documentation ont été mis à jour après ces tests. Paquet préparé pour installation ; la sandbox reste au build 2026093001.
+
+### Zones texte et média — build 2026100102
+
+Les zones texte et média (`mod_label`) sont sélectionnables et affichées directement dans
+`index.html`, à leur position dans la section du cours. Le contenu conserve son format Moodle
+et les badges de visibilité. Les pièces jointes du champ introduction sont copiées dans
+`files/{cmid}/intro/0/`, avec leurs sous-dossiers ; les liens deviennent relatifs.
+Deux zones peuvent donc utiliser le même nom de fichier sans écrasement.
+Les fichiers distants ne sont pas téléchargés. Les filtres Moodle sont désactivés pour éviter
+une dépendance à leurs scripts ou services ; les intégrations externes restent dépendantes du réseau.
+
+Text and media areas are rendered inline in the course index. Introduction attachments are
+isolated per course module and linked locally; remote media and Moodle filters are not captured.
+
+Quatre tests PHPUnit supplémentaires couvrent la sélection par un enseignant, l’isolation entre
+cours, le contenu inline et son ordre, les fichiers de même nom et les chemins avec espaces dans
+le ZIP, le format texte brut et le rejet d’un autre type de module. Le test JavaScript de soumission
+inclut maintenant une zone texte et média. Le contrôle Moodle CodeSniffer du nouvel exporteur et
+de son fichier de tests est ajouté à GitHub Actions ; il ne certifie pas encore tout le code historique.
+Validation de la matrice CI en cours. Non déployé sur la sandbox.

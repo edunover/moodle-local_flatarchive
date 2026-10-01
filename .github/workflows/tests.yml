@@ -115,5 +115,8 @@ jobs:
           MOODLE_BRANCH: ${{ matrix.branch }}
       - name: Check PHP syntax
         run: moodle-plugin-ci phplint
+      - name: Check Moodle conventions for the text and media exporter
+        if: matrix.moodle == '5.2' && matrix.php == '8.4'
+        run: phpcs --standard=moodle plugin/classes/archive/label_exporter.php plugin/tests/label_exporter_test.php
       - name: Run PHPUnit
         run: moodle-plugin-ci phpunit --fail-on-warning

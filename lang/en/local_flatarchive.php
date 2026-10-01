@@ -12,7 +12,7 @@ $string['deselectall'] = 'Deselect all';
 $string['archiveselection'] = 'Archive selection';
 $string['loading'] = 'Loading';
 $string['backendnotready'] = 'Backend not connected yet. Next step: implement get_tree and start_job.';
-$string['nothingselected'] = 'Select at least one Page or Book.';
+$string['nothingselected'] = 'Select at least one resource.';
 $string['status_idle'] = 'Ready';
 $string['status_running'] = 'In progress';
 $string['status_done'] = 'Done';
@@ -33,7 +33,7 @@ $string['visibility_hidden'] = 'hidden';
 $string['visibility_stealth'] = 'hidden from course page';
 $string['visibility_section_hidden'] = 'hidden section';
 $string['visibility_chapter_hidden'] = 'hidden chapter';
-$string['noresources'] = 'No Pages or Books are available to archive.';
+$string['noresources'] = 'No supported resources are available to archive.';
 $string['archivefailed'] = 'The archive could not be created. Check available disk space and file permissions.';
 $string['invalidselection'] = 'The selection contains an unsupported resource or a resource outside this course.';
 

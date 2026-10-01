@@ -1,7 +1,7 @@
 <?php
 // This file is part of Moodle - http://moodle.org/
 //
-// External function to return course sections and Page/Book modules (visible and hidden).
+// External function to return course sections and Page/Book/Label modules (visible and hidden).
 
 namespace local_flatarchive\external;
 
@@ -28,7 +28,7 @@ class get_tree extends external_api {
     }
 
     /**
-     * Retourne l’arborescence des sections et des modules Page et Livre du cours,
+     * Retourne l’arborescence des sections et des modules Page, Livre et Zone texte et média du cours,
      * incluant les éléments visibles et cachés.
      *
      * @param int $courseid
@@ -72,8 +72,8 @@ class get_tree extends external_api {
             foreach ($cmids as $cmid) {
                 $cm = $modinfo->get_cm($cmid);
 
-                // The HTML exporter supports Pages and Books.
-                if (!in_array($cm->modname, ['page', 'book'], true)) {
+                // The HTML exporter supports Pages, Books and text and media areas.
+                if (!in_array($cm->modname, ['page', 'book', 'label'], true)) {
                     continue;
                 }
 
