@@ -15,7 +15,7 @@ Version : 0.2.0 (2026093001) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ## Règles de versionnage
 
-- À chaque changement déployé, incrémenter le numéro de build dans `version.php` : YYYYMMDDXX+1 (ex: 2026093001 → 2026032904)
+- À chaque changement déployé, incrémenter le numéro de build dans `version.php` : YYYYMMDDXX+1 (ex: 2026093001 → 2026093002)
 - Si le jour change, repartir à 01 (ex: 2026033001)
 - Incrémenter `$plugin->release` (mineur ou patch) uniquement sur demande explicite
 
@@ -81,7 +81,7 @@ Reste à implémenter : la couche cron/jobs asynchrones et la génération PDF.
 - `tests/external/get_tree_test.php` contient les tests PHPUnit Moodle du service d’arborescence.
   Exécution depuis Moodle, après initialisation PHPUnit :
   `vendor/bin/phpunit local/flatarchive/tests`.
-- Le build 2026093001 reste à valider dans un Moodle de test avant déploiement.
+- Le build 2026093001 est installé sur la sandbox Moodle 4.5 ; la génération des 50 Pages du cours TEST- réussit. Le téléchargement manuel et les 203 références locales du ZIP sont validés ; l’affichage visuel hors ligne reste à vérifier.
 
 ---
 
@@ -158,7 +158,7 @@ Reste à implémenter : la couche cron/jobs asynchrones et la génération PDF.
 - Sélection dédupliquée et validée avant création du workspace ; nettoyage en cas d’exception.
 - Release mise en cache pour la durée de la requête.
 - Tests : 7 arborescence + 4 chemins + 6 archives temporaires + 1 fichiers/ZIP = 18 tests PHPUnit.
-- Aucune exécution PHPUnit dans cet espace sans Moodle/base de test ; essai réel indispensable.
+- Les 18 tests PHPUnit passent dans GitHub Actions sur les 14 combinaisons Moodle/PHP documentées ci-dessous.
 
 
 ## GitHub Actions
@@ -170,8 +170,15 @@ aucun accès à l’instance sandbox ni secret serveur n’est nécessaire.
 
 Référence : https://moodlehq.github.io/moodle-plugin-ci/
 
-Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation finale en cours.
+Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation réussie sur les 14 combinaisons Moodle/PHP.
 
 Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 18 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
 
 Références des prérequis : https://moodledev.io/general/releases/4.4 ; https://moodledev.io/general/releases/4.5 ; https://moodledev.io/general/releases/5.0 ; https://moodledev.io/general/releases/5.1 ; https://moodledev.io/general/releases/5.2
+
+## Validation du 1er octobre 2026
+
+- GitHub Actions : 14 environnements PHPUnit et le job JavaScript réussis : https://github.com/edunover/moodle-local-flatarchive/actions/runs/36734923014 (commit `39dbae6`).
+- Sandbox Moodle 4.5.11+, PHP 8.3.33 : installation du build 2026093001 réussie ; accès par le menu du cours ; sélection et génération des 50 Pages du cours TEST- réussies, sans modifier le contenu du cours.
+- Téléchargement manuel réussi, confirmé par le ZIP fourni : intégrité correcte, 54 fichiers dont 50 Pages, index.html, about.html, CSS et icône. Les 203 références locales sont valides ; aucun lien externe détecté dans les attributs href/src. La récupération automatisée du navigateur intégré échoue ; les reprises de téléchargement restent à examiner, car le ZIP est supprimé après envoi.
+- Aucun essai navigateur des Livres n’est encore confirmé. L’aperçu visuel local est bloqué par la politique du navigateur intégré (file:// non autorisé) ; la structure et les liens de l’archive ont été contrôlés directement.
