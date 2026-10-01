@@ -1,7 +1,7 @@
 # local_flatarchive — CLAUDE.md
 
 Plugin Moodle local pour archiver des ressources "Page" et "Livre" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.2.0 (2026093001) MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026100101) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
@@ -45,7 +45,7 @@ Reste à implémenter : la couche cron/jobs asynchrones et la génération PDF.
   - `flatarchive_prepare_html_for_archive()` : normalise HTML (emojis, icônes, images)
   - `local_flatarchive_visibility_badges()` : badges HTML de visibilité
   - `local_flatarchive_copy_mod_icon()` : copie l'icône SVG/PNG du module (Moodle 4.x : monologo.svg)
-  - `local_flatarchive_get_release()` : lit `version.php` pour obtenir la release (ex: `0.2.0 (2026093001)`)
+  - `local_flatarchive_get_release()` : lit `version.php` pour obtenir la release (ex: `0.2.0 (2026100101)`)
 - `archive_templates/` — 4 templates HTML autonomes : index, about, page, book_toc
   - Footer : `Flatarchive {release} © EDUNOVER – {coursetitle}`
   - Badges de visibilité sur page individuelle et TOC livre
@@ -157,7 +157,7 @@ Reste à implémenter : la couche cron/jobs asynchrones et la génération PDF.
 - Chapitres parcourus par recordset fermé dans `finally` ; résultat de génération ZIP vérifié.
 - Sélection dédupliquée et validée avant création du workspace ; nettoyage en cas d’exception.
 - Release mise en cache pour la durée de la requête.
-- Tests : 7 arborescence + 4 chemins + 6 archives temporaires + 1 fichiers/ZIP = 18 tests PHPUnit.
+- Tests : 7 arborescence + 4 chemins + 6 archives temporaires + 1 fichiers/ZIP + 2 structure de l’index = 20 tests PHPUnit.
 - Les 18 tests PHPUnit passent dans GitHub Actions sur les 14 combinaisons Moodle/PHP documentées ci-dessous.
 
 
@@ -172,7 +172,7 @@ Référence : https://moodlehq.github.io/moodle-plugin-ci/
 
 Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation réussie sur les 14 combinaisons Moodle/PHP.
 
-Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 18 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
+Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 20 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
 
 Références des prérequis : https://moodledev.io/general/releases/4.4 ; https://moodledev.io/general/releases/4.5 ; https://moodledev.io/general/releases/5.0 ; https://moodledev.io/general/releases/5.1 ; https://moodledev.io/general/releases/5.2
 
@@ -197,3 +197,7 @@ Contrôle réussi : ZIP intact, 4 chapitres, 6 images PNG valides et distinctes 
 ### Prochaine version : structure de l’index HTML
 
 L’index regroupe les ressources exportées sous les noms des sections Moodle, dans l’ordre du cours (par exemple « New section » puis « test ppt »). Seules les sections contenant une ressource sélectionnée sont incluses ; des sections de même nom restent distinctes. Les noms de sections par défaut suivent la langue de Moodle. Les liens des Pages et des Livres, ainsi que leurs badges de visibilité, sont conservés. Modification préparée, non déployée.
+
+### Validation du build 2026100101
+
+Les 20 tests PHPUnit passent sur les 14 combinaisons Moodle/PHP, ainsi que les 6 tests JavaScript : https://github.com/edunover/moodle-local-flatarchive/actions/runs/36889554729 (code `1575049`). Le build 2026100101 regroupe l’index par sections et le lien de retour traduit ; le numéro de build et cette documentation ont été mis à jour après ces tests. Paquet préparé pour installation ; la sandbox reste au build 2026093001.
