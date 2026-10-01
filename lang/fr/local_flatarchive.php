@@ -5,6 +5,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Flat archive';
 $string['flatarchive'] = 'Flat archive';
+$string['backtoflatarchive'] = 'Retour à Flat Archive';
 $string['archivecourse'] = 'Archiver le contenu du cours';
 $string['selectall'] = 'Tout sélectionner';
 $string['deselectall'] = 'Tout désélectionner';

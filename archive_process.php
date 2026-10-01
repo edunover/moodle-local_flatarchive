@@ -90,7 +90,7 @@ try {
             if ($iconpath && !isset($zipfiles[$iconpath])) {
                 $zipfiles[$iconpath] = $tempdir . '/' . $iconpath;
             }
-            $page_links[] = '<li>' . $iconimg . '<a href="' . s(rawurlencode($pagefile)) . '">' . s($cm->name) . '</a>'
+            $page_links[$cmid] = '<li>' . $iconimg . '<a href="' . s(rawurlencode($pagefile)) . '">' . s($cm->name) . '</a>'
                 . ($badges ? ' ' . $badges : '') . '</li>';
             $zipfiles[$pagefile] = $pagepath;
             $DB->get_field_sql('SELECT 1'); // keepalive MySQL (wait_timeout=60s sur LWS).
@@ -151,7 +151,7 @@ try {
             if ($bookiconpath && !isset($zipfiles[$bookiconpath])) {
                 $zipfiles[$bookiconpath] = $tempdir . '/' . $bookiconpath;
             }
-            $page_links[] = '<li>' . $bookiconimg . '<a href="' . s(rawurlencode($bookshortname) . '/index.html') . '">' . s($cm->name) . '</a>'
+            $page_links[$cmid] = '<li>' . $bookiconimg . '<a href="' . s(rawurlencode($bookshortname) . '/index.html') . '">' . s($cm->name) . '</a>'
                 . ($bookbadges ? ' ' . $bookbadges : '') . '</li>';
             continue;
         }
@@ -172,7 +172,8 @@ try {
         }
     }
 
-    $indexhtml = local_flatarchive_render_index_template($course, $courseid, $page_links, $course->shortname);
+    $sections = local_flatarchive_group_index_links($course, $modinfo, $page_links);
+    $indexhtml = local_flatarchive_render_index_template($course, $courseid, $sections, $course->shortname);
     local_flatarchive_write_file($tempdir . '/index.html', $indexhtml);
     $zipfiles['index.html'] = $tempdir . '/index.html';
 
@@ -207,6 +208,6 @@ echo html_writer::tag('p',
     html_writer::link($downloadurl, get_string('archive_success_download', 'local_flatarchive'), ['class' => 'btn btn-primary'])
 );
 echo html_writer::tag('p',
-    html_writer::link(new moodle_url('/local/flatarchive/index.php', ['id' => $courseid]), get_string('flatarchive', 'local_flatarchive'))
+    html_writer::link(new moodle_url('/local/flatarchive/index.php', ['id' => $courseid]), get_string('backtoflatarchive', 'local_flatarchive'))
 );
 echo $OUTPUT->footer();

@@ -251,3 +251,32 @@ function local_flatarchive_write_file(string $path, string $content): void {
         throw new moodle_exception('archivefailed', 'local_flatarchive');
     }
 }
+
+/**
+ * Group exported links by section, preserving course order and distinct section IDs.
+ *
+ * @param stdClass $course Course record.
+ * @param course_modinfo $modinfo Course structure.
+ * @param array $links Trusted rendered list items indexed by course module ID.
+ * @return array Non-empty sections with their selected resource links.
+ */
+function local_flatarchive_group_index_links(stdClass $course, course_modinfo $modinfo, array $links): array {
+    $result = [];
+    $sectionmodules = $modinfo->get_sections();
+    foreach ($modinfo->get_section_info_all() as $section) {
+        $selected = [];
+        foreach ($sectionmodules[$section->section] ?? [] as $cmid) {
+            if (isset($links[$cmid])) {
+                $selected[] = $links[$cmid];
+            }
+        }
+        if ($selected) {
+            $result[] = [
+                'id' => $section->id,
+                'name' => get_section_name($course, $section),
+                'links' => $selected,
+            ];
+        }
+    }
+    return $result;
+}

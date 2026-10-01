@@ -38,3 +38,6 @@ hr { margin: 1rem 0; border: 0; border-top: 1px solid #dee2e6; }
 .fa-vis-section { background: #6c757d; color: #fff; }
 .fa-vis-block { display: flex; gap: 4px; margin-bottom: 0.5rem; }
 .fa-modicon { width: 1rem; height: 1rem; vertical-align: middle; margin-right: 0.25rem; }
+
+.fa-course-section { margin: 1.5rem 0; }
+.fa-course-section h2 { font-size: 1.25rem; margin-bottom: 0.5rem; }

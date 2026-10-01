@@ -10,12 +10,18 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @param stdClass $course
  * @param int $courseid
- * @param array $page_links tableau de chaînes <li><a href="...">...</a></li> (liens relatifs)
+ * @param array $sections Sections ordonnées avec nom, ID et liens relatifs rendus.
  * @param string $courseshortname nom court du cours (pour affichage)
  * @return string HTML complet
  */
-function local_flatarchive_render_index_template(stdClass $course, int $courseid, array $page_links, string $courseshortname): string {
-    $linkshtml = !empty($page_links) ? implode("\n                    ", $page_links) : '';
+function local_flatarchive_render_index_template(stdClass $course, int $courseid, array $sections, string $courseshortname): string {
+    $sectionshtml = '';
+    foreach ($sections as $section) {
+        $headingid = 'section-' . (int)$section['id'];
+        $sectionshtml .= '<section class="fa-course-section" aria-labelledby="' . $headingid . '">'
+            . '<h2 id="' . $headingid . '">' . s($section['name']) . '</h2>'
+            . '<ul>' . implode("\n", $section['links']) . '</ul></section>';
+    }
     $coursetitle = s($course->fullname);
     $sitename = s($course->shortname ?: get_string('pluginname', 'local_flatarchive'));
 
@@ -38,9 +44,7 @@ function local_flatarchive_render_index_template(stdClass $course, int $courseid
             <div>
                 <h1>' . $coursetitle . '</h1>
                 <hr>
-                <ul>
-                    ' . $linkshtml . '
-                </ul>
+                ' . $sectionshtml . '
             </div>
         </main>
         <footer id="page-footer" class="py-3">
