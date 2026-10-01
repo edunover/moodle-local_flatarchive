@@ -219,4 +219,4 @@ Quatre tests PHPUnit supplémentaires couvrent la sélection par un enseignant, 
 cours, le contenu inline et son ordre, les fichiers de même nom et les chemins avec espaces dans
 le ZIP, le format texte brut et le rejet d’un autre type de module. Le test JavaScript de soumission
 inclut maintenant une zone texte et média. Le contrôle Moodle CodeSniffer des fichiers PHP touchés par cette évolution est ajouté à GitHub Actions ; il ne certifie pas encore tout le code historique.
-Validation de la matrice CI en cours. Non déployé sur la sandbox.
+Validation réussie : 24 tests PHPUnit sur les 14 combinaisons Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer des 9 fichiers PHP concernés. Exécution : https://github.com/edunover/moodle-local-flatarchive/actions/runs/36892945413 (code `c045465`). Non déployé sur la sandbox.
