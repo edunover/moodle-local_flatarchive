@@ -34,6 +34,7 @@ global $DB;
 
 use local_flatarchive\archive\label_exporter;
 use local_flatarchive\archive\paths;
+use local_flatarchive\archive\resource_exporter;
 use local_flatarchive\archive\temporary_archive;
 
 $courseid = required_param('id', PARAM_INT);
@@ -59,7 +60,7 @@ $cms = $modinfo->get_cms();
 
 // Validate the whole selection before creating any files.
 foreach ($cmids as $cmid) {
-    if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, ['page', 'book', 'label'], true)) {
+    if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, ['page', 'book', 'label', 'resource'], true)) {
         throw new moodle_exception('invalidselection', 'local_flatarchive');
     }
 }
@@ -80,6 +81,11 @@ try {
 
     foreach ($cmids as $cmid) {
         $cm = $cms[$cmid];
+
+        if ($cm->modname === 'resource') {
+            $indexitems[$cmid] = resource_exporter::render($cm, $modinfo, $tempdir);
+            continue;
+        }
 
         if ($cm->modname === 'label') {
             $indexitems[$cmid] = label_exporter::render($cm, $modinfo, $tempdir);

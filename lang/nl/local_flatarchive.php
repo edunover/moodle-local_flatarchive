@@ -50,3 +50,5 @@ $string['archivefailed'] = 'Het archief kon niet worden gemaakt. Controleer de v
 $string['invalidselection'] = 'De selectie bevat een niet-ondersteunde bron of een bron uit een andere cursus.';
 
 $string['flatarchive:archive'] = 'Cursusbronnen archiveren';
+
+$string['resourcefilenotfound'] = 'De bestandsbron "{$a}" bevat geen bestand om te archiveren.';

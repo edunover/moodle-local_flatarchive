@@ -59,3 +59,5 @@ $string['archivefailed'] = 'The archive could not be created. Check available di
 $string['invalidselection'] = 'The selection contains an unsupported resource or a resource outside this course.';
 
 $string['flatarchive:archive'] = 'Archive course resources';
+
+$string['resourcefilenotfound'] = 'The file resource "{$a}" has no file to archive.';

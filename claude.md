@@ -1,7 +1,7 @@
 # local_flatarchive — CLAUDE.md
 
 Plugin Moodle local pour archiver des ressources "Page", "Livre" et "Zone texte et média" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.2.0 (2026100102) MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026100201) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
@@ -220,3 +220,27 @@ cours, le contenu inline et son ordre, les fichiers de même nom et les chemins 
 le ZIP, le format texte brut et le rejet d’un autre type de module. Le test JavaScript de soumission
 inclut maintenant une zone texte et média. Le contrôle Moodle CodeSniffer des fichiers PHP touchés par cette évolution est ajouté à GitHub Actions ; il ne certifie pas encore tout le code historique.
 Validation réussie : 24 tests PHPUnit sur les 14 combinaisons Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer des 9 fichiers PHP concernés. Exécution : https://github.com/edunover/moodle-local-flatarchive/actions/runs/36892945413 (code `c045465`). Non déployé sur la sandbox.
+
+### Validation sandbox du build 2026100102
+
+Installation réussie. Le ZIP `archive_course-monitoring_202610021934.zip` contient 126 fichiers,
+60 chapitres et la zone texte et média avec son PNG embarqué (1054 × 1032).
+Les 248 références locales sont valides ; aucun lien externe ni marqueur Moodle résiduel détecté.
+Le rendu visuel hors ligne est confirmé par l’utilisateur le 2 octobre 2026.
+
+### Ressource Fichier — build 2026100201
+
+Les ressources Fichier (`mod_resource`) sont sélectionnables. Le lien dans la section de l’index
+ouvre le fichier principal, choisi selon l’ordre Moodle (`sortorder DESC, id ASC`).
+Tous les fichiers associés sont conservés, octet pour octet, dans `files/{cmid}/content/0/`,
+avec leurs sous-dossiers et noms d’origine. Les espaces et caractères spéciaux sont encodés
+uniquement dans les liens. Un fichier manquant bloque explicitement la génération.
+Les documents nécessitent toujours un lecteur adapté ; aucune conversion PDF/HTML n’est effectuée.
+La description de la ressource n’est pas exportée à ce stade. Les dépendances externes d’un
+fichier HTML restent externes ; seuls ses fichiers stockés dans Moodle sont embarqués.
+
+File resources link to their original main file from the course index. Companion files and
+subdirectories are preserved, isolated by module ID. No document conversion is performed.
+Four additional PHPUnit tests cover selection, main-file order, companion files, duplicate
+filenames, URL encoding, ZIP contents, missing files and wrong module types.
+Validation CI en cours ; build non installé sur la sandbox.

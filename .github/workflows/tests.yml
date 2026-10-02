@@ -120,6 +120,7 @@ jobs:
         run: >-
           phpcs --standard=moodle
           plugin/classes/archive/label_exporter.php plugin/tests/label_exporter_test.php
+          plugin/classes/archive/resource_exporter.php plugin/tests/resource_exporter_test.php
           plugin/archive_process.php plugin/classes/external/get_tree.php
           plugin/tests/external/get_tree_test.php plugin/lang/en/local_flatarchive.php
           plugin/lang/fr/local_flatarchive.php plugin/lang/nl/local_flatarchive.php plugin/version.php

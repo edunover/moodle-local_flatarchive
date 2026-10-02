@@ -59,3 +59,5 @@ $string['archivefailed'] = 'Impossible de créer l’archive. Vérifie l’espac
 $string['invalidselection'] = 'La sélection contient une ressource non prise en charge ou extérieure à ce cours.';
 
 $string['flatarchive:archive'] = 'Archiver les ressources du cours';
+
+$string['resourcefilenotfound'] = 'La ressource Fichier « {$a} » ne contient aucun fichier à archiver.';
