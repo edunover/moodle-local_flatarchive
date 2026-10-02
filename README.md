@@ -6,7 +6,7 @@
 
 ## Français
 
-Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres et Zones texte et média) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
+Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média et Fichiers) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
 **Version :** 0.2.0 (2026100101) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
@@ -14,7 +14,7 @@ Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres et Zone
 
 Flatarchive permet aux enseignants d'exporter des ressources de cours vers une archive portable utilisable hors ligne :
 
-- Sélection des activités **Page**, **Livre** et **Zone texte et média** depuis l'arborescence du cours
+- Sélection des activités **Page**, **Livre**, **Zone texte et média** et **Fichier** depuis l'arborescence du cours
 - Génération d'un **site HTML statique** — aucune dépendance Moodle après téléchargement
 - Réécriture des liens `@@PLUGINFILE@@` en chemins relatifs et copie des fichiers embarqués
 - **Badges de visibilité** (caché / caché de la page de cours / section cachée) sur chaque page et dans l'index
@@ -58,7 +58,7 @@ archive_SHORTNAME_202603291200.zip
 ### Utilisation
 
 1. Ouvrir un cours → le lien **Flat archive** apparaît dans la navigation du cours
-2. Sélectionner les Pages, Livres et/ou Zones texte et média à archiver
+2. Sélectionner les Pages, Livres, Zones texte et média et/ou Fichiers à archiver
 3. Cliquer sur **Générer l'archive HTML**
 4. Télécharger le ZIP depuis la page de succès
 
@@ -96,7 +96,7 @@ archive_SHORTNAME_202603291200.zip
 
 ## English
 
-Moodle local plugin — Archive course resources (Pages, Books and Text and media areas) as self-contained static HTML pages bundled in a downloadable ZIP.
+Moodle local plugin — Archive course resources (Pages, Books, Text and media areas and Files) as self-contained static HTML pages bundled in a downloadable ZIP.
 
 **Version:** 0.2.0 (2026100101) · MATURITY_ALPHA · Requires Moodle 4.4+
 
@@ -104,7 +104,7 @@ Moodle local plugin — Archive course resources (Pages, Books and Text and medi
 
 Flatarchive lets teachers export selected course resources to a portable offline archive:
 
-- Selects **Page**, **Book** and **Text and media area** resources from the course tree
+- Selects **Page**, **Book**, **Text and media area** and **File** resources from the course tree
 - Generates a **static HTML website** — no Moodle dependency after download
 - Rewrites all `@@PLUGINFILE@@` links to relative paths and copies embedded files
 - Adds **visibility badges** (hidden / stealth / hidden section) on each page and in the index
@@ -148,7 +148,7 @@ archive_SHORTNAME_202603291200.zip
 ### Usage
 
 1. Open a course → the **Flat archive** link appears in the course navigation
-2. Select the Pages, Books and/or Text and media areas to archive
+2. Select the Pages, Books, Text and media areas and/or Files to archive
 3. Click **Générer l'archive HTML**
 4. Download the ZIP from the success page
 
@@ -254,10 +254,10 @@ same session can download it, subject to course permissions. Legacy `?path=` lin
 Failed exports and completed downloads are cleaned up. Undownloaded exports remain temporary;
 a plugin-specific purge task is still pending.
 
-La suite PHPUnit comprend désormais 24 tests, dont les collisions, les fichiers embarqués,
+La suite PHPUnit comprend désormais 28 tests, dont les collisions, les fichiers embarqués,
 leur conservation dans un ZIP, les sessions/propriétaires, les traversées de chemins et les liens symboliques.
 Ces tests nécessitent Moodle : les contrôles de syntaxe locaux ne remplacent pas leur exécution.
-The PHPUnit suite now includes 24 tests covering these cases and requires a Moodle test installation.
+The PHPUnit suite now includes 28 tests covering these cases and requires a Moodle test installation.
 Local syntax checks do not replace executing that suite.
 
 
@@ -272,7 +272,7 @@ Référence : https://moodlehq.github.io/moodle-plugin-ci/
 
 Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation réussie sur les 14 combinaisons Moodle/PHP.
 
-Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 24 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
+Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 28 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
 
 Références des prérequis : https://moodledev.io/general/releases/4.4 ; https://moodledev.io/general/releases/4.5 ; https://moodledev.io/general/releases/5.0 ; https://moodledev.io/general/releases/5.1 ; https://moodledev.io/general/releases/5.2
 
@@ -346,4 +346,4 @@ File resources link to their original main file from the course index. Companion
 subdirectories are preserved, isolated by module ID. No document conversion is performed.
 Four additional PHPUnit tests cover selection, main-file order, companion files, duplicate
 filenames, URL encoding, ZIP contents, missing files and wrong module types.
-Validation CI en cours ; build non installé sur la sandbox.
+Validation CI réussie : 28 tests PHPUnit sur 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. Exécution : https://github.com/edunover/moodle-local-flatarchive/actions/runs/37042345425 (code `eb8fea2`). Build non installé sur la sandbox ; celle-ci reste en 2026100102.
