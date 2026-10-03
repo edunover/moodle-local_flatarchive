@@ -116,7 +116,7 @@ Reste à implémenter : la couche cron/jobs asynchrones et la génération PDF.
 2. `render.php` reste vide et orphelin.
 3. Les services de jobs et tâches cron sont encore vides : ne pas les appeler depuis l’interface.
 4. L’export ZIP et son téléchargement nécessitent des tests d’intégration Moodle supplémentaires.
-5. Les archives jamais téléchargées ont encore besoin d’une politique de purge ; leur téléchargement exige la session de création.
+5. Les liens de téléchargement expirent après une heure et exigent la session de création ; la suppression physique dépend du nettoyage temporaire planifié de Moodle.
 
 ---
 
@@ -258,4 +258,4 @@ lien au bout d’une heure ne signifie pas une suppression physique immédiate.
 Repeated downloads are supported for one hour in the originating session. Expired or missing
 archives show a friendly page. Moodle cron handles eventual temporary-file cleanup.
 Trois tests PHPUnit supplémentaires couvrent les lectures répétées, l’expiration et le fichier disparu.
-Validation CI en cours. Non déployé ; la sandbox est en 2026100201.
+Validation CI réussie : 31 tests PHPUnit et 150 assertions sur les 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37124447456), code `c76fbe3`. PHPUnit signale encore 7 dépréciations de métadonnées sur Moodle 5.x, sans échec. Non déployé ; la sandbox est en 2026100201. Le double téléchargement devra être confirmé dans le navigateur après installation.

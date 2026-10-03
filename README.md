@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média et Fichiers) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026100101) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026100301) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -60,14 +60,14 @@ archive_SHORTNAME_202603291200.zip
 1. Ouvrir un cours → le lien **Flat archive** apparaît dans la navigation du cours
 2. Sélectionner les Pages, Livres, Zones texte et média et/ou Fichiers à archiver
 3. Cliquer sur **Générer l'archive HTML**
-4. Télécharger le ZIP depuis la page de succès
+4. Télécharger le ZIP depuis la page de succès ; le lien reste utilisable pendant une heure dans la même session
 
 ### Prérequis
 
 | Prérequis | Version |
 |---|---|
 | Moodle | 4.4+ |
-| PHP | 7.4+ |
+| PHP | 8.1+ (selon la version de Moodle / depending on Moodle version) |
 | mPDF (via Composer) | 8.2.7 |
 
 ### Types de ressources supportés
@@ -76,9 +76,9 @@ archive_SHORTNAME_202603291200.zip
 |---|---|
 | `mod_page` | ✅ Complet |
 | `mod_book` | ✅ Complet (table des matières + chapitres) |
-| `mod_resource` | Prévu |
+| `mod_resource` | ✅ Fichier principal et fichiers associés, sans conversion |
 | `mod_url` | Prévu |
-| `mod_label` | Prévu |
+| `mod_label` | ✅ Texte et médias intégrés dans l’index |
 
 ### Capacité Moodle
 
@@ -98,7 +98,7 @@ archive_SHORTNAME_202603291200.zip
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas and Files) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026100101) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026100301) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -150,14 +150,14 @@ archive_SHORTNAME_202603291200.zip
 1. Open a course → the **Flat archive** link appears in the course navigation
 2. Select the Pages, Books, Text and media areas and/or Files to archive
 3. Click **Générer l'archive HTML**
-4. Download the ZIP from the success page
+4. Download the ZIP from the success page; the link remains usable for one hour in the same session
 
 ### Requirements
 
 | Requirement | Version |
 |---|---|
 | Moodle | 4.4+ |
-| PHP | 7.4+ |
+| PHP | 8.1+ (selon la version de Moodle / depending on Moodle version) |
 | mPDF (via Composer) | 8.2.7 |
 
 ### Supported resource types
@@ -166,9 +166,9 @@ archive_SHORTNAME_202603291200.zip
 |---|---|
 | `mod_page` | ✅ Full |
 | `mod_book` | ✅ Full (TOC + chapters) |
-| `mod_resource` | Planned |
+| `mod_resource` | ✅ Main file and companion files, without conversion |
 | `mod_url` | Planned |
-| `mod_label` | Planned |
+| `mod_label` | ✅ Text and media embedded in the course index |
 
 ### Capability
 
@@ -243,18 +243,18 @@ After installing this update, run the Moodle upgrade and purge caches.
 - Déduplication et validation de la sélection avant toute génération ; échecs d’écriture et de ZIP signalés.
 - Dossier aléatoire distinct pour chaque export. Téléchargement réservé au créateur, dans sa session,
   avec vérification des droits du cours. Les anciens liens `?path=` ne sont plus acceptés.
-- Nettoyage après génération échouée ou téléchargement complet. Les exports jamais téléchargés
-  restent temporaires ; aucune tâche de purge propre au plugin n’est encore implémentée.
+- Nettoyage immédiat après génération échouée. Depuis le build 2026100301, le ZIP reste
+  téléchargeable pendant une heure ; les fichiers sont ensuite purgés par le nettoyage temporaire de Moodle.
 
 Attachments use Moodle's file-copy API instead of loading complete contents into PHP strings.
 Chapters use a recordset that is closed reliably. Resource IDs prevent title collisions, and
 chapter attachments have separate directories. Selection is deduplicated and validated, and
 write/ZIP errors are reported. Each export has its own random workspace; only its owner in the
 same session can download it, subject to course permissions. Legacy `?path=` links are rejected.
-Failed exports and completed downloads are cleaned up. Undownloaded exports remain temporary;
-a plugin-specific purge task is still pending.
+Failed exports are cleaned up immediately. Since build 2026100301, downloads remain available
+for one hour; Moodle scheduled temporary-file cleanup eventually removes the files.
 
-La suite PHPUnit comprend désormais 28 tests, dont les collisions, les fichiers embarqués,
+La suite PHPUnit comprend désormais 31 tests, dont les collisions, les fichiers embarqués,
 leur conservation dans un ZIP, les sessions/propriétaires, les traversées de chemins et les liens symboliques.
 Ces tests nécessitent Moodle : les contrôles de syntaxe locaux ne remplacent pas leur exécution.
 The PHPUnit suite now includes 28 tests covering these cases and requires a Moodle test installation.
@@ -361,4 +361,4 @@ lien au bout d’une heure ne signifie pas une suppression physique immédiate.
 Repeated downloads are supported for one hour in the originating session. Expired or missing
 archives show a friendly page. Moodle cron handles eventual temporary-file cleanup.
 Trois tests PHPUnit supplémentaires couvrent les lectures répétées, l’expiration et le fichier disparu.
-Validation CI en cours. Non déployé ; la sandbox est en 2026100201.
+Validation CI réussie : 31 tests PHPUnit et 150 assertions sur les 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37124447456), code `c76fbe3`. PHPUnit signale encore 7 dépréciations de métadonnées sur Moodle 5.x, sans échec. Non déployé ; la sandbox est en 2026100201. Le double téléchargement devra être confirmé dans le navigateur après installation.
