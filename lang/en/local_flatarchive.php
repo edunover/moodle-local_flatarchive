@@ -61,3 +61,9 @@ $string['invalidselection'] = 'The selection contains an unsupported resource or
 $string['flatarchive:archive'] = 'Archive course resources';
 
 $string['resourcefilenotfound'] = 'The file resource "{$a}" has no file to archive.';
+
+$string['archiveunavailable'] = 'Archive no longer available';
+
+$string['archiveunavailable_help'] = 'This temporary archive is no longer available. Return to your course and generate a new archive.';
+
+$string['downloadavailability'] = 'You can download this archive again for one hour after generation, while signed in to this session.';

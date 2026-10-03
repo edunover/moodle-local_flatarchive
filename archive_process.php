@@ -235,6 +235,7 @@ $downloadurl = new moodle_url('/local/flatarchive/serve_temp.php', [
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('archive_success', 'local_flatarchive'));
+echo html_writer::tag('p', get_string('downloadavailability', 'local_flatarchive'));
 echo html_writer::div(get_string('archive_success', 'local_flatarchive'), 'alert alert-success');
 echo html_writer::tag(
     'p',

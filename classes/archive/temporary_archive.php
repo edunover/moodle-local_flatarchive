@@ -1,7 +1,20 @@
 <?php
-namespace local_flatarchive\archive;
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_flatarchive\archive;
 
 /**
  * Session-owned temporary archives. No client-supplied filesystem paths.
@@ -11,6 +24,9 @@ defined('MOODLE_INTERNAL') || die();
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class temporary_archive {
+    /** @var int Download availability in seconds after generation. */
+    public const LIFETIME = HOURSECS;
+
     /**
      * Create a distinct workspace for every export.
      * @return array Token and directory.
@@ -36,6 +52,7 @@ final class temporary_archive {
             'userid' => (int)$USER->id,
             'courseid' => $courseid,
             'filename' => clean_filename($filename),
+            'expiresat' => time() + self::LIFETIME,
         ];
     }
 
@@ -47,7 +64,7 @@ final class temporary_archive {
     public static function resolve(string $token): array {
         global $SESSION, $USER;
         $entry = $SESSION->local_flatarchive_archives[$token] ?? null;
-        if (!$entry || (int)$entry['userid'] !== (int)$USER->id) {
+        if (!$entry || (int)$entry['userid'] !== (int)$USER->id || ($entry['expiresat'] ?? 0) <= time()) {
             throw new \moodle_exception('filenotfound', 'error');
         }
         $directory = self::directory($token);
@@ -59,7 +76,7 @@ final class temporary_archive {
     }
 
     /**
-     * Forget a successfully downloaded archive and remove just its workspace.
+     * Explicitly remove an available archive and just its workspace.
      * @param string $token Workspace token.
      */
     public static function delete(string $token): void {

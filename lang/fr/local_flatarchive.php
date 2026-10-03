@@ -61,3 +61,9 @@ $string['invalidselection'] = 'La sélection contient une ressource non prise en
 $string['flatarchive:archive'] = 'Archiver les ressources du cours';
 
 $string['resourcefilenotfound'] = 'La ressource Fichier « {$a} » ne contient aucun fichier à archiver.';
+
+$string['archiveunavailable'] = 'Archive indisponible';
+
+$string['archiveunavailable_help'] = 'Cette archive temporaire n’est plus disponible. Retourne dans ton cours et génère une nouvelle archive.';
+
+$string['downloadavailability'] = 'Tu peux télécharger cette archive plusieurs fois pendant une heure après sa génération, dans cette session.';

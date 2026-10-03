@@ -52,3 +52,9 @@ $string['invalidselection'] = 'De selectie bevat een niet-ondersteunde bron of e
 $string['flatarchive:archive'] = 'Cursusbronnen archiveren';
 
 $string['resourcefilenotfound'] = 'De bestandsbron "{$a}" bevat geen bestand om te archiveren.';
+
+$string['archiveunavailable'] = 'Archief niet meer beschikbaar';
+
+$string['archiveunavailable_help'] = 'Dit tijdelijke archief is niet meer beschikbaar. Ga terug naar je cursus en maak een nieuw archief.';
+
+$string['downloadavailability'] = 'Je kunt dit archief gedurende één uur na het aanmaken opnieuw downloaden binnen deze sessie.';

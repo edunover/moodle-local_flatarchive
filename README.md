@@ -346,4 +346,19 @@ File resources link to their original main file from the course index. Companion
 subdirectories are preserved, isolated by module ID. No document conversion is performed.
 Four additional PHPUnit tests cover selection, main-file order, companion files, duplicate
 filenames, URL encoding, ZIP contents, missing files and wrong module types.
-Validation CI réussie : 28 tests PHPUnit sur 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. Exécution : https://github.com/edunover/moodle-local-flatarchive/actions/runs/37042345425 (code `eb8fea2`). Build non installé sur la sandbox ; celle-ci reste en 2026100102.
+Validation CI réussie : 28 tests PHPUnit sur 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. Exécution : https://github.com/edunover/moodle-local-flatarchive/actions/runs/37042345425 (code `eb8fea2`). Build 2026100201 installé sur la sandbox. Archive réelle vérifiée le 3 octobre 2026 : 127 fichiers, liens locaux valides, ressource TXT avec espaces et accents conservée octet pour octet ; section « New section » contenant le livre, la zone texte et média et le fichier.
+
+### Téléchargements répétés — build 2026100301
+
+Le premier téléchargement ne supprime plus le ZIP. Le même lien peut être utilisé pendant
+une heure après génération, par son propriétaire dans la même session et avec la capacité
+requise sur le cours. La durée est fixe et ne se prolonge pas à chaque téléchargement.
+Un ZIP expiré ou absent affiche une page informative traduite (en/fr/nl), avec accès aux cours,
+au lieu d’une exception Moodle. Il faut alors générer une nouvelle archive.
+Les fichiers temporaires restent gérés par le nettoyage planifié de Moodle ; l’expiration du
+lien au bout d’une heure ne signifie pas une suppression physique immédiate.
+
+Repeated downloads are supported for one hour in the originating session. Expired or missing
+archives show a friendly page. Moodle cron handles eventual temporary-file cleanup.
+Trois tests PHPUnit supplémentaires couvrent les lectures répétées, l’expiration et le fichier disparu.
+Validation CI en cours. Non déployé ; la sandbox est en 2026100201.
