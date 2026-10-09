@@ -384,6 +384,17 @@ Quatre tests PHPUnit supplémentaires couvrent la sélection par un enseignant, 
 cours, les sous-dossiers imbriqués et vides, les noms avec accents et caractères spéciaux, les
 homonymes, le fichier original index.html, les médias de description, les badges, les liens et
 la conservation des octets après compression/décompression. Le test JavaScript inclut un Dossier.
-Validation CI réussie : 35 tests PHPUnit et 231 assertions sur les 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37941805235), code `6639581`. Huit dépréciations PHPUnit de métadonnées restent signalées sur Moodle 5.x, sans échec. Build non installé ; la sandbox utilise 2026100301, avec double téléchargement validé.
+Validation CI réussie : 35 tests PHPUnit et 231 assertions sur les 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37941805235), code `6639581`. Huit dépréciations PHPUnit de métadonnées restent signalées sur Moodle 5.x, sans échec. Build 2026100901 installé sur la sandbox et fonctionnement manuel confirmé par l’utilisateur le 9 octobre 2026.
 
 Jeu de test manuel : `tests/fixtures/folder/` contient un DOCX, un PDF, un PNG, deux fichiers notes.txt distincts dans des sous-dossiers et un index.html original. Les empreintes SHA-256 sont dans `tests/fixtures/folder-sha256.json`. Le ZIP de préparation inclut aussi un dossier vide (Git ne conserve pas les répertoires vides).
+
+### Validation sandbox du Dossier — 9 octobre 2026
+
+L’archive `archive_course-monitoring_202610091624.zip`, générée avec le build 2026100901,
+contient 135 fichiers et 259 références locales sans cible manquante. Le Dossier apparaît
+sous « section extra » dans l’index du cours et ouvre `folder-86.html`. Les sous-dossiers,
+le dossier vide et les deux fichiers notes.txt distincts sont correctement représentés.
+Les sept fichiers du jeu de test, dont DOCX, PDF et PNG, sont identiques octet pour octet
+aux originaux (comparaison SHA-256). Le fichier index.html fourni dans le Dossier est
+conservé séparément de l’index du cours. Aucun lien externe détecté dans href/src.
+L’utilisateur confirme le fonctionnement manuel sans anomalie.
