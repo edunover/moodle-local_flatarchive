@@ -58,7 +58,7 @@ archive_SHORTNAME_202603291200.zip
 ### Utilisation
 
 1. Ouvrir un cours → le lien **Flat archive** apparaît dans la navigation du cours
-2. Sélectionner les Pages, Livres, Zones texte et média et/ou Fichiers et/ou Dossiers à archiver
+2. Sélectionner les Pages, Livres, Zones texte et média Fichiers et/ou Dossiers à archiver
 3. Cliquer sur **Générer l'archive HTML**
 4. Télécharger le ZIP depuis la page de succès ; le lien reste utilisable pendant une heure dans la même session
 
@@ -105,7 +105,7 @@ Moodle local plugin — Archive course resources (Pages, Books, Text and media a
 
 Flatarchive lets teachers export selected course resources to a portable offline archive:
 
-- Selects **Page**, **Book**, **Text and media area** and **File** resources from the course tree
+- Selects **Page**, **Book**, **Text and media area**, **File** and **Folder** resources from the course tree
 - Generates a **static HTML website** — no Moodle dependency after download
 - Rewrites all `@@PLUGINFILE@@` links to relative paths and copies embedded files
 - Adds **visibility badges** (hidden / stealth / hidden section) on each page and in the index
@@ -149,7 +149,7 @@ archive_SHORTNAME_202603291200.zip
 ### Usage
 
 1. Open a course → the **Flat archive** link appears in the course navigation
-2. Select the Pages, Books, Text and media areas and/or Files to archive
+2. Select the Pages, Books, Text and media areas Files and/or Folders to archive
 3. Click **Générer l'archive HTML**
 4. Download the ZIP from the success page; the link remains usable for one hour in the same session
 
@@ -256,10 +256,10 @@ same session can download it, subject to course permissions. Legacy `?path=` lin
 Failed exports are cleaned up immediately. Since build 2026100301, downloads remain available
 for one hour; Moodle scheduled temporary-file cleanup eventually removes the files.
 
-La suite PHPUnit comprend désormais 31 tests, dont les collisions, les fichiers embarqués,
+La suite PHPUnit comprend désormais 35 tests, dont les collisions, les fichiers embarqués,
 leur conservation dans un ZIP, les sessions/propriétaires, les traversées de chemins et les liens symboliques.
 Ces tests nécessitent Moodle : les contrôles de syntaxe locaux ne remplacent pas leur exécution.
-The PHPUnit suite now includes 28 tests covering these cases and requires a Moodle test installation.
+The PHPUnit suite now includes 35 tests covering these cases and requires a Moodle test installation.
 Local syntax checks do not replace executing that suite.
 
 
@@ -274,7 +274,7 @@ Référence : https://moodlehq.github.io/moodle-plugin-ci/
 
 Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation réussie sur les 14 combinaisons Moodle/PHP.
 
-Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 28 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
+Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 35 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
 
 Références des prérequis : https://moodledev.io/general/releases/4.4 ; https://moodledev.io/general/releases/4.5 ; https://moodledev.io/general/releases/5.0 ; https://moodledev.io/general/releases/5.1 ; https://moodledev.io/general/releases/5.2
 
@@ -384,4 +384,6 @@ Quatre tests PHPUnit supplémentaires couvrent la sélection par un enseignant, 
 cours, les sous-dossiers imbriqués et vides, les noms avec accents et caractères spéciaux, les
 homonymes, le fichier original index.html, les médias de description, les badges, les liens et
 la conservation des octets après compression/décompression. Le test JavaScript inclut un Dossier.
-Validation CI en cours. Build non installé ; la sandbox utilise 2026100301, avec double téléchargement validé.
+Validation CI réussie : 35 tests PHPUnit et 231 assertions sur les 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37941805235), code `6639581`. Huit dépréciations PHPUnit de métadonnées restent signalées sur Moodle 5.x, sans échec. Build non installé ; la sandbox utilise 2026100301, avec double téléchargement validé.
+
+Jeu de test manuel : `tests/fixtures/folder/` contient un DOCX, un PDF, un PNG, deux fichiers notes.txt distincts dans des sous-dossiers et un index.html original. Les empreintes SHA-256 sont dans `tests/fixtures/folder-sha256.json`. Le ZIP de préparation inclut aussi un dossier vide (Git ne conserve pas les répertoires vides).

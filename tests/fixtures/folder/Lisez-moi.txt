@@ -1,0 +1,4 @@
+TEST DOSSIER FLAT ARCHIVE
+Importer puis décompresser ce ZIP dans une ressource Dossier de Moodle.
+Après archivage : vérifier la structure, ouvrir DOCX/PDF/PNG, comparer les deux notes.txt et le fichier index.html original.
+Le dossier vide doit apparaître dans la page HTML exportée.
