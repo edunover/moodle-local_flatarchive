@@ -298,7 +298,7 @@ L’utilisateur confirme le fonctionnement manuel sans anomalie.
 
 Les glossaires sont exportés dans `glossary-{cmid}.html`, avec description et liste de mots. Chaque mot ouvre sa propre page
 `glossary-{cmid}-entry-{entryid}.html` : mot en titre, définition formatée, synonymes,
-catégories et pièces jointes, puis navigation de retour au glossaire.
+catégories et pièces jointes, avec un lien de retour au glossaire.
 Les entrées approuvées sont triées par concept puis identifiant selon la collation de la base.
 Les doublons disposent de pages distinctes. Les entrées en attente sont exclues, avec indication
 de leur nombre ; les commentaires, évaluations, profils des auteurs et liens automatiques ne
@@ -314,4 +314,9 @@ profiles are not exported; external resources remain external.
 
 Cinq tests PHPUnit supplémentaires : sélection autorisée et isolation des cours, doublons,
 fichiers et ZIP, formats HTML/texte, entrées exclues, glossaire source/principal, description
-et glossaire vide, mauvais type de module. Validation CI en cours ; non déployé sur la sandbox.
+et glossaire vide, mauvais type de module. Les tests vérifient aussi les pages individuelles,
+les titres, les liens aller/retour et leur conservation dans le ZIP.
+Validation CI réussie : 40 tests PHPUnit et 285 assertions sur les 14 environnements Moodle/PHP,
+6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37945527767),
+code `b91174f`. Neuf dépréciations PHPUnit de métadonnées sont signalées sur Moodle 5.x, sans échec.
+Build 2026100902 non déployé sur la sandbox ; validation manuelle à réaliser.
