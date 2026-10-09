@@ -53,7 +53,7 @@ final class folder_exporter_test extends \advanced_testcase {
             ]);
             $context = \context_module::instance($folder->cmid);
             $fs->delete_area_files($context->id, 'mod_folder', 'content');
-            foreach (['/', '/été & notes/', '/été & notes/sub/'] as $path) {
+            foreach (['/', '/été # notes/', '/été # notes/sub/'] as $path) {
                 $content = 'Bytes ' . $folder->cmid . $path;
                 $fs->create_file_from_string([
                     'contextid' => $context->id, 'component' => 'mod_folder', 'filearea' => 'content',
@@ -88,7 +88,7 @@ final class folder_exporter_test extends \advanced_testcase {
             $dom = new \DOMDocument();
             @$dom->loadHTML($html);
             $xpath = new \DOMXPath($dom);
-            $this->assertSame(1, $xpath->query('//li[strong="été & notes"]/ul/li[strong="sub"]/ul/li/a')->length);
+            $this->assertSame(1, $xpath->query('//li[strong="été # notes"]/ul/li[strong="sub"]/ul/li/a')->length);
             foreach ($xpath->query('//a[starts-with(@href,"files/")] | //img') as $node) {
                 $url = $node->getAttribute($node->nodeName === 'a' ? 'href' : 'src');
                 $this->assertArrayHasKey(rawurldecode($url), $expected);

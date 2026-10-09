@@ -43,11 +43,23 @@ final class folder_exporter {
         $folder = $DB->get_record('folder', ['id' => $cm->instance], 'id, intro, introformat', MUST_EXIST);
         $context = \context_module::instance($cm->id);
         $intro = \local_flatarchive_copy_pluginfiles_and_rewrite(
-            $folder->intro, $context, 'mod_folder', 'intro', 0, $directory, (int)$cm->id
+            $folder->intro,
+            $context,
+            'mod_folder',
+            'intro',
+            0,
+            $directory,
+            (int)$cm->id
         );
         $intro = format_text($intro, $folder->introformat, ['context' => $context, 'filter' => false]);
         \local_flatarchive_copy_pluginfiles_and_rewrite(
-            '', $context, 'mod_folder', 'content', 0, $directory, (int)$cm->id
+            '',
+            $context,
+            'mod_folder',
+            'content',
+            0,
+            $directory,
+            (int)$cm->id
         );
         $files = get_file_storage()->get_area_files($context->id, 'mod_folder', 'content', 0, 'filepath, filename', true);
         $tree = ['directories' => [], 'files' => []];
