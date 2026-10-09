@@ -13,7 +13,8 @@ const sections = [{name: 'Section', visible: true, modules: [
     {cmid: 9, name: 'Text and media', type: 'label', visible: true},
     {cmid: 10, name: 'File resource', type: 'resource', visible: true},
     {cmid: 11, name: 'Folder resource', type: 'folder', visible: true},
-    {cmid: 12, name: 'Glossary', type: 'glossary', visible: true}
+    {cmid: 12, name: 'Glossary', type: 'glossary', visible: true},
+    {cmid: 13, name: 'Wiki', type: 'wiki', visible: true}
 ]}];
 
 async function setup(file, response = {sections}, error = null) {
@@ -45,23 +46,23 @@ for (const file of ['amd/src/selectors.js', 'amd/build/selectors.min.js']) {
         const {document, dom} = ctx;
         assert.equal(ctx.requests[0].methodname, 'local_flatarchive_get_tree');
         assert.equal(ctx.requests[0].args.courseid, 42);
-        assert.equal(document.querySelectorAll('input[name="cmid[]"]').length, 6);
+        assert.equal(document.querySelectorAll('input[name="cmid[]"]').length, 7);
         assert.equal(document.querySelector('[data-region="tree"] img'), null);
         assert.match(document.querySelector('[data-region="tree"]').textContent, /<img/);
         assert.equal(document.querySelector('.badge').textContent, 'hidden');
         document.querySelector('[data-action="selectall"]').click();
-        assert.equal(document.querySelectorAll('input:checked').length, 6);
+        assert.equal(document.querySelectorAll('input:checked').length, 7);
         document.querySelector('[data-action="deselectall"]').click();
         assert.equal(document.querySelectorAll('input:checked').length, 0);
         assert.equal(ctx.submit().defaultPrevented, true);
         assert.equal(ctx.alerts.length, 1);
-        document.querySelector('input[value="12"]').checked = true;
+        document.querySelector('input[value="13"]').checked = true;
         const form = document.querySelector('form');
         assert.equal(form.method, 'post');
         assert.equal(new URL(form.action).pathname, '/local/flatarchive/archive_process.php');
         assert.equal(ctx.submit().defaultPrevented, false);
         assert.deepEqual(Array.from(new dom.window.FormData(form).entries()), [
-            ['id', '42'], ['sesskey', 'test-session'], ['cmid[]', '12']
+            ['id', '42'], ['sesskey', 'test-session'], ['cmid[]', '13']
         ]);
         assert.equal(ctx.submit().defaultPrevented, true);
         dom.window.dispatchEvent(new dom.window.PageTransitionEvent('pageshow', {persisted: true}));

@@ -1,7 +1,7 @@
 # local_flatarchive — CLAUDE.md
 
 Plugin Moodle local pour archiver des ressources "Page", "Livre", "Zone texte et média", "Fichier" et "Dossier" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.2.0 (2026100903) MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026100904) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
@@ -336,3 +336,24 @@ Le ZIP du 9 octobre à 17:02 est validé : 141 fichiers, 276 références locale
 une liste et trois pages de définition. Build 2026100903 : 42 tests PHPUnit et 300 assertions réussis sur les 14 configurations,
 6 tests JavaScript et contrôle Moodle CodeSniffer réussis. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37950134719),
 code `ca50a4c`. Validation manuelle à réaliser après installation.
+
+### Wiki — build 2026100904
+
+Export de la dernière révision des pages Wiki (HTML, Creole et NWiki), avec index par espace,
+liens internes hors ligne, fichiers partagés par sous-wiki, auteur de la dernière révision et
+commentaires accessibles datés. Les espaces individuels et par groupe suivent les règles
+`wiki_user_can_view()` de Moodle ; seuls leurs fichiers sont copiés. Les pages non archivées
+sont signalées et leurs liens désactivés. Les ressources externes restent externes.
+L’historique des révisions, les opérations d’édition et le multilinguisme ne sont pas inclus.
+L’export ne modifie ni les pages, ni leur cache, ni leurs compteurs de consultation.
+
+Chaque wiki a un index `wiki-{cmid}.html` et des pages `wiki-{cmid}-page-{pageid}.html`.
+Les fichiers sont conservés dans `files/{cmid}/attachments/{subwikiid}/`.
+Six tests PHPUnit supplémentaires couvrent sélection, révisions, navigation, fichiers/ZIP,
+formats, commentaires, espaces individuels et groupes séparés, droits et wiki vide.
+Validation CI en cours ; non installé sur la sandbox.
+
+Le glossaire 2026100903 est installé et validé : trois auteurs et trois commentaires datés
+dans l’archive du 9 octobre à 17:23 ; 276 références locales sans cible manquante.
+Le multilinguisme reste prévu après les activités : `{mlang}`, balises FilterCodes
+`{multilang xx}…{/multilang}` et HTML multilang, avec navigation entre traductions sur chaque page.

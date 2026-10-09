@@ -34,6 +34,7 @@ global $DB;
 
 use local_flatarchive\archive\folder_exporter;
 use local_flatarchive\archive\glossary_exporter;
+use local_flatarchive\archive\wiki_exporter;
 use local_flatarchive\archive\label_exporter;
 use local_flatarchive\archive\paths;
 use local_flatarchive\archive\resource_exporter;
@@ -62,7 +63,7 @@ $cms = $modinfo->get_cms();
 
 // Validate the whole selection before creating any files.
 foreach ($cmids as $cmid) {
-    if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, ['page', 'book', 'label', 'resource', 'folder', 'glossary'], true)) {
+    if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki'], true)) {
         throw new moodle_exception('invalidselection', 'local_flatarchive');
     }
 }
@@ -84,8 +85,9 @@ try {
     foreach ($cmids as $cmid) {
         $cm = $cms[$cmid];
 
-        if ($cm->modname === 'glossary') {
-            $export = glossary_exporter::render($cm, $modinfo, $tempdir);
+        if (in_array($cm->modname, ['glossary', 'wiki'], true)) {
+            $exporter = $cm->modname === 'wiki' ? wiki_exporter::class : glossary_exporter::class;
+            $export = $exporter::render($cm, $modinfo, $tempdir);
             $indexitems[$cmid] = $export['item'];
             foreach ($export['filenames'] as $filename) {
                 $zipfiles[$filename] = $tempdir . '/' . $filename;

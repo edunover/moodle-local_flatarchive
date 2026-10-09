@@ -73,3 +73,15 @@ $string['backtoglossary'] = 'Terug naar de woordenlijst';
 $string['glossaryauthor'] = 'Auteur';
 $string['glossarycomments'] = 'Reacties';
 $string['glossaryunknownauthor'] = 'Onbekende of verwijderde auteur';
+
+$string['wikiscope'] = 'Laatste versies van leesbare pagina’s, bestanden en reacties. Geen versiegeschiedenis; externe bronnen blijven extern.';
+$string['wikispace'] = 'Wikiruimte {$a}';
+$string['wikiunknowngroup'] = 'Onbekende groep';
+$string['wikiunknownauthor'] = 'Onbekende of verwijderde auteur';
+$string['wikifirstpage'] = 'Startpagina';
+$string['wikiempty'] = 'Geen leesbare pagina’s.';
+$string['wikiattachments'] = 'Bestanden in deze wikiruimte';
+$string['backtowiki'] = 'Terug naar wiki';
+$string['wikilastauthor'] = 'Laatste versie door';
+$string['wikicomments'] = 'Reacties';
+$string['wikinotarchived'] = 'Pagina niet gearchiveerd';

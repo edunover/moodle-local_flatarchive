@@ -82,3 +82,15 @@ $string['backtoglossary'] = 'Retour au glossaire';
 $string['glossaryauthor'] = 'Auteur';
 $string['glossarycomments'] = 'Commentaires';
 $string['glossaryunknownauthor'] = 'Auteur inconnu ou supprimé';
+
+$string['wikiscope'] = 'Dernières révisions des pages accessibles, fichiers et commentaires. Historique exclu ; ressources externes non copiées.';
+$string['wikispace'] = 'Espace wiki {$a}';
+$string['wikiunknowngroup'] = 'Groupe inconnu';
+$string['wikiunknownauthor'] = 'Auteur inconnu ou supprimé';
+$string['wikifirstpage'] = 'Page de départ';
+$string['wikiempty'] = 'Aucune page accessible.';
+$string['wikiattachments'] = 'Fichiers de cet espace wiki';
+$string['backtowiki'] = 'Retour au wiki';
+$string['wikilastauthor'] = 'Dernière révision par';
+$string['wikicomments'] = 'Commentaires';
+$string['wikinotarchived'] = 'Page non archivée';
