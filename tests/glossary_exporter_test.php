@@ -196,6 +196,101 @@ final class glossary_exporter_test extends \advanced_testcase {
     }
 
     /**
+     * Authors and every comment survive export, with context isolation and deleted-user fallback.
+     */
+    public function test_authors_and_comments(): void {
+        global $DB;
+        set_config('usecomments', 1);
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $module = $generator->create_module('glossary', ['course' => $course->id, 'allowcomments' => 1]);
+        $other = $generator->create_module('glossary', ['course' => $course->id]);
+        $author = $generator->create_user(['firstname' => 'Alice', 'lastname' => 'Été']);
+        $deleted = $generator->create_user(['firstname' => 'PRIVATE', 'lastname' => 'DELETED']);
+        $DB->set_field('user', 'deleted', 1, ['id' => $deleted->id]);
+        $id = $this->entry($module->id, ['userid' => $author->id, 'definition' => '<p>Definition</p>']);
+        $context = \context_module::instance($module->cmid);
+        $base = ['contextid' => $context->id, 'component' => 'mod_glossary',
+            'commentarea' => 'glossary_entry', 'itemid' => $id, 'userid' => $author->id,
+            'format' => FORMAT_HTML, 'timecreated' => 1700000000];
+        for ($i = 20; $i >= 1; $i--) {
+            $DB->insert_record('comments', (object)array_merge($base, [
+                'content' => '<p>Comment ' . $i . '</p>', 'timecreated' => 1700000000 + $i,
+            ]));
+        }
+        $DB->insert_record('comments', (object)array_merge($base, [
+            'component' => null, 'userid' => $deleted->id, 'content' => '<b>Legacy plain</b>', 'format' => FORMAT_PLAIN,
+        ]));
+        foreach ([['contextid' => \context_module::instance($other->cmid)->id],
+                ['commentarea' => 'other'], ['component' => 'mod_forum'], ['itemid' => $id + 999]] as $override) {
+            $DB->insert_record('comments', (object)array_merge($base, ['content' => 'FOREIGN COMMENT'], $override));
+        }
+        $modinfo = get_fast_modinfo($course);
+        $directory = make_temp_directory('glossary-comments');
+        $result = glossary_exporter::render($modinfo->get_cm($module->cmid), $modinfo, $directory);
+        $html = file_get_contents($directory . '/' . $result['filenames'][1]);
+        $this->assertStringContainsString('Alice Été', $html);
+        $this->assertStringNotContainsString($author->email, $html);
+        $this->assertStringNotContainsString('/user/view.php', $html);
+        $this->assertStringNotContainsString('PRIVATE', $html);
+        $this->assertStringNotContainsString('FOREIGN COMMENT', $html);
+        $this->assertStringContainsString(get_string('glossaryunknownauthor', 'local_flatarchive'), $html);
+        $this->assertStringContainsString('&lt;b&gt;Legacy plain&lt;/b&gt;', $html);
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($html);
+        $xpath = new \DOMXPath($dom);
+        $this->assertSame(21, $xpath->query('//ol[@class="fa-glossary-comments"]/li')->length);
+        $times = $xpath->query('//time/@datetime');
+        $this->assertSame('2023-11-14T22:13:20Z', $times->item(0)->nodeValue);
+        $this->assertSame('2023-11-14T22:13:40Z', $times->item(20)->nodeValue);
+        $DB->set_field('user', 'deleted', 1, ['id' => $author->id]);
+        glossary_exporter::render($modinfo->get_cm($module->cmid), $modinfo, $directory);
+        $this->assertStringNotContainsString('Alice', file_get_contents($directory . '/' . $result['filenames'][1]));
+    }
+
+    /**
+     * Disabled comments and denied capabilities cannot leak stored discussions.
+     */
+    public function test_comment_visibility(): void {
+        global $DB, $USER;
+        set_config('usecomments', 1);
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $module = $generator->create_module('glossary', ['course' => $course->id, 'allowcomments' => 1]);
+        $id = $this->entry($module->id, ['definition' => 'Definition']);
+        $context = \context_module::instance($module->cmid);
+        $DB->insert_record('comments', (object)[
+            'contextid' => $context->id, 'component' => 'mod_glossary', 'commentarea' => 'glossary_entry',
+            'itemid' => $id, 'userid' => $USER->id, 'content' => 'PRIVATE DISCUSSION',
+            'format' => FORMAT_PLAIN, 'timecreated' => time(),
+        ]);
+        $teacher = $generator->create_user();
+        $generator->enrol_user($teacher->id, $course->id, 'editingteacher');
+        $roleid = $DB->get_field('role', 'id', ['shortname' => 'editingteacher']);
+        $this->setUser($teacher);
+        $directory = make_temp_directory('glossary-comment-permissions');
+        $modinfo = get_fast_modinfo($course);
+        $cm = $modinfo->get_cm($module->cmid);
+        foreach (['moodle/comment:view', 'mod/glossary:comment'] as $capability) {
+            assign_capability($capability, CAP_PROHIBIT, $roleid, $context->id);
+            accesslib_clear_all_caches_for_unit_testing();
+            $result = glossary_exporter::render($cm, $modinfo, $directory);
+            $this->assertStringNotContainsString('PRIVATE DISCUSSION',
+                file_get_contents($directory . '/' . $result['filenames'][1]));
+            unassign_capability($capability, $roleid, $context->id);
+            accesslib_clear_all_caches_for_unit_testing();
+        }
+        $this->setAdminUser();
+        foreach (['site', 'glossary'] as $setting) {
+            set_config('usecomments', $setting === 'site' ? 0 : 1);
+            $DB->set_field('glossary', 'allowcomments', $setting === 'glossary' ? 0 : 1, ['id' => $module->id]);
+            $result = glossary_exporter::render($cm, $modinfo, $directory);
+            $this->assertStringNotContainsString('PRIVATE DISCUSSION',
+                file_get_contents($directory . '/' . $result['filenames'][1]));
+        }
+    }
+
+    /**
      * Reject modules that are not glossaries.
      */
     public function test_rejects_other_module_types(): void {

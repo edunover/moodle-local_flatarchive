@@ -71,7 +71,7 @@ $string['downloadavailability'] = 'Tu peux télécharger cette archive plusieurs
 $string['foldercontents'] = 'Fichiers et sous-dossiers';
 $string['folderempty'] = 'Ce dossier est vide.';
 
-$string['glossaryscope'] = 'Seules les entrées approuvées sont incluses. Les commentaires, évaluations et profils des auteurs ne sont pas archivés.';
+$string['glossaryscope'] = 'Seules les entrées approuvées sont incluses. Les commentaires accessibles et les noms des auteurs sont archivés ; évaluations et profils exclus.';
 $string['glossaryexcluded'] = 'Entrées en attente exclues : {$a}.';
 $string['glossaryaliases'] = 'Synonymes';
 $string['glossarycategories'] = 'Catégories';
@@ -79,3 +79,6 @@ $string['glossaryattachments'] = 'Pièces jointes';
 $string['glossaryempty'] = 'Aucune entrée approuvée.';
 $string['glossaryentries'] = 'Entrées du glossaire';
 $string['backtoglossary'] = 'Retour au glossaire';
+$string['glossaryauthor'] = 'Auteur';
+$string['glossarycomments'] = 'Commentaires';
+$string['glossaryunknownauthor'] = 'Auteur inconnu ou supprimé';

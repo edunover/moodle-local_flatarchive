@@ -1,7 +1,7 @@
 # local_flatarchive — CLAUDE.md
 
 Plugin Moodle local pour archiver des ressources "Page", "Livre", "Zone texte et média", "Fichier" et "Dossier" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.2.0 (2026100902) MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026100903) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
@@ -320,3 +320,17 @@ Validation CI réussie : 40 tests PHPUnit et 285 assertions sur les 14 environne
 6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37945527767),
 code `b91174f`. Neuf dépréciations PHPUnit de métadonnées sont signalées sur Moodle 5.x, sans échec.
 Build 2026100902 non déployé sur la sandbox ; validation manuelle à réaliser.
+
+### Auteurs et commentaires du glossaire — build 2026100903
+
+Chaque définition affiche le nom de son auteur. Les commentaires accessibles sont conservés
+dans l’ordre chronologique avec leur auteur et leur date. Les réglages de commentaires du
+site et du glossaire, ainsi que les capacités Moodle de lecture et de commentaire, sont respectés.
+Les commentaires restent isolés par contexte, composant et entrée, y compris pour les glossaires
+source/principal. Les comptes supprimés ou absents apparaissent comme auteur inconnu ou supprimé.
+Aucun profil, adresse électronique ou avatar n’est ajouté. Les évaluations restent exclues.
+Les filtres dynamiques des commentaires sont désactivés ; les liens externes restent externes.
+
+Le build 2026100902 est installé et son fonctionnement confirmé par l’utilisateur.
+Le ZIP du 9 octobre à 17:02 a été reçu pour validation. Build 2026100903 : CI en cours,
+validation manuelle à réaliser après installation.

@@ -78,6 +78,8 @@ final class glossary_exporter {
                     $filename,
                     get_string('backtoglossary', 'local_flatarchive')
                 ));
+                $body .= \html_writer::tag('p', get_string('glossaryauthor', 'local_flatarchive') . ': ' .
+                    s(self::author((int)$entry->userid)));
                 $body .= format_text($definition, $entry->definitionformat, ['context' => $filecontext, 'filter' => false]);
                 $aliases = $DB->get_fieldset_select('glossary_alias', 'alias', 'entryid = ?', [$entry->id]);
                 $categories = $DB->get_fieldset_sql(
@@ -112,6 +114,7 @@ final class glossary_exporter {
                     $body .= \html_writer::tag('h2', get_string('glossaryattachments', 'local_flatarchive'));
                     $body .= \html_writer::tag('ul', $links);
                 }
+                $body .= self::comments($cm, $context, $glossary, (int)$entry->id);
                 $html = \local_flatarchive_render_page_template(
                     $modinfo->get_course(),
                     $cm,
@@ -141,6 +144,79 @@ final class glossary_exporter {
             'filenames' => $filenames,
             'item' => \html_writer::tag('li', \html_writer::link($filename, s($cm->name)) . $badges),
         ];
+    }
+
+    /**
+     * Resolve a display name without exporting profile details or deleted identities.
+     *
+     * @param int $userid User ID.
+     * @return string Display name.
+     */
+    private static function author(int $userid): string {
+        global $DB;
+        $fields = 'id, deleted, ' . implode(', ', \core_user\fields::get_name_fields());
+        $user = $DB->get_record('user', ['id' => $userid], $fields);
+        if (!$user || $user->deleted) {
+            return get_string('glossaryunknownauthor', 'local_flatarchive');
+        }
+        return fullname($user);
+    }
+
+    /**
+     * Export all readable comments in chronological order in the selected glossary context.
+     *
+     * @param \cm_info $cm Selected module.
+     * @param \context_module $context Selected context (not the attachment storage context).
+     * @param \stdClass $glossary Glossary settings.
+     * @param int $entryid Approved entry ID.
+     * @return string Static comments section, or an empty string.
+     */
+    private static function comments(
+        \cm_info $cm,
+        \context_module $context,
+        \stdClass $glossary,
+        int $entryid
+    ): string {
+        global $CFG, $DB;
+        if (empty($CFG->usecomments) || !$glossary->allowcomments ||
+                !has_capability('mod/glossary:comment', $context)) {
+            return '';
+        }
+        require_once($CFG->dirroot . '/comment/lib.php');
+        $options = (object)[
+            'context' => $context, 'component' => 'mod_glossary', 'courseid' => $cm->course,
+            'cm' => $cm, 'area' => 'glossary_entry', 'itemid' => $entryid,
+        ];
+        $manager = new \comment($options);
+        if (!$manager->can_view()) {
+            return '';
+        }
+        // Read raw content to avoid applying dynamic Moodle filters to archived comments.
+        $records = $DB->get_recordset_select('comments',
+            'contextid = :contextid AND commentarea = :area AND itemid = :itemid AND ' .
+            '(component = :component OR component IS NULL)',
+            ['contextid' => $context->id, 'area' => 'glossary_entry',
+                'itemid' => $entryid, 'component' => 'mod_glossary'],
+            'timecreated, id'
+        );
+        $items = '';
+        try {
+            foreach ($records as $record) {
+                $date = \html_writer::tag('time', s(userdate($record->timecreated)), [
+                    'datetime' => gmdate('Y-m-d\\TH:i:s\\Z', $record->timecreated),
+                ]);
+                $metadata = \html_writer::tag('p', s(self::author((int)$record->userid)) . ' — ' . $date);
+                $text = format_text($record->content, $record->format, ['context' => $context, 'filter' => false]);
+                $items .= \html_writer::tag('li', $metadata . $text);
+            }
+        } finally {
+            $records->close();
+        }
+        if ($items === '') {
+            return '';
+        }
+        return \html_writer::tag('h2', get_string('glossarycomments', 'local_flatarchive')) .
+            \html_writer::tag('ol', $items, ['class' => 'fa-glossary-comments']);
     }
 
     /**
