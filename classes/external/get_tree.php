@@ -43,7 +43,7 @@ class get_tree extends external_api {
     }
 
     /**
-     * Retourne l’arborescence des sections et des modules Page, Livre et Zone texte et média du cours,
+     * Retourne l’arborescence des sections et des ressources prises en charge du cours,
      * incluant les éléments visibles et cachés.
      *
      * @param int $courseid
@@ -86,8 +86,8 @@ class get_tree extends external_api {
             foreach ($cmids as $cmid) {
                 $cm = $modinfo->get_cm($cmid);
 
-                // The HTML exporter supports Pages, Books, text and media areas, and Files.
-                if (!in_array($cm->modname, ['page', 'book', 'label', 'resource'], true)) {
+                // The HTML exporter supports Pages, Books, text and media areas, Files and Folders.
+                if (!in_array($cm->modname, ['page', 'book', 'label', 'resource', 'folder'], true)) {
                     continue;
                 }
 
@@ -100,7 +100,7 @@ class get_tree extends external_api {
                 ];
             }
 
-            // On ajoute la section uniquement si elle contient au moins une Page ou un Livre.
+            // Include only sections containing supported resources.
             if (!empty($sectiondata['modules'])) {
                 $sections[] = $sectiondata;
             }

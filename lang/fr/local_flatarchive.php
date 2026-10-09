@@ -67,3 +67,6 @@ $string['archiveunavailable'] = 'Archive indisponible';
 $string['archiveunavailable_help'] = 'Cette archive temporaire n’est plus disponible. Retourne dans ton cours et génère une nouvelle archive.';
 
 $string['downloadavailability'] = 'Tu peux télécharger cette archive plusieurs fois pendant une heure après sa génération, dans cette session.';
+
+$string['foldercontents'] = 'Fichiers et sous-dossiers';
+$string['folderempty'] = 'Ce dossier est vide.';

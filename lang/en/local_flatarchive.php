@@ -67,3 +67,6 @@ $string['archiveunavailable'] = 'Archive no longer available';
 $string['archiveunavailable_help'] = 'This temporary archive is no longer available. Return to your course and generate a new archive.';
 
 $string['downloadavailability'] = 'You can download this archive again for one hour after generation, while signed in to this session.';
+
+$string['foldercontents'] = 'Files and subfolders';
+$string['folderempty'] = 'This folder is empty.';

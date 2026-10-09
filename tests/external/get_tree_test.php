@@ -113,6 +113,27 @@ final class get_tree_test extends \externallib_advanced_testcase {
     }
 
     /**
+     * Hidden folders are selectable in their own course by an authorised teacher.
+     */
+    public function test_folder_only_course(): void {
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $file = $generator->create_module('folder', ['course' => $course->id, 'visible' => 0]);
+        $other = $generator->create_course();
+        $generator->create_module('folder', ['course' => $other->id]);
+        $teacher = $generator->create_user();
+        $generator->enrol_user($teacher->id, $course->id, 'editingteacher');
+        $this->setUser($teacher);
+        $sections = $this->read_tree($course->id)['sections'];
+        $this->assertCount(1, $sections);
+        $this->assertCount(1, $sections[0]['modules']);
+        $module = $sections[0]['modules'][0];
+        $this->assertEquals($file->cmid, $module['cmid']);
+        $this->assertSame('folder', $module['type']);
+        $this->assertFalse((bool)$module['visible']);
+    }
+
+    /**
      * Course section order is preserved even when activities are created out of order.
      */
     public function test_section_order_and_default_names(): void {

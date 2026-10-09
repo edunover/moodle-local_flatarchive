@@ -1,7 +1,7 @@
 # local_flatarchive — CLAUDE.md
 
 Plugin Moodle local pour archiver des ressources "Page", "Livre", "Zone texte et média" et "Fichier" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.2.0 (2026100301) MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026100901) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
@@ -40,7 +40,7 @@ Reste à implémenter : la couche cron/jobs asynchrones et la génération PDF.
   - Icônes modules copiées depuis `mod/{modname}/pix/monologo.svg` vers `shared/icons/`
   - Badges de visibilité (caché / stealth / section cachée)
   - Nom ZIP : `archive_{shortname}_{YYYYMMDDHHmm}.zip`
-- `serve_temp.php` — résout un token de session, vérifie propriétaire et capacité du cours, sert le ZIP puis supprime uniquement ce dossier
+- `serve_temp.php` — résout un token de session, vérifie propriétaire et capacité du cours, sert le ZIP plusieurs fois pendant une heure ; suppression différée par le nettoyage temporaire Moodle
 - `locallib.php` — helpers :
   - `flatarchive_prepare_html_for_archive()` : normalise HTML (emojis, icônes, images)
   - `local_flatarchive_visibility_badges()` : badges HTML de visibilité
@@ -258,4 +258,25 @@ lien au bout d’une heure ne signifie pas une suppression physique immédiate.
 Repeated downloads are supported for one hour in the originating session. Expired or missing
 archives show a friendly page. Moodle cron handles eventual temporary-file cleanup.
 Trois tests PHPUnit supplémentaires couvrent les lectures répétées, l’expiration et le fichier disparu.
-Validation CI réussie : 31 tests PHPUnit et 150 assertions sur les 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37124447456), code `c76fbe3`. PHPUnit signale encore 7 dépréciations de métadonnées sur Moodle 5.x, sans échec. Non déployé ; la sandbox est en 2026100201. Le double téléchargement devra être confirmé dans le navigateur après installation.
+Validation CI réussie : 31 tests PHPUnit et 150 assertions sur les 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37124447456), code `c76fbe3`. PHPUnit signale encore 7 dépréciations de métadonnées sur Moodle 5.x, sans échec. Build 2026100301 installé sur la sandbox le 9 octobre 2026. Deux téléchargements successifs du même ZIP sans erreur confirmés par l’utilisateur.
+
+### Ressource Dossier — build 2026100901
+
+Les Dossiers (`mod_folder`) sont sélectionnables dans leur section. Chaque dossier a une page
+`folder-{cmid}.html`, avec sa description, ses médias embarqués, ses badges de visibilité et une
+arborescence de liens locaux. Les fichiers originaux sont copiés dans `files/{cmid}/content/0/`,
+les pièces jointes de description dans `files/{cmid}/intro/0/`. Les noms, sous-dossiers et octets
+sont conservés. Les dossiers vides sont représentés dans l’arborescence HTML, sans entrée de
+répertoire vide garantie dans le ZIP. Les fichiers sont triés naturellement, dossiers en premier.
+Le rendu utilise une page dédiée même si Moodle affiche le dossier directement dans le cours.
+Aucune conversion de documents ni capture des dépendances externes ; filtres de description désactivés.
+
+Folder resources export to a dedicated offline HTML page with a description and nested file tree.
+Original files and paths are preserved; empty folders appear in the HTML tree. Documents require
+an appropriate reader. Remote dependencies remain remote.
+
+Quatre tests PHPUnit supplémentaires couvrent la sélection par un enseignant, l’isolation entre
+cours, les sous-dossiers imbriqués et vides, les noms avec accents et caractères spéciaux, les
+homonymes, le fichier original index.html, les médias de description, les badges, les liens et
+la conservation des octets après compression/décompression. Le test JavaScript inclut un Dossier.
+Validation CI en cours. Build non installé ; la sandbox utilise 2026100301, avec double téléchargement validé.

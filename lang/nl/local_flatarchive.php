@@ -58,3 +58,6 @@ $string['archiveunavailable'] = 'Archief niet meer beschikbaar';
 $string['archiveunavailable_help'] = 'Dit tijdelijke archief is niet meer beschikbaar. Ga terug naar je cursus en maak een nieuw archief.';
 
 $string['downloadavailability'] = 'Je kunt dit archief gedurende één uur na het aanmaken opnieuw downloaden binnen deze sessie.';
+
+$string['foldercontents'] = 'Bestanden en submappen';
+$string['folderempty'] = 'Deze map is leeg.';
