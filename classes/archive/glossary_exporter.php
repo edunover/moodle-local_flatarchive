@@ -178,8 +178,10 @@ final class glossary_exporter {
         int $entryid
     ): string {
         global $CFG, $DB;
-        if (empty($CFG->usecomments) || !$glossary->allowcomments ||
-                !has_capability('mod/glossary:comment', $context)) {
+        if (
+            empty($CFG->usecomments) || !$glossary->allowcomments ||
+            !has_capability('mod/glossary:comment', $context)
+        ) {
             return '';
         }
         require_once($CFG->dirroot . '/comment/lib.php');
@@ -192,7 +194,8 @@ final class glossary_exporter {
             return '';
         }
         // Read raw content to avoid applying dynamic Moodle filters to archived comments.
-        $records = $DB->get_recordset_select('comments',
+        $records = $DB->get_recordset_select(
+            'comments',
             'contextid = :contextid AND commentarea = :area AND itemid = :itemid AND ' .
             '(component = :component OR component IS NULL)',
             ['contextid' => $context->id, 'area' => 'glossary_entry',

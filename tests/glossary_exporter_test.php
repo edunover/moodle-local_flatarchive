@@ -221,8 +221,11 @@ final class glossary_exporter_test extends \advanced_testcase {
         $DB->insert_record('comments', (object)array_merge($base, [
             'component' => null, 'userid' => $deleted->id, 'content' => '<b>Legacy plain</b>', 'format' => FORMAT_PLAIN,
         ]));
-        foreach ([['contextid' => \context_module::instance($other->cmid)->id],
-                ['commentarea' => 'other'], ['component' => 'mod_forum'], ['itemid' => $id + 999]] as $override) {
+        $overrides = [
+            ['contextid' => \context_module::instance($other->cmid)->id],
+            ['commentarea' => 'other'], ['component' => 'mod_forum'], ['itemid' => $id + 999],
+        ];
+        foreach ($overrides as $override) {
             $DB->insert_record('comments', (object)array_merge($base, ['content' => 'FOREIGN COMMENT'], $override));
         }
         $modinfo = get_fast_modinfo($course);
@@ -275,8 +278,10 @@ final class glossary_exporter_test extends \advanced_testcase {
             assign_capability($capability, CAP_PROHIBIT, $roleid, $context->id);
             accesslib_clear_all_caches_for_unit_testing();
             $result = glossary_exporter::render($cm, $modinfo, $directory);
-            $this->assertStringNotContainsString('PRIVATE DISCUSSION',
-                file_get_contents($directory . '/' . $result['filenames'][1]));
+            $this->assertStringNotContainsString(
+                'PRIVATE DISCUSSION',
+                file_get_contents($directory . '/' . $result['filenames'][1])
+            );
             unassign_capability($capability, $roleid, $context->id);
             accesslib_clear_all_caches_for_unit_testing();
         }
@@ -285,8 +290,10 @@ final class glossary_exporter_test extends \advanced_testcase {
             set_config('usecomments', $setting === 'site' ? 0 : 1);
             $DB->set_field('glossary', 'allowcomments', $setting === 'glossary' ? 0 : 1, ['id' => $module->id]);
             $result = glossary_exporter::render($cm, $modinfo, $directory);
-            $this->assertStringNotContainsString('PRIVATE DISCUSSION',
-                file_get_contents($directory . '/' . $result['filenames'][1]));
+            $this->assertStringNotContainsString(
+                'PRIVATE DISCUSSION',
+                file_get_contents($directory . '/' . $result['filenames'][1])
+            );
         }
     }
 
