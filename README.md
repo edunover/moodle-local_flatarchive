@@ -1,8 +1,8 @@
 # local_flatarchive
 
-> **État du développement — 9 octobre 2026 :** cette documentation décrit **0.2.0, build 2026100902**, avec un glossaire à deux niveaux : liste des mots et page individuelle par définition. Le code est disponible sur [codex/restore-html-export](https://github.com/edunover/moodle-local-flatarchive/tree/codex/restore-html-export), sans intégration à `main`. [Tests réussis](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37945527767). Le build Dossier 2026100901 est validé sur la sandbox ; le Glossaire 2026100902 attend sa validation manuelle.
+> **État du développement — 9 octobre 2026 :** build **2026100903**, avec auteurs et commentaires accessibles du glossaire. Code disponible sur [codex/restore-html-export](https://github.com/edunover/moodle-local-flatarchive/tree/codex/restore-html-export), non intégré à `main`. [Tests réussis](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37950134719). Le glossaire à deux niveaux du build 2026100902 est installé et validé ; les auteurs et commentaires attendent leur validation manuelle après mise à jour.
 >
-> **Development status — October 9, 2026:** build **2026100902** adds a glossary word list and separate entry pages. Code is on [codex/restore-html-export](https://github.com/edunover/moodle-local-flatarchive/tree/codex/restore-html-export), not yet merged into `main`. Automated checks pass; manual Glossary validation is pending.
+> **Development status — October 9, 2026:** build **2026100903** adds glossary authors and readable comments. Code remains on `codex/restore-html-export`. Automated checks pass; manual validation of this update is pending.
 
 > [Français](#français) | [English](#english)
 
@@ -12,7 +12,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers et Glossaires) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026100902) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026100903) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -103,7 +103,7 @@ archive_SHORTNAME_202603291200.zip
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders and Glossaries) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026100902) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026100903) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -260,10 +260,10 @@ same session can download it, subject to course permissions. Legacy `?path=` lin
 Failed exports are cleaned up immediately. Since build 2026100301, downloads remain available
 for one hour; Moodle scheduled temporary-file cleanup eventually removes the files.
 
-La suite PHPUnit comprend désormais 40 tests, dont les collisions, les fichiers embarqués,
+La suite PHPUnit comprend désormais 42 tests, dont les collisions, les fichiers embarqués,
 leur conservation dans un ZIP, les sessions/propriétaires, les traversées de chemins et les liens symboliques.
 Ces tests nécessitent Moodle : les contrôles de syntaxe locaux ne remplacent pas leur exécution.
-The PHPUnit suite now includes 40 tests covering these cases and requires a Moodle test installation.
+The PHPUnit suite now includes 42 tests covering these cases and requires a Moodle test installation.
 Local syntax checks do not replace executing that suite.
 
 
@@ -278,7 +278,7 @@ Référence : https://moodlehq.github.io/moodle-plugin-ci/
 
 Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation réussie sur les 14 combinaisons Moodle/PHP.
 
-Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 40 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
+Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 42 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
 
 Références des prérequis : https://moodledev.io/general/releases/4.4 ; https://moodledev.io/general/releases/4.5 ; https://moodledev.io/general/releases/5.0 ; https://moodledev.io/general/releases/5.1 ; https://moodledev.io/general/releases/5.2
 
@@ -429,3 +429,19 @@ Validation CI réussie : 40 tests PHPUnit et 285 assertions sur les 14 environne
 6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37945527767),
 code `b91174f`. Neuf dépréciations PHPUnit de métadonnées sont signalées sur Moodle 5.x, sans échec.
 Build 2026100902 non déployé sur la sandbox ; validation manuelle à réaliser.
+
+### Auteurs et commentaires du glossaire — build 2026100903
+
+Chaque définition affiche le nom de son auteur. Les commentaires accessibles sont conservés
+dans l’ordre chronologique avec leur auteur et leur date. Les réglages de commentaires du
+site et du glossaire, ainsi que les capacités Moodle de lecture et de commentaire, sont respectés.
+Les commentaires restent isolés par contexte, composant et entrée, y compris pour les glossaires
+source/principal. Les comptes supprimés ou absents apparaissent comme auteur inconnu ou supprimé.
+Aucun profil, adresse électronique ou avatar n’est ajouté. Les évaluations restent exclues.
+Les filtres dynamiques des commentaires sont désactivés ; les liens externes restent externes.
+
+Le build 2026100902 est installé et son fonctionnement confirmé par l’utilisateur.
+Le ZIP du 9 octobre à 17:02 est validé : 141 fichiers, 276 références locales sans cible manquante,
+une liste et trois pages de définition. Build 2026100903 : 42 tests PHPUnit et 300 assertions réussis sur les 14 configurations,
+6 tests JavaScript et contrôle Moodle CodeSniffer réussis. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37950134719),
+code `ca50a4c`. Validation manuelle à réaliser après installation.
