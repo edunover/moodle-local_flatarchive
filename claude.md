@@ -1,7 +1,7 @@
 # local_flatarchive — CLAUDE.md
 
 Plugin Moodle local pour archiver des ressources "Page", "Livre", "Zone texte et média", "Fichier" et "Dossier" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.2.0 (2026100901) MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026100902) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
@@ -172,7 +172,7 @@ Référence : https://moodlehq.github.io/moodle-plugin-ci/
 
 Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation réussie sur les 14 combinaisons Moodle/PHP.
 
-Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 35 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
+Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 40 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
 
 Références des prérequis : https://moodledev.io/general/releases/4.4 ; https://moodledev.io/general/releases/4.5 ; https://moodledev.io/general/releases/5.0 ; https://moodledev.io/general/releases/5.1 ; https://moodledev.io/general/releases/5.2
 
@@ -293,3 +293,24 @@ Les sept fichiers du jeu de test, dont DOCX, PDF et PNG, sont identiques octet p
 aux originaux (comparaison SHA-256). Le fichier index.html fourni dans le Dossier est
 conservé séparément de l’index du cours. Aucun lien externe détecté dans href/src.
 L’utilisateur confirme le fonctionnement manuel sans anomalie.
+
+### Glossaire — build 2026100902
+
+Les glossaires sont exportés dans `glossary-{cmid}.html`, avec description, sommaire de liens
+vers les entrées, concepts, définitions formatées, synonymes, catégories et pièces jointes.
+Les entrées approuvées sont triées par concept puis identifiant selon la collation de la base.
+Les doublons disposent d’ancres distinctes. Les entrées en attente sont exclues, avec indication
+de leur nombre ; les commentaires, évaluations, profils des auteurs et liens automatiques ne
+sont pas archivés. Les filtres Moodle sont désactivés ; les ressources distantes restent externes.
+Les pièces jointes sont isolées dans `files/{cmid}/entry/{entryid}/` et
+`files/{cmid}/attachment/{entryid}/`, et la description dans `files/{cmid}/intro/0/`.
+Les entrées transférées vers un glossaire principal sont aussi conservées dans l’export du
+glossaire source, en résolvant leur contexte de fichiers réel dans le même cours.
+
+Glossaries export approved entries, definitions, aliases, categories and attachments into one
+offline HTML page. Pending entries are counted but excluded. Comments, ratings and author
+profiles are not exported; external resources remain external.
+
+Cinq tests PHPUnit supplémentaires : sélection autorisée et isolation des cours, doublons,
+fichiers et ZIP, formats HTML/texte, entrées exclues, glossaire source/principal, description
+et glossaire vide, mauvais type de module. Validation CI en cours ; non déployé sur la sandbox.

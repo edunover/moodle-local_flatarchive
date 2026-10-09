@@ -70,3 +70,11 @@ $string['downloadavailability'] = 'You can download this archive again for one h
 
 $string['foldercontents'] = 'Files and subfolders';
 $string['folderempty'] = 'This folder is empty.';
+
+$string['glossaryscope'] = 'Only approved entries are included. Comments, ratings and author profiles are not archived.';
+$string['glossaryexcluded'] = 'Pending entries excluded: {$a}.';
+$string['glossaryaliases'] = 'Aliases';
+$string['glossarycategories'] = 'Categories';
+$string['glossaryattachments'] = 'Attachments';
+$string['glossaryempty'] = 'No approved entries.';
+$string['glossaryentries'] = 'Glossary entries';

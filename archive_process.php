@@ -33,6 +33,7 @@ require_once(__DIR__ . '/archive_templates/book_toc_template.php');
 global $DB;
 
 use local_flatarchive\archive\folder_exporter;
+use local_flatarchive\archive\glossary_exporter;
 use local_flatarchive\archive\label_exporter;
 use local_flatarchive\archive\paths;
 use local_flatarchive\archive\resource_exporter;
@@ -61,7 +62,7 @@ $cms = $modinfo->get_cms();
 
 // Validate the whole selection before creating any files.
 foreach ($cmids as $cmid) {
-    if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, ['page', 'book', 'label', 'resource', 'folder'], true)) {
+    if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, ['page', 'book', 'label', 'resource', 'folder', 'glossary'], true)) {
         throw new moodle_exception('invalidselection', 'local_flatarchive');
     }
 }
@@ -82,6 +83,14 @@ try {
 
     foreach ($cmids as $cmid) {
         $cm = $cms[$cmid];
+
+        if ($cm->modname === 'glossary') {
+            $export = glossary_exporter::render($cm, $modinfo, $tempdir);
+            $indexitems[$cmid] = $export['item'];
+            $zipfiles[$export['filename']] = $tempdir . '/' . $export['filename'];
+            $DB->get_field_sql('SELECT 1');
+            continue;
+        }
 
         if ($cm->modname === 'folder') {
             $export = folder_exporter::render($cm, $modinfo, $tempdir);

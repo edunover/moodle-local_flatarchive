@@ -61,3 +61,11 @@ $string['downloadavailability'] = 'Je kunt dit archief gedurende één uur na he
 
 $string['foldercontents'] = 'Bestanden en submappen';
 $string['folderempty'] = 'Deze map is leeg.';
+
+$string['glossaryscope'] = 'Alleen goedgekeurde items zijn opgenomen. Reacties, beoordelingen en auteursprofielen worden niet gearchiveerd.';
+$string['glossaryexcluded'] = 'Uitgesloten items in afwachting: {$a}.';
+$string['glossaryaliases'] = 'Synoniemen';
+$string['glossarycategories'] = 'Categorieën';
+$string['glossaryattachments'] = 'Bijlagen';
+$string['glossaryempty'] = 'Geen goedgekeurde items.';
+$string['glossaryentries'] = 'Woordenlijstitems';
