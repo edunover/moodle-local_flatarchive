@@ -78,3 +78,4 @@ $string['glossarycategories'] = 'Catégories';
 $string['glossaryattachments'] = 'Pièces jointes';
 $string['glossaryempty'] = 'Aucune entrée approuvée.';
 $string['glossaryentries'] = 'Entrées du glossaire';
+$string['backtoglossary'] = 'Retour au glossaire';

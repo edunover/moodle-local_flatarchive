@@ -87,7 +87,9 @@ try {
         if ($cm->modname === 'glossary') {
             $export = glossary_exporter::render($cm, $modinfo, $tempdir);
             $indexitems[$cmid] = $export['item'];
-            $zipfiles[$export['filename']] = $tempdir . '/' . $export['filename'];
+            foreach ($export['filenames'] as $filename) {
+                $zipfiles[$filename] = $tempdir . '/' . $filename;
+            }
             $DB->get_field_sql('SELECT 1');
             continue;
         }

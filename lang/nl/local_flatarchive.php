@@ -69,3 +69,4 @@ $string['glossarycategories'] = 'Categorieën';
 $string['glossaryattachments'] = 'Bijlagen';
 $string['glossaryempty'] = 'Geen goedgekeurde items.';
 $string['glossaryentries'] = 'Woordenlijstitems';
+$string['backtoglossary'] = 'Terug naar de woordenlijst';

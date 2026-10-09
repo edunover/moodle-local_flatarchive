@@ -78,3 +78,4 @@ $string['glossarycategories'] = 'Categories';
 $string['glossaryattachments'] = 'Attachments';
 $string['glossaryempty'] = 'No approved entries.';
 $string['glossaryentries'] = 'Glossary entries';
+$string['backtoglossary'] = 'Back to glossary';

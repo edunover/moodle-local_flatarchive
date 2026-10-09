@@ -102,27 +102,39 @@ final class glossary_exporter_test extends \advanced_testcase {
         $modinfo = get_fast_modinfo($course);
         $result = glossary_exporter::render($modinfo->get_cm($glossary->cmid), $modinfo, $directory);
         $html = file_get_contents($directory . '/' . $result['filename']);
+        $this->assertStringContainsString(get_string('glossaryexcluded', 'local_flatarchive', 1), $html);
+        $this->assertStringNotContainsString('Definition', $html);
+        $this->assertDirectoryDoesNotExist($directory . '/files/' . $glossary->cmid . '/attachment/' . $pending);
+        $this->assertCount(3, $result['filenames']);
+        $zipfiles = [];
+        $allhtml = $html;
+        foreach ($result['filenames'] as $filename) {
+            $zipfiles[$filename] = $directory . '/' . $filename;
+        }
+        foreach ([$first, $second] as $id) {
+            $entryfile = 'glossary-' . $glossary->cmid . '-entry-' . $id . '.html';
+            $this->assertContains($entryfile, $result['filenames']);
+            $this->assertStringContainsString('href="' . $entryfile . '"', $html);
+            $entryhtml = file_get_contents($directory . '/' . $entryfile);
+            $allhtml .= $entryhtml;
+            $dom = new \DOMDocument();
+            @$dom->loadHTML($entryhtml);
+            $xpath = new \DOMXPath($dom);
+            $this->assertSame(1, $xpath->query('//h1')->length);
+            $this->assertSame('Été <test>', $xpath->query('//h1')->item(0)->textContent);
+            $this->assertSame(1, $xpath->query('//a[@href="' . $result['filename'] . '"]')->length);
+            $this->assertStringContainsString(get_string('backtoglossary', 'local_flatarchive'), $entryhtml);
+            foreach ($xpath->query('//a[starts-with(@href,"files/")] | //img') as $node) {
+                $url = $node->getAttribute($node->nodeName === 'a' ? 'href' : 'src');
+                $this->assertArrayHasKey(rawurldecode($url), $expected);
+            }
+        }
         foreach (['Synonyme &lt;test&gt;', 'Catégorie &amp; été', '&lt;b&gt;Plain text&lt;/b&gt;', 'fa-vis-hidden'] as $text) {
-            $this->assertStringContainsString($text, $html);
+            $this->assertStringContainsString($text, $allhtml);
         }
         foreach (['PENDING SECRET', 'FOREIGN ENTRY', 'secret.txt', '@@PLUGINFILE@@'] as $text) {
-            $this->assertStringNotContainsString($text, $html);
+            $this->assertStringNotContainsString($text, $allhtml);
         }
-        $this->assertDirectoryDoesNotExist($directory . '/files/' . $glossary->cmid . '/attachment/' . $pending);
-        $this->assertStringContainsString(get_string('glossaryexcluded', 'local_flatarchive', 1), $html);
-        $dom = new \DOMDocument();
-        @$dom->loadHTML($html);
-        $xpath = new \DOMXPath($dom);
-        $this->assertSame(2, $xpath->query('//section')->length);
-        foreach ([$first, $second] as $id) {
-            $this->assertSame(1, $xpath->query('//h2[@id="entry-' . $id . '"]')->length);
-            $this->assertSame(1, $xpath->query('//a[@href="#entry-' . $id . '"]')->length);
-        }
-        foreach ($xpath->query('//a[starts-with(@href,"files/")] | //img') as $node) {
-            $url = $node->getAttribute($node->nodeName === 'a' ? 'href' : 'src');
-            $this->assertArrayHasKey(rawurldecode($url), $expected);
-        }
-        $zipfiles = [$result['filename'] => $directory . '/' . $result['filename']];
         foreach ($expected as $path => $bytes) {
             $this->assertSame($bytes, file_get_contents($directory . '/' . $path));
             $zipfiles[$path] = $directory . '/' . $path;
@@ -130,6 +142,12 @@ final class glossary_exporter_test extends \advanced_testcase {
         $packer = get_file_packer('application/zip');
         $this->assertTrue($packer->archive_to_pathname($zipfiles, $directory . '/test.zip'));
         $this->assertNotFalse($packer->extract_to_pathname($directory . '/test.zip', $directory . '/unpacked'));
+        foreach ($result['filenames'] as $filename) {
+            $this->assertSame(
+                file_get_contents($directory . '/' . $filename),
+                file_get_contents($directory . '/unpacked/' . $filename)
+            );
+        }
         foreach ($expected as $path => $bytes) {
             $this->assertSame($bytes, file_get_contents($directory . '/unpacked/' . $path));
         }

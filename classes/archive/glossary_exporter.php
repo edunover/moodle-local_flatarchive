@@ -25,12 +25,12 @@ namespace local_flatarchive\archive;
  */
 final class glossary_exporter {
     /**
-     * Write the glossary page and copy its attachments.
+     * Write the glossary index, individual entry pages and attachments.
      *
      * @param \cm_info $cm Glossary module.
      * @param \course_modinfo $modinfo Course structure.
      * @param string $directory Archive directory.
-     * @return array Index item and HTML filename.
+     * @return array Index item, index filename and all generated HTML filenames.
      */
     public static function render(\cm_info $cm, \course_modinfo $modinfo, string $directory): array {
         global $CFG, $DB;
@@ -53,7 +53,9 @@ final class glossary_exporter {
         }
         $entries = $DB->get_recordset_select('glossary_entries', $selection . ' AND approved = 1', $params, 'concept, id');
         $toc = '';
-        $definitions = '';
+        $filename = 'glossary-' . $cm->id . '.html';
+        $filenames = [$filename];
+        $badges = \local_flatarchive_visibility_badges($cm, $modinfo);
         try {
             foreach ($entries as $entry) {
                 // Exported entries remain visible in the source glossary; their files live in the main glossary.
@@ -62,8 +64,8 @@ final class glossary_exporter {
                     $maincm = get_coursemodule_from_instance('glossary', $entry->glossaryid, $cm->course, false, MUST_EXIST);
                     $filecontext = \context_module::instance($maincm->id);
                 }
-                $anchor = 'entry-' . $entry->id;
-                $toc .= \html_writer::tag('li', \html_writer::link('#' . $anchor, s($entry->concept)));
+                $entryfile = 'glossary-' . $cm->id . '-entry-' . $entry->id . '.html';
+                $toc .= \html_writer::tag('li', \html_writer::link($entryfile, s($entry->concept)));
                 $definition = self::copy_area(
                     $entry->definition,
                     $filecontext,
@@ -72,7 +74,10 @@ final class glossary_exporter {
                     $directory,
                     (int)$cm->id
                 );
-                $body = \html_writer::tag('h2', s($entry->concept), ['id' => $anchor]);
+                $body = \html_writer::tag('p', \html_writer::link(
+                    $filename,
+                    get_string('backtoglossary', 'local_flatarchive')
+                ));
                 $body .= format_text($definition, $entry->definitionformat, ['context' => $filecontext, 'filter' => false]);
                 $aliases = $DB->get_fieldset_select('glossary_alias', 'alias', 'entryid = ?', [$entry->id]);
                 $categories = $DB->get_fieldset_sql(
@@ -104,10 +109,19 @@ final class glossary_exporter {
                     $links .= \html_writer::tag('li', \html_writer::link($url, s($file->get_filename())));
                 }
                 if ($links !== '') {
-                    $body .= \html_writer::tag('h3', get_string('glossaryattachments', 'local_flatarchive'));
+                    $body .= \html_writer::tag('h2', get_string('glossaryattachments', 'local_flatarchive'));
                     $body .= \html_writer::tag('ul', $links);
                 }
-                $definitions .= \html_writer::tag('section', $body, ['aria-labelledby' => $anchor]);
+                $html = \local_flatarchive_render_page_template(
+                    $modinfo->get_course(),
+                    $cm,
+                    $entry->concept,
+                    $body,
+                    '',
+                    $badges
+                );
+                \local_flatarchive_write_file($directory . '/' . $entryfile, $html);
+                $filenames[] = $entryfile;
             }
         } finally {
             $entries->close();
@@ -117,14 +131,14 @@ final class glossary_exporter {
         } else {
             $content .= \html_writer::tag('nav', \html_writer::tag('ul', $toc), [
                 'aria-label' => get_string('glossaryentries', 'local_flatarchive'),
-            ]) . $definitions;
+            ]);
         }
-        $filename = 'glossary-' . $cm->id . '.html';
-        $badges = \local_flatarchive_visibility_badges($cm, $modinfo);
+
         $html = \local_flatarchive_render_page_template($modinfo->get_course(), $cm, $cm->name, $content, '', $badges);
         \local_flatarchive_write_file($directory . '/' . $filename, $html);
         return [
             'filename' => $filename,
+            'filenames' => $filenames,
             'item' => \html_writer::tag('li', \html_writer::link($filename, s($cm->name)) . $badges),
         ];
     }

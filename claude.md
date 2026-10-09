@@ -296,10 +296,11 @@ L’utilisateur confirme le fonctionnement manuel sans anomalie.
 
 ### Glossaire — build 2026100902
 
-Les glossaires sont exportés dans `glossary-{cmid}.html`, avec description, sommaire de liens
-vers les entrées, concepts, définitions formatées, synonymes, catégories et pièces jointes.
+Les glossaires sont exportés dans `glossary-{cmid}.html`, avec description et liste de mots. Chaque mot ouvre sa propre page
+`glossary-{cmid}-entry-{entryid}.html` : mot en titre, définition formatée, synonymes,
+catégories et pièces jointes, puis navigation de retour au glossaire.
 Les entrées approuvées sont triées par concept puis identifiant selon la collation de la base.
-Les doublons disposent d’ancres distinctes. Les entrées en attente sont exclues, avec indication
+Les doublons disposent de pages distinctes. Les entrées en attente sont exclues, avec indication
 de leur nombre ; les commentaires, évaluations, profils des auteurs et liens automatiques ne
 sont pas archivés. Les filtres Moodle sont désactivés ; les ressources distantes restent externes.
 Les pièces jointes sont isolées dans `files/{cmid}/entry/{entryid}/` et
@@ -307,8 +308,8 @@ Les pièces jointes sont isolées dans `files/{cmid}/entry/{entryid}/` et
 Les entrées transférées vers un glossaire principal sont aussi conservées dans l’export du
 glossaire source, en résolvant leur contexte de fichiers réel dans le même cours.
 
-Glossaries export approved entries, definitions, aliases, categories and attachments into one
-offline HTML page. Pending entries are counted but excluded. Comments, ratings and author
+Glossaries export a word list linking to individual offline entry pages, each with the concept
+as its heading, definition, aliases, categories, attachments and a link back to the glossary. Pending entries are counted but excluded. Comments, ratings and author
 profiles are not exported; external resources remain external.
 
 Cinq tests PHPUnit supplémentaires : sélection autorisée et isolation des cours, doublons,

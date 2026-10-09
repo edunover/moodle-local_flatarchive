@@ -6,7 +6,7 @@
 
 ## Français
 
-Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers et Dossiers) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
+Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers et Glossaires) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
 **Version :** 0.2.0 (2026100902) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
@@ -14,7 +14,7 @@ Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones 
 
 Flatarchive permet aux enseignants d'exporter des ressources de cours vers une archive portable utilisable hors ligne :
 
-- Sélection des activités **Page**, **Livre**, **Zone texte et média**, **Fichier** et **Dossier** depuis l'arborescence du cours
+- Sélection des activités **Page**, **Livre**, **Zone texte et média**, **Fichier**, **Dossier** et **Glossaire** depuis l'arborescence du cours
 - Génération d'un **site HTML statique** — aucune dépendance Moodle après téléchargement
 - Réécriture des liens `@@PLUGINFILE@@` en chemins relatifs et copie des fichiers embarqués
 - **Badges de visibilité** (caché / caché de la page de cours / section cachée) sur chaque page et dans l'index
@@ -58,7 +58,7 @@ archive_SHORTNAME_202603291200.zip
 ### Utilisation
 
 1. Ouvrir un cours → le lien **Flat archive** apparaît dans la navigation du cours
-2. Sélectionner les Pages, Livres, Zones texte et média Fichiers et/ou Dossiers à archiver
+2. Sélectionner les Pages, Livres, Zones texte et média Fichiers, Dossiers et/ou Glossaires à archiver
 3. Cliquer sur **Générer l'archive HTML**
 4. Télécharger le ZIP depuis la page de succès ; le lien reste utilisable pendant une heure dans la même session
 
@@ -97,7 +97,7 @@ archive_SHORTNAME_202603291200.zip
 
 ## English
 
-Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files and Folders) as self-contained static HTML pages bundled in a downloadable ZIP.
+Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders and Glossaries) as self-contained static HTML pages bundled in a downloadable ZIP.
 
 **Version:** 0.2.0 (2026100902) · MATURITY_ALPHA · Requires Moodle 4.4+
 
@@ -105,7 +105,7 @@ Moodle local plugin — Archive course resources (Pages, Books, Text and media a
 
 Flatarchive lets teachers export selected course resources to a portable offline archive:
 
-- Selects **Page**, **Book**, **Text and media area**, **File** and **Folder** resources from the course tree
+- Selects **Page**, **Book**, **Text and media area**, **File**, **Folder** and **Glossary** resources from the course tree
 - Generates a **static HTML website** — no Moodle dependency after download
 - Rewrites all `@@PLUGINFILE@@` links to relative paths and copies embedded files
 - Adds **visibility badges** (hidden / stealth / hidden section) on each page and in the index
@@ -149,7 +149,7 @@ archive_SHORTNAME_202603291200.zip
 ### Usage
 
 1. Open a course → the **Flat archive** link appears in the course navigation
-2. Select the Pages, Books, Text and media areas Files and/or Folders to archive
+2. Select the Pages, Books, Text and media areas Files, Folders and/or Glossaries to archive
 3. Click **Générer l'archive HTML**
 4. Download the ZIP from the success page; the link remains usable for one hour in the same session
 
@@ -401,10 +401,11 @@ L’utilisateur confirme le fonctionnement manuel sans anomalie.
 
 ### Glossaire — build 2026100902
 
-Les glossaires sont exportés dans `glossary-{cmid}.html`, avec description, sommaire de liens
-vers les entrées, concepts, définitions formatées, synonymes, catégories et pièces jointes.
+Les glossaires sont exportés dans `glossary-{cmid}.html`, avec description et liste de mots. Chaque mot ouvre sa propre page
+`glossary-{cmid}-entry-{entryid}.html` : mot en titre, définition formatée, synonymes,
+catégories et pièces jointes, puis navigation de retour au glossaire.
 Les entrées approuvées sont triées par concept puis identifiant selon la collation de la base.
-Les doublons disposent d’ancres distinctes. Les entrées en attente sont exclues, avec indication
+Les doublons disposent de pages distinctes. Les entrées en attente sont exclues, avec indication
 de leur nombre ; les commentaires, évaluations, profils des auteurs et liens automatiques ne
 sont pas archivés. Les filtres Moodle sont désactivés ; les ressources distantes restent externes.
 Les pièces jointes sont isolées dans `files/{cmid}/entry/{entryid}/` et
@@ -412,8 +413,8 @@ Les pièces jointes sont isolées dans `files/{cmid}/entry/{entryid}/` et
 Les entrées transférées vers un glossaire principal sont aussi conservées dans l’export du
 glossaire source, en résolvant leur contexte de fichiers réel dans le même cours.
 
-Glossaries export approved entries, definitions, aliases, categories and attachments into one
-offline HTML page. Pending entries are counted but excluded. Comments, ratings and author
+Glossaries export a word list linking to individual offline entry pages, each with the concept
+as its heading, definition, aliases, categories, attachments and a link back to the glossary. Pending entries are counted but excluded. Comments, ratings and author
 profiles are not exported; external resources remain external.
 
 Cinq tests PHPUnit supplémentaires : sélection autorisée et isolation des cours, doublons,
