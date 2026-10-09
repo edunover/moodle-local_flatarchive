@@ -1,8 +1,8 @@
 # local_flatarchive
 
-> **État du développement — 9 octobre 2026 :** cette documentation décrit **0.2.0, build 2026100901**, avec prise en charge des Dossiers. Le code et les fichiers de test sont disponibles sur [codex/restore-html-export](https://github.com/edunover/moodle-local-flatarchive/tree/codex/restore-html-export) et ne sont pas encore intégrés à `main`. [Tests réussis](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37941805235). Le build Dossier 2026100901 est installé et validé sur la sandbox : fonctionnement manuel confirmé, 259 liens locaux valides et fichiers DOCX/PDF/PNG conservés à l’identique.
+> **État du développement — 9 octobre 2026 :** cette documentation décrit **0.2.0, build 2026100902**, avec un glossaire à deux niveaux : liste des mots et page individuelle par définition. Le code est disponible sur [codex/restore-html-export](https://github.com/edunover/moodle-local-flatarchive/tree/codex/restore-html-export), sans intégration à `main`. [Tests réussis](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37945527767). Le build Dossier 2026100901 est validé sur la sandbox ; le Glossaire 2026100902 attend sa validation manuelle.
 >
-> **Development status — October 9, 2026:** use [codex/restore-html-export](https://github.com/edunover/moodle-local-flatarchive/tree/codex/restore-html-export) for build **2026100901**, including Folder exports and multimedia test fixtures. Its code has not yet been merged into `main`. Automated checks and sandbox Folder export validation pass; original DOCX/PDF/PNG files are preserved byte for byte.
+> **Development status — October 9, 2026:** build **2026100902** adds a glossary word list and separate entry pages. Code is on [codex/restore-html-export](https://github.com/edunover/moodle-local-flatarchive/tree/codex/restore-html-export), not yet merged into `main`. Automated checks pass; manual Glossary validation is pending.
 
 > [Français](#français) | [English](#english)
 
@@ -10,15 +10,15 @@
 
 ## Français
 
-Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers et Dossiers) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
+Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers et Glossaires) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026100901) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026100902) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
 Flatarchive permet aux enseignants d'exporter des ressources de cours vers une archive portable utilisable hors ligne :
 
-- Sélection des activités **Page**, **Livre**, **Zone texte et média**, **Fichier** et **Dossier** depuis l'arborescence du cours
+- Sélection des activités **Page**, **Livre**, **Zone texte et média**, **Fichier**, **Dossier** et **Glossaire** depuis l'arborescence du cours
 - Génération d'un **site HTML statique** — aucune dépendance Moodle après téléchargement
 - Réécriture des liens `@@PLUGINFILE@@` en chemins relatifs et copie des fichiers embarqués
 - **Badges de visibilité** (caché / caché de la page de cours / section cachée) sur chaque page et dans l'index
@@ -62,7 +62,7 @@ archive_SHORTNAME_202603291200.zip
 ### Utilisation
 
 1. Ouvrir un cours → le lien **Flat archive** apparaît dans la navigation du cours
-2. Sélectionner les Pages, Livres, Zones texte et média Fichiers et/ou Dossiers à archiver
+2. Sélectionner les Pages, Livres, Zones texte et média Fichiers, Dossiers et/ou Glossaires à archiver
 3. Cliquer sur **Générer l'archive HTML**
 4. Télécharger le ZIP depuis la page de succès ; le lien reste utilisable pendant une heure dans la même session
 
@@ -101,15 +101,15 @@ archive_SHORTNAME_202603291200.zip
 
 ## English
 
-Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files and Folders) as self-contained static HTML pages bundled in a downloadable ZIP.
+Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders and Glossaries) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026100901) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026100902) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
 Flatarchive lets teachers export selected course resources to a portable offline archive:
 
-- Selects **Page**, **Book**, **Text and media area**, **File** and **Folder** resources from the course tree
+- Selects **Page**, **Book**, **Text and media area**, **File**, **Folder** and **Glossary** resources from the course tree
 - Generates a **static HTML website** — no Moodle dependency after download
 - Rewrites all `@@PLUGINFILE@@` links to relative paths and copies embedded files
 - Adds **visibility badges** (hidden / stealth / hidden section) on each page and in the index
@@ -153,7 +153,7 @@ archive_SHORTNAME_202603291200.zip
 ### Usage
 
 1. Open a course → the **Flat archive** link appears in the course navigation
-2. Select the Pages, Books, Text and media areas Files and/or Folders to archive
+2. Select the Pages, Books, Text and media areas Files, Folders and/or Glossaries to archive
 3. Click **Générer l'archive HTML**
 4. Download the ZIP from the success page; the link remains usable for one hour in the same session
 
@@ -260,10 +260,10 @@ same session can download it, subject to course permissions. Legacy `?path=` lin
 Failed exports are cleaned up immediately. Since build 2026100301, downloads remain available
 for one hour; Moodle scheduled temporary-file cleanup eventually removes the files.
 
-La suite PHPUnit comprend désormais 35 tests, dont les collisions, les fichiers embarqués,
+La suite PHPUnit comprend désormais 40 tests, dont les collisions, les fichiers embarqués,
 leur conservation dans un ZIP, les sessions/propriétaires, les traversées de chemins et les liens symboliques.
 Ces tests nécessitent Moodle : les contrôles de syntaxe locaux ne remplacent pas leur exécution.
-The PHPUnit suite now includes 35 tests covering these cases and requires a Moodle test installation.
+The PHPUnit suite now includes 40 tests covering these cases and requires a Moodle test installation.
 Local syntax checks do not replace executing that suite.
 
 
@@ -278,7 +278,7 @@ Référence : https://moodlehq.github.io/moodle-plugin-ci/
 
 Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation réussie sur les 14 combinaisons Moodle/PHP.
 
-Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 35 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
+Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 40 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
 
 Références des prérequis : https://moodledev.io/general/releases/4.4 ; https://moodledev.io/general/releases/4.5 ; https://moodledev.io/general/releases/5.0 ; https://moodledev.io/general/releases/5.1 ; https://moodledev.io/general/releases/5.2
 
@@ -402,3 +402,30 @@ Les sept fichiers du jeu de test, dont DOCX, PDF et PNG, sont identiques octet p
 aux originaux (comparaison SHA-256). Le fichier index.html fourni dans le Dossier est
 conservé séparément de l’index du cours. Aucun lien externe détecté dans href/src.
 L’utilisateur confirme le fonctionnement manuel sans anomalie.
+
+### Glossaire — build 2026100902
+
+Les glossaires sont exportés dans `glossary-{cmid}.html`, avec description et liste de mots. Chaque mot ouvre sa propre page
+`glossary-{cmid}-entry-{entryid}.html` : mot en titre, définition formatée, synonymes,
+catégories et pièces jointes, avec un lien de retour au glossaire.
+Les entrées approuvées sont triées par concept puis identifiant selon la collation de la base.
+Les doublons disposent de pages distinctes. Les entrées en attente sont exclues, avec indication
+de leur nombre ; les commentaires, évaluations, profils des auteurs et liens automatiques ne
+sont pas archivés. Les filtres Moodle sont désactivés ; les ressources distantes restent externes.
+Les pièces jointes sont isolées dans `files/{cmid}/entry/{entryid}/` et
+`files/{cmid}/attachment/{entryid}/`, et la description dans `files/{cmid}/intro/0/`.
+Les entrées transférées vers un glossaire principal sont aussi conservées dans l’export du
+glossaire source, en résolvant leur contexte de fichiers réel dans le même cours.
+
+Glossaries export a word list linking to individual offline entry pages, each with the concept
+as its heading, definition, aliases, categories, attachments and a link back to the glossary. Pending entries are counted but excluded. Comments, ratings and author
+profiles are not exported; external resources remain external.
+
+Cinq tests PHPUnit supplémentaires : sélection autorisée et isolation des cours, doublons,
+fichiers et ZIP, formats HTML/texte, entrées exclues, glossaire source/principal, description
+et glossaire vide, mauvais type de module. Les tests vérifient aussi les pages individuelles,
+les titres, les liens aller/retour et leur conservation dans le ZIP.
+Validation CI réussie : 40 tests PHPUnit et 285 assertions sur les 14 environnements Moodle/PHP,
+6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37945527767),
+code `b91174f`. Neuf dépréciations PHPUnit de métadonnées sont signalées sur Moodle 5.x, sans échec.
+Build 2026100902 non déployé sur la sandbox ; validation manuelle à réaliser.
