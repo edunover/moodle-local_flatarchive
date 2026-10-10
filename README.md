@@ -475,3 +475,16 @@ ne peut pas être lue, le message de confirmation reste affiché sans taille.
 
 The download page shows the completed ZIP size next to the success message, using Moodle’s
 localized size formatting. Manual verification on the sandbox remains pending.
+
+### Validation du 10 octobre 2026
+
+L’utilisateur confirme le fonctionnement du Wiki sur la sandbox. Le ZIP
+`archive_course-monitoring_202610101627.zip` est intact : 147 fichiers, 300 références
+locales sans cible manquante. L’index Wiki et ses trois pages, l’image, le fichier joint,
+les auteurs et le commentaire sont présents. L’accueil contient la version finale, sans
+la version initiale ; aucun lien de création/édition Moodle ni marqueur de fichier ne
+subsiste dans les pages Wiki.
+
+Le build 2026101002 (taille du ZIP sur la page de téléchargement) passe la CI :
+https://github.com/edunover/moodle-local-flatarchive/actions/runs/38058888279
+La vérification visuelle de cet affichage sur la sandbox reste à réaliser.
