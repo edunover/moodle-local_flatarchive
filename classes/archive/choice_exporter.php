@@ -47,8 +47,10 @@ final class choice_exporter {
             throw new \moodle_exception('invalidselection', 'local_flatarchive');
         }
         $choice = $DB->get_record('choice', ['id' => $cm->instance], '*', MUST_EXIST);
-        if ($choice->timeopen > time() && !$choice->showpreview
-                && !has_capability('moodle/course:manageactivities', $context)) {
+        if (
+            $choice->timeopen > time() && !$choice->showpreview
+            && !has_capability('moodle/course:manageactivities', $context)
+        ) {
             throw new \moodle_exception('invalidselection', 'local_flatarchive');
         }
         $options = $DB->get_records('choice_options', ['choiceid' => $choice->id], 'id');
