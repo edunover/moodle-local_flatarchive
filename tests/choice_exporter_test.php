@@ -120,6 +120,26 @@ final class choice_exporter_test extends \advanced_testcase {
     }
 
     /**
+     * Results after answering require an answer; unopened questions need preview permission.
+     */
+    public function test_after_answer_and_unopened_preview(): void {
+        global $DB;
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $choice = $generator->create_module('choice', ['course' => $course->id, 'showresults' => 1]);
+        $student = $generator->create_user();
+        $generator->enrol_user($student->id, $course->id, 'student');
+        $this->setUser($student);
+        $this->assertStringContainsString(get_string('choicerestricted', 'local_flatarchive'), $this->export($choice));
+        $this->answer($choice, $student->id);
+        $this->assertStringContainsString(get_string('choicecount', 'local_flatarchive', 1), $this->export($choice));
+        $DB->set_field('choice', 'timeopen', time() + 3600, ['id' => $choice->id]);
+        $DB->set_field('choice', 'showpreview', 0, ['id' => $choice->id]);
+        $this->expectException(\moodle_exception::class);
+        $this->export($choice);
+    }
+
+    /**
      * Private reports require permission to download and cannot bypass view access.
      */
     public function test_report_download_and_view_permissions(): void {
