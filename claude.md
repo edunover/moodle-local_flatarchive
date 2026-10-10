@@ -172,7 +172,7 @@ Référence : https://moodlehq.github.io/moodle-plugin-ci/
 
 Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation réussie sur les 14 combinaisons Moodle/PHP.
 
-Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 42 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
+Matrice CI (14 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 avec PHP 8.3/8.4. Chaque combinaison exécute les 48 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
 
 Références des prérequis : https://moodledev.io/general/releases/4.4 ; https://moodledev.io/general/releases/4.5 ; https://moodledev.io/general/releases/5.0 ; https://moodledev.io/general/releases/5.1 ; https://moodledev.io/general/releases/5.2
 
@@ -351,7 +351,10 @@ Chaque wiki a un index `wiki-{cmid}.html` et des pages `wiki-{cmid}-page-{pageid
 Les fichiers sont conservés dans `files/{cmid}/attachments/{subwikiid}/`.
 Six tests PHPUnit supplémentaires couvrent sélection, révisions, navigation, fichiers/ZIP,
 formats, commentaires, espaces individuels et groupes séparés, droits et wiki vide.
-Validation CI en cours ; non installé sur la sandbox.
+Validation CI réussie : 48 tests PHPUnit et 365 assertions sur les 14 configurations,
+6 tests JavaScript et contrôle Moodle CodeSniffer réussis. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38057074490),
+code `fe091da`. Dix dépréciations PHPUnit de métadonnées sont signalées sur Moodle 5.x, sans échec.
+Build 2026101001 non installé sur la sandbox ; test manuel à réaliser.
 
 Le glossaire 2026100903 est installé et validé : trois auteurs et trois commentaires datés
 dans l’archive du 9 octobre à 17:23 ; 276 références locales sans cible manquante.
