@@ -498,3 +498,7 @@ Le rendu utilise des éléments DOM, sans interpréter le titre comme du HTML.
 
 The selection page displays Moodle activity icons before resource titles, with a localized
 activity-type alternative text. The existing selection and submission tests cover this display.
+
+Validation du build 2026101003 : les 14 configurations Moodle/PHP, les 6 tests JavaScript
+et le contrôle Moodle CodeSniffer passent. Vérification visuelle sur la sandbox à réaliser.
+https://github.com/edunover/moodle-local-flatarchive/actions/runs/38060730033
