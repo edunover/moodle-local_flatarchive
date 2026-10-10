@@ -1,7 +1,7 @@
 # local_flatarchive — CLAUDE.md
 
 Plugin Moodle local pour archiver des ressources "Page", "Livre", "Zone texte et média", "Fichier" et "Dossier" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.2.0 (2026101003) MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026101004) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
@@ -397,3 +397,27 @@ activity-type alternative text. The existing selection and submission tests cove
 Validation du build 2026101003 : les 14 configurations Moodle/PHP, les 6 tests JavaScript
 et le contrôle Moodle CodeSniffer passent. Vérification visuelle sur la sandbox à réaliser.
 https://github.com/edunover/moodle-local-flatarchive/actions/runs/38060730033
+
+### Feedback — build 2026101004
+
+Export statique du questionnaire, avec choix multiples et pondérés, questions numériques et
+textuelles, informations, étiquettes illustrées, sauts de page, caractère obligatoire et
+conditions. Une page par réponse soumise accessible via `mod/feedback:viewreports` et les
+règles Moodle de visibilité des groupes. Sans ce droit, seul le questionnaire est exporté.
+Les réponses nominatives conservent nom et date ; chaque réponse anonyme conserve son statut
+initial, sans nom, identifiant utilisateur, date ni information automatique. Leur ordre est
+mélangé dans l’archive sans modifier Moodle. Le texte libre est conservé tel que saisi et peut
+contenir des informations fournies par le répondant : il ne fait pas l’objet d’une anonymisation
+sémantique. Les comptes supprimés sont exclus des réponses nominatives comme dans les rapports Moodle.
+
+Index `feedback-{cmid}.html`, pages `feedback-{cmid}-response-{number}.html`, médias isolés
+par module et élément. Les brouillons, statistiques agrégées, formulaires interactifs,
+redirections après soumission et réponses de feedbacks de site rattachées à d’autres cours
+ne sont pas inclus. Les types de questions tiers sont signalés sans interpréter leur configuration.
+Les valeurs absentes (question sautée ou sans réponse enregistrée) ne sont pas inventées.
+
+Feedback exports include the static questionnaire and individual submitted responses permitted
+by report capabilities and Moodle group visibility. Anonymous submissions omit identity and
+time metadata; free text remains unchanged. No interactive forms or aggregate reports are exported.
+Six additional PHPUnit tests cover selection, ZIP/media, question formats, anonymity, response
+isolation, capabilities, separate groups and empty/unsupported questionnaires.

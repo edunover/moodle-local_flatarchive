@@ -96,3 +96,25 @@ $string['wikicomments'] = 'Commentaires';
 $string['wikinotarchived'] = 'Page non archivée';
 
 $string['archive_success_size'] = 'Votre archive a été générée. ({$a})';
+
+$string['feedbackscope'] = 'Questionnaire statique et réponses soumises accessibles. Les brouillons sont exclus. Les réponses anonymes ne comportent ni auteur ni date de soumission. Les réponses libres sont conservées telles que saisies.';
+
+$string['feedbackquestions'] = 'Questionnaire';
+
+$string['feedbackcondition'] = 'Affiché lorsque « {$a->question} » vaut « {$a->value} ».';
+
+$string['feedbackempty'] = 'Ce questionnaire est vide.';
+
+$string['feedbackaftersubmit'] = 'Message après soumission';
+
+$string['feedbackresponses'] = 'Réponses individuelles';
+
+$string['feedbackresponsesrestricted'] = 'Les réponses individuelles sont exclues : le droit de consulter les rapports est nécessaire.';
+
+$string['feedbackresponse'] = 'Réponse {$a}';
+
+$string['backtofeedback'] = 'Retour au Feedback';
+
+$string['feedbacknoresponses'] = 'Aucune réponse soumise accessible dans ce cours et tes groupes.';
+
+$string['feedbackunsupported'] = 'Ce type de question n’est pas pris en charge par l’archive.';

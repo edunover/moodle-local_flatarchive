@@ -87,3 +87,25 @@ $string['wikicomments'] = 'Reacties';
 $string['wikinotarchived'] = 'Pagina niet gearchiveerd';
 
 $string['archive_success_size'] = 'Je archief is aangemaakt. ({$a})';
+
+$string['feedbackscope'] = 'Statische vragenlijst en toegankelijke ingediende antwoorden. Concepten worden uitgesloten. Anonieme antwoorden hebben geen auteur of indieningsdatum. Vrije tekst blijft ongewijzigd.';
+
+$string['feedbackquestions'] = 'Vragenlijst';
+
+$string['feedbackcondition'] = 'Getoond wanneer “{$a->question}” gelijk is aan “{$a->value}”.';
+
+$string['feedbackempty'] = 'Deze vragenlijst is leeg.';
+
+$string['feedbackaftersubmit'] = 'Bericht na indiening';
+
+$string['feedbackresponses'] = 'Individuele antwoorden';
+
+$string['feedbackresponsesrestricted'] = 'Individuele antwoorden zijn niet opgenomen: toestemming om rapporten te bekijken is vereist.';
+
+$string['feedbackresponse'] = 'Antwoord {$a}';
+
+$string['backtofeedback'] = 'Terug naar Feedback';
+
+$string['feedbacknoresponses'] = 'Er zijn geen ingediende antwoorden beschikbaar in deze cursus en je groepen.';
+
+$string['feedbackunsupported'] = 'Dit vraagtype wordt niet ondersteund door het archief.';

@@ -75,6 +75,20 @@ final class get_tree_test extends \externallib_advanced_testcase {
         }
     }
 
+    /** Feedback activities are selectable only from the requested course. */
+    public function test_feedback_selection(): void {
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $other = $generator->create_course();
+        $feedback = $generator->create_module('feedback', ['course' => $course->id]);
+        $generator->create_module('feedback', ['course' => $other->id]);
+        $sections = $this->read_tree($course->id)['sections'];
+        $this->assertCount(1, $sections);
+        $this->assertCount(1, $sections[0]['modules']);
+        $this->assertEquals($feedback->cmid, $sections[0]['modules'][0]['cmid']);
+        $this->assertSame('feedback', $sections[0]['modules'][0]['type']);
+    }
+
     /**
      * A course containing only a hidden text and media area remains archivable by a teacher.
      */
