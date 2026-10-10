@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires et Wikis) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101001) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101002) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -99,7 +99,7 @@ archive_SHORTNAME_202603291200.zip
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries and Wikis) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101001) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101002) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -465,3 +465,13 @@ Le glossaire 2026100903 est installé et validé : trois auteurs et trois commen
 dans l’archive du 9 octobre à 17:23 ; 276 références locales sans cible manquante.
 Le multilinguisme reste prévu après les activités : `{mlang}`, balises FilterCodes
 `{multilang xx}…{/multilang}` et HTML multilang, avec navigation entre traductions sur chaque page.
+
+### Taille du ZIP — build 2026101002
+
+La page de téléchargement affiche la taille réelle du ZIP terminé à côté du message de
+confirmation, dans le titre et la notification. Le formatage utilise `display_size()` de
+Moodle et les messages sont traduits en français, anglais et néerlandais. Si la taille
+ne peut pas être lue, le message de confirmation reste affiché sans taille.
+
+The download page shows the completed ZIP size next to the success message, using Moodle’s
+localized size formatting. Manual verification on the sandbox remains pending.

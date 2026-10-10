@@ -85,3 +85,5 @@ $string['backtowiki'] = 'Terug naar wiki';
 $string['wikilastauthor'] = 'Laatste versie door';
 $string['wikicomments'] = 'Reacties';
 $string['wikinotarchived'] = 'Pagina niet gearchiveerd';
+
+$string['archive_success_size'] = 'Je archief is aangemaakt. ({$a})';

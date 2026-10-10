@@ -94,3 +94,5 @@ $string['backtowiki'] = 'Back to wiki';
 $string['wikilastauthor'] = 'Last revision by';
 $string['wikicomments'] = 'Comments';
 $string['wikinotarchived'] = 'Page not archived';
+
+$string['archive_success_size'] = 'Your archive has been generated. ({$a})';
