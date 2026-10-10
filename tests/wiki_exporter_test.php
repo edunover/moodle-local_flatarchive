@@ -108,6 +108,19 @@ final class wiki_exporter_test extends \advanced_testcase {
             $this->assertStringNotContainsString($text, $html[$firstfile]);
         }
         $this->assertSame('STALE CACHE', $DB->get_field('wiki_pages', 'cachedcontent', ['id' => $first->id]));
+        foreach ($html as $document) {
+            $dom = new \DOMDocument();
+            @$dom->loadHTML($document);
+            $xpath = new \DOMXPath($dom);
+            foreach ($xpath->query('//a[@href] | //img[@src]') as $node) {
+                $url = $node->getAttribute($node->nodeName === 'a' ? 'href' : 'src');
+                $path = parse_url($url, PHP_URL_PATH);
+                if (!$path || parse_url($url, PHP_URL_HOST) || $path === 'index.html') {
+                    continue;
+                }
+                $this->assertFileExists($directory . '/' . rawurldecode($path));
+            }
+        }
         $zipfiles = [];
         foreach ($result['filenames'] as $filename) {
             $zipfiles[$filename] = $directory . '/' . $filename;

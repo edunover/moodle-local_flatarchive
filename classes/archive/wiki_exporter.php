@@ -306,7 +306,10 @@ final class wiki_exporter {
                     $target = $map[(int)$query['pageid']] ?? null;
                 } else if ($isview && (int)($query['id'] ?? 0) === (int)$cm->id) {
                     $target = 'wiki-' . $cm->id . '.html';
-                } else if (isset($query['title'])) {
+                } else if (
+                    isset($query['title']) &&
+                    (!isset($query['wid']) || (int)$query['wid'] === (int)$cm->instance)
+                ) {
                     $swid = (int)($query['swid'] ?? $page->subwikiid);
                     foreach ($pages as $candidate) {
                         if ((int)$candidate->subwikiid === $swid && $candidate->title === $query['title']) {
