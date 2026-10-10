@@ -96,7 +96,7 @@ class get_tree extends external_api {
                     'name' => $cm->name,
                     'type' => $cm->modname,
                     'iconurl' => $cm->get_icon_url()->out(false),
-                    'modfullname' => $cm->get_module_type_name(),
+                    'modfullname' => (string)$cm->get_module_type_name(),
                     'visible' => (bool) $cm->visible,
                     'available' => (bool) $cm->available,
                 ];

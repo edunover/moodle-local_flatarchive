@@ -71,7 +71,7 @@ final class get_tree_test extends \externallib_advanced_testcase {
         foreach ($modules as $module) {
             $cm = get_fast_modinfo($course)->get_cm($module['cmid']);
             $this->assertSame($cm->get_icon_url()->out(false), $module['iconurl']);
-            $this->assertSame($cm->get_module_type_name(), $module['modfullname']);
+            $this->assertSame((string)$cm->get_module_type_name(), $module['modfullname']);
         }
     }
 
