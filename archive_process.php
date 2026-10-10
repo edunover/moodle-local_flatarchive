@@ -63,7 +63,8 @@ $cms = $modinfo->get_cms();
 
 // Validate the whole selection before creating any files.
 foreach ($cmids as $cmid) {
-    if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki'], true)) {
+    $supported = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki'];
+    if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, $supported, true)) {
         throw new moodle_exception('invalidselection', 'local_flatarchive');
     }
 }

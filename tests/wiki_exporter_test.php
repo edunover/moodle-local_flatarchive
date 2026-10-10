@@ -18,8 +18,6 @@ namespace local_flatarchive;
 
 use local_flatarchive\archive\wiki_exporter;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Test offline wiki revisions, navigation, files and access isolation.
  *
@@ -29,7 +27,9 @@ defined('MOODLE_INTERNAL') || die();
  * @covers \local_flatarchive\archive\wiki_exporter
  */
 final class wiki_exporter_test extends \advanced_testcase {
-    /** Set up independent wiki fixtures. */
+    /**
+     * Set up independent wiki fixtures.
+     */
     protected function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();
@@ -55,7 +55,9 @@ final class wiki_exporter_test extends \advanced_testcase {
         return [$result, $directory, $html];
     }
 
-    /** Latest revisions, Unicode links, fragments, attachments and comments survive a ZIP round trip. */
+    /**
+     * Latest revisions, Unicode links, fragments, attachments and comments survive a ZIP round trip.
+     */
     public function test_pages_links_files_and_comments(): void {
         global $DB, $CFG, $USER;
         $generator = $this->getDataGenerator();
@@ -65,7 +67,12 @@ final class wiki_exporter_test extends \advanced_testcase {
         $second = $wg->create_page($wiki, ['title' => 'Été & suite', 'content' => '<h2 id="details">Suite</h2>']);
         $context = \context_module::instance($wiki->cmid);
         $fileurl = \moodle_url::make_pluginfile_url(
-            $context->id, 'mod_wiki', 'attachments', $second->subwikiid, '/', 'image été.png'
+            $context->id,
+            'mod_wiki',
+            'attachments',
+            $second->subwikiid,
+            '/',
+            'image été.png'
         )->out(false);
         $first = $wg->create_first_page($wiki, ['content' => '<p>OLD REVISION</p>']);
         $newcontent = '<p>[[Été & suite]] [[Page absente]]</p><img alt="Test" src="@@PLUGINFILE@@/image%20%C3%A9t%C3%A9.png">' .
@@ -88,14 +95,16 @@ final class wiki_exporter_test extends \advanced_testcase {
         $this->assertCount(3, $result['filenames']);
         $firstfile = 'wiki-' . $wiki->cmid . '-page-' . $first->id . '.html';
         $secondfile = 'wiki-' . $wiki->cmid . '-page-' . $second->id . '.html';
-        $this->assertStringContainsString($secondfile, $html[$firstfile]);
+        $this->assertStringContainsString('href="' . $secondfile . '"', $html[$firstfile]);
         $this->assertStringContainsString($secondfile . '#details', $html[$firstfile]);
         $this->assertStringContainsString(get_string('wikinotarchived', 'local_flatarchive'), $html[$firstfile]);
         $this->assertStringContainsString('https://example.org/mod/wiki/view.php?pageid=1', $html[$firstfile]);
         $this->assertStringContainsString('Commentaire', $html[$firstfile]);
         $this->assertStringContainsString('2023-11-14T22:13:20Z', $html[$firstfile]);
         $this->assertStringContainsString(fullname($USER), $html[$firstfile]);
-        foreach (['OLD REVISION', 'STALE CACHE', '@@PLUGINFILE@@', '/mod/wiki/create.php', $CFG->wwwroot . '/pluginfile.php'] as $text) {
+        $excluded = ['OLD REVISION', 'STALE CACHE', '@@PLUGINFILE@@', '/mod/wiki/create.php',
+            'wiki_edit_section', $CFG->wwwroot . '/pluginfile.php'];
+        foreach ($excluded as $text) {
             $this->assertStringNotContainsString($text, $html[$firstfile]);
         }
         $this->assertSame('STALE CACHE', $DB->get_field('wiki_pages', 'cachedcontent', ['id' => $first->id]));
@@ -116,7 +125,9 @@ final class wiki_exporter_test extends \advanced_testcase {
         }
     }
 
-    /** Creole and NWiki render from source, including their internal page links. */
+    /**
+     * Creole and NWiki render from source, including their internal page links.
+     */
     public function test_markup_formats(): void {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
@@ -129,12 +140,18 @@ final class wiki_exporter_test extends \advanced_testcase {
             $this->assertCount(3, $result['filenames']);
             $all = implode('', $html);
             $this->assertStringContainsString('wiki-' . $wiki->cmid . '-page-' . $target->id . '.html', $all);
+            $sourcefile = 'wiki-' . $wiki->cmid . '-page-';
+            $targetlink = 'href="' . $sourcefile . $target->id . '.html"';
+            $this->assertSame(2, substr_count($all, $targetlink));
+            $this->assertStringNotContainsString('wiki_edit_section', $all);
             $this->assertStringContainsString('Heading', $all);
             $this->assertStringNotContainsString('[[Destination]]', $all);
         }
     }
 
-    /** Private individual wikis and their files never leak into another student's archive. */
+    /**
+     * Private individual wikis and their files never leak into another student's archive.
+     */
     public function test_individual_visibility(): void {
         global $CFG;
         $generator = $this->getDataGenerator();
@@ -162,7 +179,9 @@ final class wiki_exporter_test extends \advanced_testcase {
         $this->assertCount(3, $result['filenames']);
     }
 
-    /** Separate groups remain isolated; identical page titles have separate destinations. */
+    /**
+     * Separate groups remain isolated; identical page titles have separate destinations.
+     */
     public function test_group_visibility_and_collisions(): void {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course(['groupmode' => SEPARATEGROUPS]);
@@ -186,7 +205,9 @@ final class wiki_exporter_test extends \advanced_testcase {
         $this->assertStringContainsString('GROUP B', implode('', $html));
     }
 
-    /** Denied comments are excluded, while an empty wiki still produces a useful index. */
+    /**
+     * Denied comments are excluded, while an empty wiki still produces a useful index.
+     */
     public function test_comments_permissions_and_empty_wiki(): void {
         global $DB, $USER;
         $generator = $this->getDataGenerator();

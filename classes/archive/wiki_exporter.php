@@ -68,7 +68,13 @@ final class wiki_exporter {
         $filenames = [$filename];
         $badges = \local_flatarchive_visibility_badges($cm, $modinfo);
         $intro = \local_flatarchive_copy_pluginfiles_and_rewrite(
-            $wiki->intro ?? '', $context, 'mod_wiki', 'intro', 0, $directory, (int)$cm->id
+            $wiki->intro ?? '',
+            $context,
+            'mod_wiki',
+            'intro',
+            0,
+            $directory,
+            (int)$cm->id
         );
         $content = format_text($intro, $wiki->introformat, ['context' => $context, 'filter' => false]);
         $content .= \html_writer::tag('p', get_string('wikiscope', 'local_flatarchive'));
@@ -97,10 +103,21 @@ final class wiki_exporter {
                 \html_writer::tag('p', get_string('wikiempty', 'local_flatarchive'));
             // Wiki files belong to a subwiki, not a particular page.
             \local_flatarchive_copy_pluginfiles_and_rewrite(
-                '', $context, 'mod_wiki', 'attachments', (int)$space->id, $directory, (int)$cm->id
+                '',
+                $context,
+                'mod_wiki',
+                'attachments',
+                (int)$space->id,
+                $directory,
+                (int)$cm->id
             );
             $files = get_file_storage()->get_area_files(
-                $context->id, 'mod_wiki', 'attachments', $space->id, 'filepath, filename', false
+                $context->id,
+                'mod_wiki',
+                'attachments',
+                $space->id,
+                'filepath, filename',
+                false
             );
             $attachments = '';
             foreach ($files as $file) {
@@ -120,15 +137,17 @@ final class wiki_exporter {
         foreach ($pages as $page) {
             $version = $page->currentversion;
             $body = \html_writer::tag('p', \html_writer::link(
-                $filename . '#subwiki-' . $page->subwikiid, get_string('backtowiki', 'local_flatarchive')
+                $filename . '#subwiki-' . $page->subwikiid,
+                get_string('backtowiki', 'local_flatarchive')
             ));
             $body .= \html_writer::tag('p', get_string('wikilastauthor', 'local_flatarchive') . ': ' .
                 s(self::author((int)$version->userid)) . ' — ' . \html_writer::tag(
-                    'time', s(userdate($version->timecreated)),
+                    'time',
+                    s(userdate($version->timecreated)),
                     ['datetime' => gmdate('Y-m-d\TH:i:s\Z', $version->timecreated)]
                 ));
             $parsed = wiki_parse_content($version->contentformat, $version->content, [
-                'swid' => $page->subwikiid, 'pageid' => $page->id, 'printable' => true,
+                'swid' => $page->subwikiid, 'pageid' => $page->id, 'pretty_print' => true,
             ]);
             $body .= format_text($parsed['toc'] . $parsed['parsed_text'], FORMAT_HTML, [
                 'context' => $context, 'filter' => false, 'allowid' => true,
@@ -172,7 +191,8 @@ final class wiki_exporter {
         }
         $items = '';
         $records = $DB->get_recordset_select(
-            'comments', 'contextid = :ctx AND commentarea = :area AND itemid = :page AND ' .
+            'comments',
+            'contextid = :ctx AND commentarea = :area AND itemid = :page AND ' .
             '(component = :component OR component IS NULL)',
             ['ctx' => $context->id, 'area' => 'wiki_page', 'page' => $page->id, 'component' => 'mod_wiki'],
             'timecreated, id'
@@ -182,7 +202,7 @@ final class wiki_exporter {
                 if (in_array((int)$comment->format, [(int)FORMAT_CREOLE, (int)FORMAT_NWIKI], true)) {
                     $format = (int)$comment->format === (int)FORMAT_CREOLE ? 'creole' : 'nwiki';
                     $parsed = wiki_parse_content($format, $comment->content, [
-                        'swid' => $page->subwikiid, 'pageid' => $page->id, 'printable' => true,
+                        'swid' => $page->subwikiid, 'pageid' => $page->id, 'pretty_print' => true,
                     ]);
                     $text = format_text($parsed['parsed_text'], FORMAT_HTML, ['context' => $context, 'filter' => false]);
                 } else {

@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers et Glossaires) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026100904) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101001) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -99,7 +99,7 @@ archive_SHORTNAME_202603291200.zip
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders and Glossaries) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026100904) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101001) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -442,7 +442,7 @@ une liste et trois pages de définition. Build 2026100903 : 42 tests PHPUnit et 
 6 tests JavaScript et contrôle Moodle CodeSniffer réussis. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37950134719),
 code `ca50a4c`. Validation manuelle à réaliser après installation.
 
-### Wiki — build 2026100904
+### Wiki — build 2026101001
 
 Export de la dernière révision des pages Wiki (HTML, Creole et NWiki), avec index par espace,
 liens internes hors ligne, fichiers partagés par sous-wiki, auteur de la dernière révision et
