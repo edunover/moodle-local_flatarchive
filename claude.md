@@ -1,7 +1,7 @@
 # local_flatarchive — CLAUDE.md
 
 Plugin Moodle local pour archiver des ressources "Page", "Livre", "Zone texte et média", "Fichier" et "Dossier" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.2.0 (2026101004) MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026101005) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
@@ -172,7 +172,7 @@ Référence : https://moodlehq.github.io/moodle-plugin-ci/
 
 Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation réussie sur les 14 combinaisons Moodle/PHP.
 
-Matrice CI (16 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 et 5.3 avec PHP 8.3/8.4. Chaque combinaison exécute les 54 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
+Matrice CI (16 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 et 5.3 avec PHP 8.3/8.4. Chaque combinaison exécute les 55 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
 
 Références des prérequis : https://moodledev.io/general/releases/4.4 ; https://moodledev.io/general/releases/4.5 ; https://moodledev.io/general/releases/5.0 ; https://moodledev.io/general/releases/5.1 ; https://moodledev.io/general/releases/5.2
 
@@ -433,3 +433,15 @@ Référence : https://moodledev.io/general/releases/5.3
 Validation Feedback avant extension : les 14 configurations Moodle/PHP et le job JavaScript ont réussi :
 https://github.com/edunover/moodle-local-flatarchive/actions/runs/38080207773 (commit `47abe8f`).
 La validation Moodle 5.3 est en attente de la prochaine exécution.
+
+### Icônes dans l’index hors connexion — build 2026101005
+
+Chaque activité exportée (Page, Livre, Texte et média, Fichier, Dossier, Glossaire,
+Wiki et Feedback) reçoit désormais son icône officielle Moodle dans l’index du ZIP.
+Les images sont stockées une seule fois par type dans `shared/icons/` ; aucun accès
+au site Moodle n’est nécessaire pour les afficher. Le nom du type sert de texte alternatif.
+La présentation des zones Texte et média et les liens existants sont conservés.
+
+Feedback : fonctionnement manuel confirmé par l’utilisateur le 10 octobre 2026.
+La matrice complète Moodle 4.4 à 5.3 a réussi avant cette modification :
+https://github.com/edunover/moodle-local-flatarchive/actions/runs/38080563571.

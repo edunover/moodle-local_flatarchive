@@ -141,12 +141,7 @@ try {
             $badges = local_flatarchive_visibility_badges($cm, $modinfo);
             $html = local_flatarchive_render_page_template($course, $cm, $cm->name, $pagecontent, '', $badges);
             local_flatarchive_write_file($pagepath, $html);
-            $iconpath = local_flatarchive_copy_mod_icon('page', $sharedfolder);
-            $iconimg = $iconpath ? '<img class="fa-modicon" src="' . s($iconpath) . '" alt=""> ' : '';
-            if ($iconpath && !isset($zipfiles[$iconpath])) {
-                $zipfiles[$iconpath] = $tempdir . '/' . $iconpath;
-            }
-            $indexitems[$cmid] = '<li>' . $iconimg . '<a href="' . s(rawurlencode($pagefile)) . '">' . s($cm->name) . '</a>'
+            $indexitems[$cmid] = '<li><a href="' . s(rawurlencode($pagefile)) . '">' . s($cm->name) . '</a>'
                 . ($badges ? ' ' . $badges : '') . '</li>';
             $zipfiles[$pagefile] = $pagepath;
             $DB->get_field_sql('SELECT 1'); // Keepalive MySQL (wait_timeout=60s sur LWS).
@@ -207,12 +202,7 @@ try {
             $zipfiles[$bookshortname . '/index.html'] = $bookdir . '/index.html';
 
             // Une seule entrée dans l'index principal, pointant vers la TOC du Livre.
-            $bookiconpath = local_flatarchive_copy_mod_icon('book', $sharedfolder);
-            $bookiconimg = $bookiconpath ? '<img class="fa-modicon" src="' . s($bookiconpath) . '" alt=""> ' : '';
-            if ($bookiconpath && !isset($zipfiles[$bookiconpath])) {
-                $zipfiles[$bookiconpath] = $tempdir . '/' . $bookiconpath;
-            }
-            $indexitems[$cmid] = '<li>' . $bookiconimg . '<a href="' . s(rawurlencode($bookshortname) . '/index.html')
+            $indexitems[$cmid] = '<li><a href="' . s(rawurlencode($bookshortname) . '/index.html')
                 . '">' . s($cm->name) . '</a>'
                 . ($bookbadges ? ' ' . $bookbadges : '') . '</li>';
             continue;
@@ -234,6 +224,9 @@ try {
         }
     }
 
+    $index = \local_flatarchive\archive\index_icons::add($indexitems, $modinfo, $tempdir);
+    $indexitems = $index['items'];
+    $zipfiles += $index['files'];
     $sections = local_flatarchive_group_index_links($course, $modinfo, $indexitems);
     $indexhtml = local_flatarchive_render_index_template($course, $courseid, $sections, $course->shortname);
     local_flatarchive_write_file($tempdir . '/index.html', $indexhtml);
