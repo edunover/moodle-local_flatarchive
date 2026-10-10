@@ -27,7 +27,9 @@ use local_flatarchive\archive\feedback_exporter;
  * @covers \local_flatarchive\archive\feedback_exporter
  */
 final class feedback_exporter_test extends \advanced_testcase {
-    /** Set up a fresh Moodle fixture. */
+    /**
+     * Set up a fresh Moodle fixture.
+     */
     protected function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();
@@ -99,7 +101,9 @@ final class feedback_exporter_test extends \advanced_testcase {
         return [$directory, $result, $pages];
     }
 
-    /** Questions, conditions, media, choices and submitted answers survive a ZIP round trip. */
+    /**
+     * Questions, conditions, media, choices and submitted answers survive a ZIP round trip.
+     */
     public function test_questionnaire_files_and_responses(): void {
         global $DB;
         $generator = $this->getDataGenerator();
@@ -112,8 +116,13 @@ final class feedback_exporter_test extends \advanced_testcase {
         $this->question($feedback, 'pagebreak', '');
         $rated = $this->question($feedback, 'multichoicerated', 'Note', 'r>>>>>1####Faible|5####Excellent');
         $numeric = $this->question($feedback, 'numeric', 'Nombre', '0|10');
-        $text = $this->question($feedback, 'textarea', 'Pourquoi ?', '40|5',
-            ['dependitem' => $choice->id, 'dependvalue' => 'Oui']);
+        $text = $this->question(
+            $feedback,
+            'textarea',
+            'Pourquoi ?',
+            '40|5',
+            ['dependitem' => $choice->id, 'dependvalue' => 'Oui']
+        );
         $this->question($feedback, 'textfield', 'Court', '20|100');
         $this->question($feedback, 'captcha', 'Contrôle');
         $context = \context_module::instance($feedback->cmid);
@@ -151,7 +160,9 @@ final class feedback_exporter_test extends \advanced_testcase {
         $this->assertSame('Image bytes', file_get_contents($extracted . '/' . $asset));
     }
 
-    /** Per-response anonymity wins over the current activity setting; no private metadata leaks. */
+    /**
+     * Per-response anonymity wins over the current activity setting; no private metadata leaks.
+     */
     public function test_anonymous_and_foreign_values(): void {
         global $DB;
         $generator = $this->getDataGenerator();
@@ -162,21 +173,28 @@ final class feedback_exporter_test extends \advanced_testcase {
         $rated = $this->question($feedback, 'multichoicerated', 'Rating only', 'r>>>>>1####Low|2####High');
         $info = $this->question($feedback, 'info', 'AUTOMATIC_TIMESTAMP', '1');
         $foreign = $this->question($other, 'textarea', 'FOREIGN_QUESTION');
-        $completed = $this->response($feedback, $user->id,
-            [$rated->id => '2', $info->id => '1700000000', $foreign->id => 'FOREIGN_ANSWER'], true);
+        $completed = $this->response(
+            $feedback,
+            $user->id,
+            [$rated->id => '2', $info->id => '1700000000', $foreign->id => 'FOREIGN_ANSWER'],
+            true
+        );
         $this->response($other, $user->id, [$foreign->id => 'OTHER_RESPONSE']);
         [, $result, $pages] = $this->export($feedback);
         $this->assertCount(2, $pages);
         $response = $pages[$result['filenames'][1]];
-        foreach (['SECRETNAME', 'PRIVATE', '1700000000', '2023-11-14', 'AUTOMATIC_TIMESTAMP',
-                'FOREIGN_ANSWER', 'FOREIGN_QUESTION', 'OTHER_RESPONSE'] as $secret) {
+        $secrets = ['SECRETNAME', 'PRIVATE', '1700000000', '2023-11-14', 'AUTOMATIC_TIMESTAMP',
+            'FOREIGN_ANSWER', 'FOREIGN_QUESTION', 'OTHER_RESPONSE'];
+        foreach ($secrets as $secret) {
             $this->assertStringNotContainsString($secret, $response);
         }
         $this->assertStringContainsString('High (2)', $response);
         $this->assertEquals(0, $DB->get_field('feedback_completed', 'random_response', ['id' => $completed]));
     }
 
-    /** Report access is required even if aggregate statistics are published. */
+    /**
+     * Report access is required even if aggregate statistics are published.
+     */
     public function test_report_capability_and_view_capability(): void {
         global $DB;
         $generator = $this->getDataGenerator();
@@ -199,7 +217,9 @@ final class feedback_exporter_test extends \advanced_testcase {
         $this->export($feedback);
     }
 
-    /** Separate groups restrict named and anonymous responses to visible users. */
+    /**
+     * Separate groups restrict named and anonymous responses to visible users.
+     */
     public function test_separate_groups(): void {
         global $DB;
         $generator = $this->getDataGenerator();
@@ -231,7 +251,9 @@ final class feedback_exporter_test extends \advanced_testcase {
         $this->assertCount(3, $pages);
     }
 
-    /** Empty feedbacks and unsupported question types have explicit static messages. */
+    /**
+     * Empty feedbacks and unsupported question types have explicit static messages.
+     */
     public function test_empty_and_unsupported(): void {
         $course = $this->getDataGenerator()->create_course();
         $feedback = $this->getDataGenerator()->create_module('feedback', ['course' => $course->id]);

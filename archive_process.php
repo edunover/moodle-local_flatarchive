@@ -88,8 +88,11 @@ try {
         $cm = $cms[$cmid];
 
         if (in_array($cm->modname, ['glossary', 'wiki', 'feedback'], true)) {
-            $exporters = ['wiki' => wiki_exporter::class, 'glossary' => glossary_exporter::class,
-                'feedback' => feedback_exporter::class];
+            $exporters = [
+                'wiki' => wiki_exporter::class,
+                'glossary' => glossary_exporter::class,
+                'feedback' => feedback_exporter::class,
+            ];
             $exporter = $exporters[$cm->modname];
             $export = $exporter::render($cm, $modinfo, $tempdir);
             $indexitems[$cmid] = $export['item'];

@@ -74,17 +74,27 @@ final class feedback_exporter {
         }
         if ($feedback->page_after_submit !== '') {
             $content .= \html_writer::tag('h2', get_string('feedbackaftersubmit', 'local_flatarchive'));
-            $content .= self::text($feedback->page_after_submit, $feedback->page_after_submitformat,
-                $context, 'page_after_submit', 0, $directory, $cm->id);
+            $content .= self::text(
+                $feedback->page_after_submit,
+                $feedback->page_after_submitformat,
+                $context,
+                'page_after_submit',
+                0,
+                $directory,
+                $cm->id
+            );
         }
         $content .= \html_writer::tag('h2', get_string('feedbackresponses', 'local_flatarchive'));
         if (!has_capability('mod/feedback:viewreports', $context)) {
             $content .= \html_writer::tag('p', get_string('feedbackresponsesrestricted', 'local_flatarchive'));
         } else {
             // Completed responses only, scoped to this activity and course (including local course_id = 0).
-            $responses = $DB->get_records_select('feedback_completed',
+            $responses = $DB->get_records_select(
+                'feedback_completed',
                 'feedback = :feedback AND (courseid = 0 OR courseid = :courseid)',
-                ['feedback' => $feedback->id, 'courseid' => $cm->course], 'id');
+                ['feedback' => $feedback->id, 'courseid' => $cm->course],
+                'id'
+            );
             // Avoid exposing submission order through anonymous page numbers. Do not shuffle Moodle records.
             $responses = array_values($responses);
             shuffle($responses);
@@ -107,8 +117,10 @@ final class feedback_exporter {
                 $title = get_string('feedbackresponse', 'local_flatarchive', $number);
                 $title .= ' — ' . ($anonymous ? get_string('anonymous', 'feedback') : fullname($user));
                 $responsefile = 'feedback-' . $cm->id . '-response-' . $number . '.html';
-                $body = \html_writer::tag('p', \html_writer::link($filename,
-                    get_string('backtofeedback', 'local_flatarchive')));
+                $body = \html_writer::tag('p', \html_writer::link(
+                    $filename,
+                    get_string('backtofeedback', 'local_flatarchive')
+                ));
                 if (!$anonymous) {
                     $body .= \html_writer::tag('time', s(userdate($response->timemodified)), [
                         'datetime' => gmdate('Y-m-d\\TH:i:s\\Z', $response->timemodified),
@@ -246,8 +258,15 @@ final class feedback_exporter {
         string $directory,
         int $cmid
     ): string {
-        $text = \local_flatarchive_copy_pluginfiles_and_rewrite($text, $context, 'mod_feedback', $area,
-            $itemid, $directory, $cmid);
+        $text = \local_flatarchive_copy_pluginfiles_and_rewrite(
+            $text,
+            $context,
+            'mod_feedback',
+            $area,
+            $itemid,
+            $directory,
+            $cmid
+        );
         return format_text($text, $format, ['context' => $context, 'filter' => false]);
     }
 }

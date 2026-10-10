@@ -75,7 +75,9 @@ final class get_tree_test extends \externallib_advanced_testcase {
         }
     }
 
-    /** Feedback activities are selectable only from the requested course. */
+    /**
+     * Feedback activities are selectable only from the requested course.
+     */
     public function test_feedback_selection(): void {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
