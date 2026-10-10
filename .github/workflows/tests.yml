@@ -127,6 +127,7 @@ jobs:
         if: (matrix.moodle == '5.2' || matrix.moodle == '5.3') && matrix.php == '8.4'
         run: >-
           phpcs --standard=moodle
+          plugin/classes/archive/choice_exporter.php plugin/tests/choice_exporter_test.php
           plugin/classes/archive/index_icons.php plugin/tests/index_icons_test.php
           plugin/classes/archive/feedback_exporter.php plugin/tests/feedback_exporter_test.php
           plugin/classes/archive/wiki_exporter.php plugin/tests/wiki_exporter_test.php

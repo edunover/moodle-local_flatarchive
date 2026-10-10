@@ -109,3 +109,13 @@ $string['backtofeedback'] = 'Terug naar Feedback';
 $string['feedbacknoresponses'] = 'Er zijn geen ingediende antwoorden beschikbaar in deze cursus en je groepen.';
 
 $string['feedbackunsupported'] = 'Dit vraagtype wordt niet ondersteund door het archief.';
+
+$string['choicemultiple'] = 'Meerdere opties kunnen worden geselecteerd.';
+$string['choicesingle'] = 'Er kan slechts één optie worden geselecteerd.';
+$string['choiceoptions'] = 'Opties';
+$string['choicelimit'] = 'Maximumaantal antwoorden: {$a}';
+$string['choiceresults'] = 'Resultaten';
+$string['choicerestricted'] = 'De resultaten kunnen niet worden geëxporteerd met je huidige rechten of publicatie-instellingen.';
+$string['choicescope'] = 'Momentopname van ingediende antwoorden voor de huidige Moodle-groep en inschrijvingen.'
+    . ' Niet-respondenten en antwoorddatums zijn niet opgenomen.';
+$string['choicecount'] = 'Antwoorden: {$a}';

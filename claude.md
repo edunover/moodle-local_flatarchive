@@ -1,7 +1,7 @@
 # local_flatarchive — CLAUDE.md
 
 Plugin Moodle local pour archiver des ressources "Page", "Livre", "Zone texte et média", "Fichier" et "Dossier" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.2.0 (2026101005) MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026101006) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
@@ -172,7 +172,7 @@ Référence : https://moodlehq.github.io/moodle-plugin-ci/
 
 Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation réussie sur les 14 combinaisons Moodle/PHP.
 
-Matrice CI (16 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 et 5.3 avec PHP 8.3/8.4. Chaque combinaison exécute les 55 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
+Matrice CI (16 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 et 5.3 avec PHP 8.3/8.4. Chaque combinaison exécute les 60 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
 
 Références des prérequis : https://moodledev.io/general/releases/4.4 ; https://moodledev.io/general/releases/4.5 ; https://moodledev.io/general/releases/5.0 ; https://moodledev.io/general/releases/5.1 ; https://moodledev.io/general/releases/5.2
 
@@ -445,3 +445,23 @@ La présentation des zones Texte et média et les liens existants sont conservé
 Feedback : fonctionnement manuel confirmé par l’utilisateur le 10 octobre 2026.
 La matrice complète Moodle 4.4 à 5.3 a réussi avant cette modification :
 https://github.com/edunover/moodle-local-flatarchive/actions/runs/38080563571.
+
+### Consultation (Choice) — build 2026101006
+
+Export statique de la description et de ses médias, des options dans leur ordre,
+du mode unique/multiple et des limites de réponse configurées. Une page
+`choice-{cmid}.html` est liée depuis l’index, avec l’icône officielle hors connexion.
+Les résultats publiés suivent `choice_can_view_results` (jamais, après réponse,
+après fermeture ou toujours). Les effectifs anonymes ne contiennent aucun nom.
+Les résultats nominatifs publiés peuvent inclure les noms ; le rapport privé exige
+`mod/choice:readresponses` et `mod/choice:downloadresponses`.
+Le groupe courant, les inscriptions actives/inactives et la visibilité des groupes
+sont respectés via les API Moodle. Les réponses multiples sont comptées par option.
+Les non-répondants, dates individuelles et formulaires interactifs sont exclus.
+Aucune réponse ni donnée de complétion n’est modifiée lors de l’export.
+
+Tests ajoutés : médias, réponses multiples, publication, anonymat, droits de rapport,
+groupes séparés et sélection limitée au cours ; icône Choice ajoutée au test ZIP.
+Validation manuelle Choice encore à effectuer. Le build précédent 2026101005 est
+validé manuellement et par la matrice complète :
+https://github.com/edunover/moodle-local-flatarchive/actions/runs/38081293859.

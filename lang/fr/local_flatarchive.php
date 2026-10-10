@@ -118,3 +118,14 @@ $string['backtofeedback'] = 'Retour au Feedback';
 $string['feedbacknoresponses'] = 'Aucune réponse soumise accessible dans ce cours et tes groupes.';
 
 $string['feedbackunsupported'] = 'Ce type de question n’est pas pris en charge par l’archive.';
+
+$string['choicemultiple'] = 'Plusieurs options peuvent être sélectionnées.';
+$string['choicesingle'] = 'Une seule option peut être sélectionnée.';
+$string['choiceoptions'] = 'Options';
+$string['choicelimit'] = 'Nombre maximal de réponses : {$a}';
+$string['choiceresults'] = 'Résultats';
+$string['choicerestricted'] = 'Les résultats ne sont pas disponibles à l’export avec tes droits actuels ou les'
+    . ' paramètres de publication.';
+$string['choicescope'] = 'Instantané des réponses soumises pour le groupe courant et les inscriptions retenues'
+    . ' par Moodle. Les non-répondants et les dates de réponse ne sont pas inclus.';
+$string['choicecount'] = 'Réponses : {$a}';
