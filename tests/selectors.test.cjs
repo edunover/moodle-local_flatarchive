@@ -15,7 +15,8 @@ const sections = [{name: 'Section', visible: true, modules: [
     {cmid: 11, name: 'Folder resource', type: 'folder', visible: true},
     {cmid: 12, name: 'Glossary', type: 'glossary', visible: true},
     {cmid: 13, name: 'Wiki', type: 'wiki', visible: true}
-]}];
+].map(item => ({...item, iconurl: `https://moodle.example/theme/image.php/boost/${item.type}/1/icon`,
+    modfullname: `Type ${item.type}`}))}];
 
 async function setup(file, response = {sections}, error = null) {
     const dom = new JSDOM(template, {url: 'https://moodle.example/', runScripts: 'outside-only'});
@@ -47,7 +48,16 @@ for (const file of ['amd/src/selectors.js', 'amd/build/selectors.min.js']) {
         assert.equal(ctx.requests[0].methodname, 'local_flatarchive_get_tree');
         assert.equal(ctx.requests[0].args.courseid, 42);
         assert.equal(document.querySelectorAll('input[name="cmid[]"]').length, 7);
-        assert.equal(document.querySelector('[data-region="tree"] img'), null);
+        const icons = document.querySelectorAll('[data-region="tree"] img');
+        assert.equal(icons.length, 7);
+        assert.equal(document.querySelector('[onerror]'), null);
+        icons.forEach((icon, index) => {
+            const item = sections[0].modules[index];
+            assert.equal(icon.src, item.iconurl);
+            assert.equal(icon.alt, item.modfullname);
+            assert.equal(icon.previousElementSibling.value, String(item.cmid));
+            assert.equal(icon.nextElementSibling.tagName, 'SPAN');
+        });
         assert.match(document.querySelector('[data-region="tree"]').textContent, /<img/);
         assert.equal(document.querySelector('.badge').textContent, 'hidden');
         document.querySelector('[data-action="selectall"]').click();

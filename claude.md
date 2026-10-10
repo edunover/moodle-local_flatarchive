@@ -1,7 +1,7 @@
 # local_flatarchive — CLAUDE.md
 
 Plugin Moodle local pour archiver des ressources "Page", "Livre", "Zone texte et média", "Fichier" et "Dossier" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.2.0 (2026101002) MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026101003) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
@@ -383,3 +383,13 @@ subsiste dans les pages Wiki.
 Le build 2026101002 (taille du ZIP sur la page de téléchargement) passe la CI :
 https://github.com/edunover/moodle-local-flatarchive/actions/runs/38058888279
 La vérification visuelle de cet affichage sur la sandbox reste à réaliser.
+
+### Icônes de sélection — build 2026101003
+
+La sélection affiche l’icône Moodle de chaque activité entre la case à cocher et son titre.
+L’URL provient de `cm_info::get_icon_url()` ; le nom localisé du type sert de texte alternatif.
+Les icônes conservent leurs proportions dans un espace de 24 pixels, y compris pour les titres longs.
+Le rendu utilise des éléments DOM, sans interpréter le titre comme du HTML.
+
+The selection page displays Moodle activity icons before resource titles, with a localized
+activity-type alternative text. The existing selection and submission tests cover this display.

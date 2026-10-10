@@ -103,7 +103,15 @@ define(['core/ajax', 'core/notification', 'core/str'], function(Ajax, Notificati
                     if (!item.visible) {
                         addHidden(title);
                     }
-                    label.append(checkbox, title);
+                    label.appendChild(checkbox);
+                    if (item.iconurl) {
+                        const icon = document.createElement('img');
+                        icon.className = 'icon activityicon fa-module-icon';
+                        icon.src = item.iconurl;
+                        icon.alt = item.modfullname || '';
+                        label.appendChild(icon);
+                    }
+                    label.appendChild(title);
                     tree.appendChild(label);
                 });
             });

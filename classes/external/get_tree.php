@@ -95,6 +95,8 @@ class get_tree extends external_api {
                     'cmid' => $cm->id,
                     'name' => $cm->name,
                     'type' => $cm->modname,
+                    'iconurl' => $cm->get_icon_url()->out(false),
+                    'modfullname' => $cm->get_module_type_name(),
                     'visible' => (bool) $cm->visible,
                     'available' => (bool) $cm->available,
                 ];
@@ -128,6 +130,8 @@ class get_tree extends external_api {
                             'cmid' => new external_value(PARAM_INT, 'ID du course module'),
                             'name' => new external_value(PARAM_TEXT, 'Nom du module'),
                             'type' => new external_value(PARAM_ALPHA, 'Type de module'),
+                            'iconurl' => new external_value(PARAM_URL, 'Activity icon URL'),
+                            'modfullname' => new external_value(PARAM_TEXT, 'Localised activity type'),
                             'visible' => new external_value(PARAM_BOOL, 'Module visible'),
                             'available' => new external_value(PARAM_BOOL, 'Module disponible'),
                         ])

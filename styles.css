@@ -9,3 +9,11 @@
     padding: .35rem 0;
     margin: 0;
 }
+
+.local-flatarchive .fa-module-icon {
+    width: 24px;
+    height: 24px;
+    flex: 0 0 24px;
+    object-fit: contain;
+    margin: 0;
+}

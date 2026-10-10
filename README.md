@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires et Wikis) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101002) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101003) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -99,7 +99,7 @@ archive_SHORTNAME_202603291200.zip
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries and Wikis) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101002) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101003) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -488,3 +488,13 @@ subsiste dans les pages Wiki.
 Le build 2026101002 (taille du ZIP sur la page de téléchargement) passe la CI :
 https://github.com/edunover/moodle-local-flatarchive/actions/runs/38058888279
 La vérification visuelle de cet affichage sur la sandbox reste à réaliser.
+
+### Icônes de sélection — build 2026101003
+
+La sélection affiche l’icône Moodle de chaque activité entre la case à cocher et son titre.
+L’URL provient de `cm_info::get_icon_url()` ; le nom localisé du type sert de texte alternatif.
+Les icônes conservent leurs proportions dans un espace de 24 pixels, y compris pour les titres longs.
+Le rendu utilise des éléments DOM, sans interpréter le titre comme du HTML.
+
+The selection page displays Moodle activity icons before resource titles, with a localized
+activity-type alternative text. The existing selection and submission tests cover this display.
