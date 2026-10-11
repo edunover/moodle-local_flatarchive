@@ -186,7 +186,7 @@ final class quiz_exporter_test extends \advanced_testcase {
     }
 
     /**
-     * Authored question media is local; an unrelated pluginfile URL cannot copy another item.
+     * Authored question media is copied locally and pluginfile placeholders are removed.
      */
     public function test_question_media(): void {
         global $DB;
@@ -225,6 +225,7 @@ final class quiz_exporter_test extends \advanced_testcase {
             'answerformat' => FORMAT_HTML,
         ]);
         $attemptobj->process_finish(time(), false);
+        $attemptobj = \mod_quiz\quiz_attempt::create($attempt->id);
         $qa = $attemptobj->get_question_attempt(1);
         $step = $qa->get_last_step_with_qt_var('answer');
         $context = \context_module::instance($quiz->cmid);
@@ -266,5 +267,4 @@ final class quiz_exporter_test extends \advanced_testcase {
         $this->assertStringNotContainsString('rightanswer', $html);
         $this->assertStringNotContainsString('Stored points:', $html);
     }
-
 }
