@@ -218,7 +218,10 @@ final class quiz_exporter_test extends \advanced_testcase {
      * Essay text, embedded files and a saved teacher comment survive without grading writes.
      */
     public function test_essay_and_manual_comment(): void {
-        [$quiz, $student] = $this->fixture(['essay']);
+        global $DB;
+        [$quiz, $student, $questions] = $this->fixture(['essay']);
+        $DB->set_field('qtype_essay_options', 'responseformat', 'editorfilepicker', ['questionid' => $questions[0]->id]);
+        \question_bank::notify_question_edited($questions[0]->id);
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
         $this->setUser($student);
         $attempt = $generator->create_attempt($quiz->id, $student->id);
