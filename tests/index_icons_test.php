@@ -37,7 +37,8 @@ final class index_icons_test extends \advanced_testcase {
         $course = $generator->create_course();
         $directory = make_request_directory();
         $items = [];
-        $types = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki', 'feedback', 'choice', 'forum', 'lesson', 'page'];
+        $types = ['page', 'book', 'label', 'resource', 'folder', 'glossary',
+            'wiki', 'feedback', 'choice', 'forum', 'lesson', 'page'];
         foreach ($types as $type) {
             $module = $generator->create_module($type, ['course' => $course->id]);
             $items[$module->cmid] = '<li id="module-' . $module->cmid . '">'

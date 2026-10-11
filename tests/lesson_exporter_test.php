@@ -113,7 +113,8 @@ final class lesson_exporter_test extends \advanced_testcase {
             $this->assertStringContainsString('href="' . $prefix . '-page-' . $id . '.html"', $page);
         }
         $this->assertStringContainsString('href="' . $prefix . '.html#end"', $page);
-        foreach (['page_contents' => $ids[0], 'page_answers' => $first, 'page_responses' => $first, 'mediafile' => 0] as $area => $id) {
+        foreach (['page_contents' => $ids[0], 'page_answers' => $first,
+                'page_responses' => $first, 'mediafile' => 0] as $area => $id) {
             $path = $directory . '/files/' . $lesson->cmid . '/' . $area . '/' . $id . '/image.png';
             $this->assertSame($area, file_get_contents($path));
         }
@@ -206,6 +207,22 @@ final class lesson_exporter_test extends \advanced_testcase {
         assign_capability('mod/lesson:view', CAP_PROHIBIT, $role, \context_module::instance($lesson->cmid)->id);
         $this->setUser($teacher);
         $this->expectException(\required_capability_exception::class);
+        $this->export($lesson);
+    }
+
+    /** Hidden modules cannot be exported by an editor lacking hidden-activity access. */
+    public function test_hidden_lesson(): void {
+        global $DB;
+        [$lesson, $ids] = $this->fixture();
+        $teacher = $this->getDataGenerator()->create_user();
+        $this->getDataGenerator()->enrol_user($teacher->id, $lesson->course, 'editingteacher');
+        $role = $DB->get_field('role', 'id', ['shortname' => 'editingteacher'], MUST_EXIST);
+        $context = \context_module::instance($lesson->cmid);
+        assign_capability('moodle/course:viewhiddenactivities', CAP_PROHIBIT, $role, $context->id);
+        $DB->set_field('course_modules', 'visible', 0, ['id' => $lesson->cmid]);
+        rebuild_course_cache($lesson->course, true);
+        $this->setUser($teacher);
+        $this->expectException(\moodle_exception::class);
         $this->export($lesson);
     }
 

@@ -108,6 +108,22 @@ final class get_tree_test extends \externallib_advanced_testcase {
     }
 
     /**
+     * Lesson solutions are not offered when the archive user cannot edit the lesson.
+     */
+    public function test_lesson_selection_requires_edit(): void {
+        global $DB;
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $lesson = $generator->create_module('lesson', ['course' => $course->id]);
+        $teacher = $generator->create_user();
+        $generator->enrol_user($teacher->id, $course->id, 'editingteacher');
+        $role = $DB->get_field('role', 'id', ['shortname' => 'editingteacher'], MUST_EXIST);
+        assign_capability('mod/lesson:edit', CAP_PROHIBIT, $role, \context_module::instance($lesson->cmid)->id);
+        $this->setUser($teacher);
+        $this->assertSame([], $this->read_tree($course->id)['sections']);
+    }
+
+    /**
      * Choice activities are selectable only from the requested course.
      */
     public function test_choice_selection(): void {
