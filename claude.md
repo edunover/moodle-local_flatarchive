@@ -509,3 +509,7 @@ racines. Un parcours itératif avec détection des visites protège des référe
 Deux tests supplémentaires vérifient le badge, l’ordre des branches, les profondeurs,
 les parents absents et les cycles. Le fonctionnement de base du Forum est confirmé
 manuellement par l’utilisateur ; ces deux améliorations restent à valider sur la sandbox.
+
+Validation automatique du build 2026101102 : 69 tests PHPUnit sur les 16 configurations
+Moodle/PHP, tests JavaScript et standards réussis :
+https://github.com/edunover/moodle-local-flatarchive/actions/runs/38146037148 (code `7cdd162`).
