@@ -129,8 +129,7 @@ $string['choicescope'] = 'Snapshot of submitted responses for the current Moodle
     . ' Non-respondents and response dates are not included.';
 $string['choicecount'] = 'Responses: {$a}';
 
-$string['forumscope'] = 'Only discussions and posts visible to the exporter are included. Messages are shown'
-    . ' chronologically; reply links preserve their relationships.';
+$string['forumscope'] = 'Only visible messages are included. Replies are grouped below their parent message.';
 $string['backtoforum'] = 'Back to forum';
 $string['forumunknownauthor'] = 'Unknown author';
 $string['forummodified'] = 'Modified: {$a}';
@@ -138,3 +137,5 @@ $string['forumprivate'] = 'Private reply';
 $string['forumparent'] = 'View parent message';
 $string['forumattachments'] = 'Attachments';
 $string['forumempty'] = 'No accessible messages.';
+
+$string['forumpinned'] = 'Pinned';

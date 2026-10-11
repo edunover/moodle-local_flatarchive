@@ -55,3 +55,29 @@ hr { margin: 1rem 0; border: 0; border-top: 1px solid #dee2e6; }
 .fa-textmedia audio {
     max-width: 100%;
 }
+
+.fa-forum-pinned {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid #8a6500;
+    border-radius: 0.25rem;
+    background: #fff3cd;
+    color: #664d03;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+.fa-forum-pinned::before { content: "📌 "; }
+.fa-forum-post {
+    margin-block: 0.75rem;
+    margin-inline-start: calc(var(--reply-depth, 0) * 2rem);
+    padding: 1rem;
+    border: 1px solid #d6dbe1;
+    border-inline-start: 3px solid #8299b0;
+    border-radius: 0.25rem;
+    overflow-wrap: anywhere;
+}
+.fa-forum-post h2 { margin-top: 0; }
+.fa-forum-post img, .fa-forum-post video { max-width: 100%; height: auto; }
+@media (max-width: 600px) {
+    .fa-forum-post { margin-inline-start: calc(var(--reply-depth, 0) * 0.5rem); padding: 0.65rem; }
+}

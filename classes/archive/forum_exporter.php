@@ -69,7 +69,14 @@ final class forum_exporter {
             }
             $discussionfile = 'forum-' . $cm->id . '-discussion-' . $discussion->id . '.html';
             $body = \html_writer::tag('p', \html_writer::link($filename, get_string('backtoforum', 'local_flatarchive')));
-            foreach ($posts as $post) {
+            $pin = !empty($discussion->pinned) ? \html_writer::tag(
+                'span',
+                get_string('forumpinned', 'local_flatarchive'),
+                ['class' => 'fa-forum-pinned']
+            ) : '';
+            $body .= $pin;
+            foreach (self::threaded_posts($posts) as $entry) {
+                $post = $entry['post'];
                 $message = \html_writer::tag('h2', s($post->subject));
                 if (!forum_is_author_hidden($post, $forum)) {
                     $fields = 'id, deleted, ' . implode(', ', \core_user\fields::get_name_fields());
@@ -119,7 +126,12 @@ final class forum_exporter {
                     $message .= \html_writer::tag('h3', get_string('forumattachments', 'local_flatarchive'));
                     $message .= \html_writer::alist($attachments);
                 }
-                $body .= \html_writer::tag('article', $message, ['id' => 'post-' . $post->id]);
+                $body .= \html_writer::tag('article', $message, [
+                    'id' => 'post-' . $post->id,
+                    'class' => 'fa-forum-post',
+                    'data-depth' => $entry['depth'],
+                    'style' => '--reply-depth: ' . min($entry['depth'], 6),
+                ]);
             }
             $html = \local_flatarchive_render_page_template(
                 $modinfo->get_course(),
@@ -131,7 +143,7 @@ final class forum_exporter {
             );
             \local_flatarchive_write_file($directory . '/' . $discussionfile, $html);
             $filenames[] = $discussionfile;
-            $links[] = \html_writer::link($discussionfile, s($discussion->name));
+            $links[] = \html_writer::link($discussionfile, s($discussion->name)) . ($pin ? ' ' . $pin : '');
         }
         $intro .= $links ? \html_writer::alist($links) :
             \html_writer::tag('p', get_string('forumempty', 'local_flatarchive'));
@@ -139,6 +151,45 @@ final class forum_exporter {
         \local_flatarchive_write_file($directory . '/' . $filename, $html);
         return ['filename' => $filename, 'filenames' => $filenames,
             'item' => \html_writer::tag('li', \html_writer::link($filename, s($cm->name)) . $badges)];
+    }
+
+    /**
+     * Traverse visible replies parent-first, retaining chronological order among siblings.
+     *
+     * Missing or hidden parents become roots. The visited set prevents malformed cycles
+     * from duplicating messages or blocking export; no hidden ancestor is queried.
+     *
+     * @param array $posts Visible messages keyed by ID, in chronological order.
+     * @return array Ordered messages with their visible reply depth.
+     */
+    private static function threaded_posts(array $posts): array {
+        $children = [];
+        $roots = [];
+        foreach ($posts as $post) {
+            if (isset($posts[$post->parent]) && $post->parent != $post->id) {
+                $children[$post->parent][] = $post->id;
+            } else {
+                $roots[] = $post->id;
+            }
+        }
+        $result = [];
+        $visited = [];
+        // Remaining IDs also cover disconnected cycles, after all normal roots.
+        foreach (array_merge($roots, array_keys($posts)) as $root) {
+            $stack = [[$root, 0]];
+            while ($stack) {
+                [$id, $depth] = array_pop($stack);
+                if (isset($visited[$id])) {
+                    continue;
+                }
+                $visited[$id] = true;
+                $result[] = ['post' => $posts[$id], 'depth' => $depth];
+                foreach (array_reverse($children[$id] ?? []) as $child) {
+                    $stack[] = [$child, $depth + 1];
+                }
+            }
+        }
+        return $result;
     }
 
     /**

@@ -112,6 +112,72 @@ final class forum_exporter_test extends \advanced_testcase {
     }
 
     /**
+     * Pinned markers and parent-first ordering distinguish nested replies from siblings.
+     */
+    public function test_pinned_and_nested_replies(): void {
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $forum = $generator->create_module('forum', ['course' => $course->id]);
+        $discussion = $this->discussion($forum, 2, ['pinned' => 1, 'name' => 'Pinned topic']);
+        $this->discussion($forum, 2, ['pinned' => 0, 'name' => 'Normal topic']);
+        $posts = $generator->get_plugin_generator('mod_forum');
+        $reply = $posts->create_post(['discussion' => $discussion->id, 'userid' => 2,
+            'parent' => $discussion->firstpost, 'created' => 1700000000]);
+        $sibling = $posts->create_post(['discussion' => $discussion->id, 'userid' => 2,
+            'parent' => $discussion->firstpost, 'created' => 1700000001]);
+        $nested = $posts->create_post(['discussion' => $discussion->id, 'userid' => 2,
+            'parent' => $reply->id, 'created' => 1700000002]);
+        [$directory, $html, $export] = $this->export($forum);
+        $this->assertSame(2, substr_count($html, 'class="fa-forum-pinned"'));
+        $this->assertStringContainsString(get_string('forumpinned', 'local_flatarchive'), $html);
+        $page = file_get_contents($directory . '/forum-' . $forum->cmid . '-discussion-' . $discussion->id . '.html');
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($page);
+        $xpath = new \DOMXPath($dom);
+        $articles = $xpath->query('//article[@class="fa-forum-post"]');
+        $ids = [];
+        $depths = [];
+        foreach ($articles as $article) {
+            $ids[] = $article->getAttribute('id');
+            $depths[] = $article->getAttribute('data-depth');
+        }
+        $this->assertSame(['post-' . $discussion->firstpost, 'post-' . $reply->id,
+            'post-' . $nested->id, 'post-' . $sibling->id], $ids);
+        $this->assertSame(['0', '1', '2', '1'], $depths);
+        $this->assertSame('#post-' . $reply->id,
+            $xpath->query('//article[@id="post-' . $nested->id . '"]/p/a')->item(0)->getAttribute('href'));
+    }
+
+    /**
+     * A hidden parent is not reconstructed; malformed cycles cannot duplicate or lose messages.
+     */
+    public function test_missing_parent_and_cycle(): void {
+        global $DB;
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $forum = $generator->create_module('forum', ['course' => $course->id]);
+        $discussion = $this->discussion($forum, 2);
+        $posts = $generator->get_plugin_generator('mod_forum');
+        $hidden = $posts->create_post(['discussion' => $discussion->id, 'userid' => 2,
+            'parent' => $discussion->firstpost, 'deleted' => 1, 'subject' => 'HiddenParentSubject']);
+        $orphan = $posts->create_post(['discussion' => $discussion->id, 'userid' => 2, 'parent' => $hidden->id]);
+        $a = $posts->create_post(['discussion' => $discussion->id, 'userid' => 2]);
+        $b = $posts->create_post(['discussion' => $discussion->id, 'userid' => 2, 'parent' => $a->id]);
+        $DB->set_field('forum_posts', 'parent', $b->id, ['id' => $a->id]);
+        [, $html] = $this->export($forum);
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($html);
+        $xpath = new \DOMXPath($dom);
+        $this->assertStringNotContainsString('HiddenParentSubject', $html);
+        $this->assertStringNotContainsString('href="#post-' . $hidden->id . '"', $html);
+        $this->assertSame('0', $xpath->query('//article[@id="post-' . $orphan->id . '"]')->item(0)
+            ->getAttribute('data-depth'));
+        foreach ([$a, $b, $orphan] as $post) {
+            $this->assertSame(1, $xpath->query('//article[@id="post-' . $post->id . '"]')->length);
+        }
+    }
+
+    /**
      * Invisible group discussions, scheduled discussions and deleted posts export no files.
      */
     public function test_group_timing_and_deleted_restrictions(): void {

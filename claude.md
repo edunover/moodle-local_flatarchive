@@ -1,7 +1,7 @@
 # local_flatarchive — CLAUDE.md
 
 Plugin Moodle local pour archiver des ressources "Page", "Livre", "Zone texte et média", "Fichier" et "Dossier" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.2.0 (2026101101) MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026101102) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
@@ -172,7 +172,7 @@ Référence : https://moodlehq.github.io/moodle-plugin-ci/
 
 Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation réussie sur les 14 combinaisons Moodle/PHP.
 
-Matrice CI (16 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 et 5.3 avec PHP 8.3/8.4. Chaque combinaison exécute les 67 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
+Matrice CI (16 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 et 5.3 avec PHP 8.3/8.4. Chaque combinaison exécute les 69 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
 
 Références des prérequis : https://moodledev.io/general/releases/4.4 ; https://moodledev.io/general/releases/4.5 ; https://moodledev.io/general/releases/5.0 ; https://moodledev.io/general/releases/5.1 ; https://moodledev.io/general/releases/5.2
 
@@ -497,3 +497,15 @@ Validation Forum : 67 tests PHPUnit et 579 assertions réussis sur les 16 config
 Moodle/PHP jusqu’à Moodle 5.3 ; six tests JavaScript et standards Moodle réussis.
 https://github.com/edunover/moodle-local-flatarchive/actions/runs/38144678736 (code `f450cdd`).
 Le build 2026101101 est prêt pour installation et validation manuelle.
+
+### Présentation du Forum — build 2026101102
+
+Les discussions épinglées portent un badge traduit dans la liste et sur leur page.
+Les messages sont regroupés par branche parent/réponses avec retraits et encadrés,
+en conservant l’ordre chronologique entre réponses de même niveau. Le retrait visuel
+est plafonné à six niveaux et réduit sur mobile ; le lien vers le parent reste disponible.
+Les parents masqués ne sont pas reconstitués : leurs réponses visibles deviennent des
+racines. Un parcours itératif avec détection des visites protège des références cycliques.
+Deux tests supplémentaires vérifient le badge, l’ordre des branches, les profondeurs,
+les parents absents et les cycles. Le fonctionnement de base du Forum est confirmé
+manuellement par l’utilisateur ; ces deux améliorations restent à valider sur la sandbox.
