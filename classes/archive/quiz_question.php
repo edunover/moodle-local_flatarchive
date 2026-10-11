@@ -69,7 +69,14 @@ final class quiz_question {
             }
             return \html_writer::tag('section', $body, ['class' => 'fa-quiz-question']);
         }
-        $html = $qa->render($options, $number);
+        if (!$qa->get_usage_id()) {
+            // Authored questionnaire: no unfinished-attempt behaviour should hide its solutions.
+            global $PAGE;
+            $renderer = $question->get_renderer($PAGE);
+            $html = $renderer->formulation_and_controls($qa, $options) . $renderer->feedback($qa, $options);
+        } else {
+            $html = $qa->render($options, $number);
+        }
         $dom = new \DOMDocument();
         @$dom->loadHTML('<?xml encoding="UTF-8"><div id="fa-question-root">' . $html . '</div>');
         $xpath = new \DOMXPath($dom);

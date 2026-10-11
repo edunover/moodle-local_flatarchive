@@ -89,10 +89,13 @@ final class quiz_exporter_test extends \advanced_testcase {
         [$quiz, $student, $questions] = $this->fixture(
             ['description', 'multichoice', 'truefalse', 'shortanswer', 'numerical', 'match', 'essay']
         );
+        $DB->set_field('question', 'generalfeedback', 'AuthoredGeneralFeedback', ['id' => $questions[1]->id]);
+        \question_bank::notify_question_edited($questions[1]->id);
         $before = $DB->count_records('question_usages');
         [$html, $directory, $result] = $this->export($quiz);
         $this->assertCount(2, $result['filenames']);
         $this->assertStringContainsString('fa-quiz-question', $html);
+        $this->assertStringContainsString('AuthoredGeneralFeedback', $html);
         $this->assertStringContainsString('fa-back-index', $html);
         foreach (['<input', '<form', '<button', '<select', '<textarea', '<script'] as $fragment) {
             $this->assertStringNotContainsString($fragment, $html);
