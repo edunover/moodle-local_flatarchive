@@ -586,5 +586,8 @@ Student attempts, grades and essay submissions are excluded.
 
 Tests PHPUnit ajoutés pour la navigation, l’ordre, les médias isolés, les droits,
 les destinations étrangères, les cycles, les types natifs, les flash-cards et les
-leçons vides. La matrice CI existante couvre Moodle 4.4 à 5.3. Validation en cours.
+leçons vides. Validation automatique réussie : 83 tests PHPUnit sur les 16 configurations
+Moodle/PHP de Moodle 4.4 à 5.3, six tests JavaScript et contrôles de standards.
+Exécution : https://github.com/edunover/moodle-local-flatarchive/actions/runs/38154464031
+(commit de code `4dc3633`). La validation manuelle du ZIP reste à effectuer.
 Fixture manuelle : cours Critical Thinking, dernière section, leçon `cmid=112`.
