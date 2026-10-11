@@ -144,8 +144,10 @@ final class forum_exporter_test extends \advanced_testcase {
         $this->assertSame(['post-' . $discussion->firstpost, 'post-' . $reply->id,
             'post-' . $nested->id, 'post-' . $sibling->id], $ids);
         $this->assertSame(['0', '1', '2', '1'], $depths);
-        $this->assertSame('#post-' . $reply->id,
-            $xpath->query('//article[@id="post-' . $nested->id . '"]/p/a')->item(0)->getAttribute('href'));
+        $this->assertSame(
+            '#post-' . $reply->id,
+            $xpath->query('//article[@id="post-' . $nested->id . '"]/p/a')->item(0)->getAttribute('href')
+        );
     }
 
     /**
