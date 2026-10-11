@@ -597,3 +597,8 @@ cible d’origine ; les médias locaux et la navigation générée sont autonome
 Le multilinguisme reste différé. Tests ajoutés pour fichiers, navigation, absence de
 marquage, groupes, dates, suppression, réponses privées, Q/R, auteurs masqués et droits.
 La validation manuelle du Forum reste à effectuer.
+
+Validation Forum : 67 tests PHPUnit et 579 assertions réussis sur les 16 configurations
+Moodle/PHP jusqu’à Moodle 5.3 ; six tests JavaScript et standards Moodle réussis.
+https://github.com/edunover/moodle-local-flatarchive/actions/runs/38144678736 (code `f450cdd`).
+Le build 2026101101 est prêt pour installation et validation manuelle.
