@@ -184,3 +184,15 @@ $string['lessonanswercorrect'] = 'Enregistrée comme correcte';
 $string['lessonanswerincorrect'] = 'Enregistrée comme incorrecte';
 
 $string['backtocourseindex'] = 'Retour à l’index du cours';
+
+$string['archivegenerated'] = 'Archive générée';
+$string['quizarchivescope'] = 'Questionnaire statique et tentatives enregistrées accessibles. Aucune réponse ne peut être envoyée ; les notes ne sont pas recalculées.';
+$string['quizquestionnaire'] = 'Questionnaire et solutions';
+$string['quizattempts'] = 'Tentatives enregistrées';
+$string['quizstoredmarks'] = 'Points enregistrés : {$a}';
+$string['quiznoattempts'] = 'Aucune tentative consultable avec tes droits actuels.';
+$string['quizslot'] = 'Emplacement de question {$a}';
+$string['quizrandomslot'] = 'Emplacement de question aléatoire. Les questions réellement tirées sont conservées dans les tentatives accessibles. Aucun nouveau tirage n’est effectué.';
+$string['quizquestionunavailable'] = 'Question indisponible ou droit d’utilisation de cette question absent.';
+$string['quizunsupported'] = 'Type de question non encore pris en charge pour un rendu hors ligne complet : {$a}. Les résumés disponibles de la tentative suivent.';
+$string['backtoquiz'] = 'Retour au test';

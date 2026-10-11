@@ -174,3 +174,15 @@ $string['lessonanswercorrect'] = 'Als correct geregistreerd';
 $string['lessonanswerincorrect'] = 'Als onjuist geregistreerd';
 
 $string['backtocourseindex'] = 'Terug naar de cursusindex';
+
+$string['archivegenerated'] = 'Archief gegenereerd';
+$string['quizarchivescope'] = 'Statische vragenlijst en toegankelijke opgeslagen pogingen. Antwoorden kunnen niet worden ingediend; cijfers worden niet herberekend.';
+$string['quizquestionnaire'] = 'Vragenlijst en oplossingen';
+$string['quizattempts'] = 'Opgeslagen pogingen';
+$string['quizstoredmarks'] = 'Opgeslagen punten: {$a}';
+$string['quiznoattempts'] = 'Geen pogingen beschikbaar voor inzage met je huidige rechten.';
+$string['quizslot'] = 'Vraagpositie {$a}';
+$string['quizrandomslot'] = 'Willekeurige vraagpositie. De werkelijk gekozen vragen worden in toegankelijke pogingen bewaard. Er wordt geen nieuwe selectie uitgevoerd.';
+$string['quizquestionunavailable'] = 'Vraag niet beschikbaar of geen toestemming om deze vraag te gebruiken.';
+$string['quizunsupported'] = 'Vraagtype nog niet ondersteund voor volledige offline weergave: {$a}. Beschikbare samenvattingen van de poging volgen.';
+$string['backtoquiz'] = 'Terug naar de test';

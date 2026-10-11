@@ -88,7 +88,7 @@ class get_tree extends external_api {
 
                 // The HTML exporter supports Pages, Books, text and media areas, Files and Folders.
                 $supported = ['page', 'book', 'label', 'resource', 'folder', 'glossary',
-                    'wiki', 'feedback', 'choice', 'forum', 'lesson'];
+                    'wiki', 'feedback', 'choice', 'forum', 'lesson', 'quiz'];
                 if (!in_array($cm->modname, $supported, true)) {
                     continue;
                 }

@@ -39,6 +39,7 @@ use local_flatarchive\archive\feedback_exporter;
 use local_flatarchive\archive\choice_exporter;
 use local_flatarchive\archive\forum_exporter;
 use local_flatarchive\archive\lesson_exporter;
+use local_flatarchive\archive\quiz_exporter;
 use local_flatarchive\archive\label_exporter;
 use local_flatarchive\archive\paths;
 use local_flatarchive\archive\resource_exporter;
@@ -67,7 +68,7 @@ $cms = $modinfo->get_cms();
 
 // Validate the whole selection before creating any files.
 foreach ($cmids as $cmid) {
-    $supported = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki', 'feedback', 'choice', 'forum', 'lesson'];
+    $supported = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki', 'feedback', 'choice', 'forum', 'lesson', 'quiz'];
     if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, $supported, true)) {
         throw new moodle_exception('invalidselection', 'local_flatarchive');
     }
@@ -90,7 +91,7 @@ try {
     foreach ($cmids as $cmid) {
         $cm = $cms[$cmid];
 
-        if (in_array($cm->modname, ['glossary', 'wiki', 'feedback', 'choice', 'forum', 'lesson'], true)) {
+        if (in_array($cm->modname, ['glossary', 'wiki', 'feedback', 'choice', 'forum', 'lesson', 'quiz'], true)) {
             $exporters = [
                 'wiki' => wiki_exporter::class,
                 'glossary' => glossary_exporter::class,
@@ -98,6 +99,7 @@ try {
                 'choice' => choice_exporter::class,
                 'forum' => forum_exporter::class,
                 'lesson' => lesson_exporter::class,
+                'quiz' => quiz_exporter::class,
             ];
             $exporter = $exporters[$cm->modname];
             $export = $exporter::render($cm, $modinfo, $tempdir);
@@ -279,7 +281,7 @@ $successmessage = $archivesize === false
     : get_string('archive_success_size', 'local_flatarchive', display_size($archivesize));
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading($successmessage);
+echo $OUTPUT->heading(get_string('archivegenerated', 'local_flatarchive'));
 echo html_writer::tag('p', get_string('downloadavailability', 'local_flatarchive'));
 echo html_writer::div($successmessage, 'alert alert-success');
 echo html_writer::tag(

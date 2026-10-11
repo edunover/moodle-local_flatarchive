@@ -183,3 +183,15 @@ $string['lessonanswercorrect'] = 'Recorded as correct';
 $string['lessonanswerincorrect'] = 'Recorded as incorrect';
 
 $string['backtocourseindex'] = 'Back to course index';
+
+$string['archivegenerated'] = 'Archive generated';
+$string['quizarchivescope'] = 'Static questionnaire and accessible recorded attempts. No answers can be submitted; marks are not recalculated.';
+$string['quizquestionnaire'] = 'Questionnaire and solutions';
+$string['quizattempts'] = 'Recorded attempts';
+$string['quizstoredmarks'] = 'Stored points: {$a}';
+$string['quiznoattempts'] = 'No attempts available for review with your current permissions.';
+$string['quizslot'] = 'Question position {$a}';
+$string['quizrandomslot'] = 'Random question position. The questions actually drawn are preserved in accessible attempts. No new draw is performed.';
+$string['quizquestionunavailable'] = 'Question unavailable or permission to use this question is missing.';
+$string['quizunsupported'] = 'Question type not yet supported for full offline rendering: {$a}. Any available attempt summaries follow.';
+$string['backtoquiz'] = 'Back to quiz';

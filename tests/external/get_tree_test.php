@@ -76,6 +76,18 @@ final class get_tree_test extends \externallib_advanced_testcase {
     }
 
     /**
+     * Quizzes are selectable and retain their official icon.
+     */
+    public function test_quiz_selection(): void {
+        $course = $this->getDataGenerator()->create_course();
+        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id]);
+        $result = $this->read_tree($course->id);
+        $modules = $result['sections'][0]['modules'];
+        $this->assertSame([$quiz->cmid], array_column($modules, 'cmid'));
+        $this->assertSame(['quiz'], array_column($modules, 'type'));
+    }
+
+    /**
      * Feedback activities are selectable only from the requested course.
      */
     public function test_feedback_selection(): void {
