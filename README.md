@@ -797,4 +797,7 @@ English: all accessible course activities are listed, including unsupported type
 with disabled checkboxes and an explicit status. Bulk selection and form submission
 exclude disabled entries. Unsupported-only sections remain visible.
 
-Validation automatique en cours ; validation visuelle à effectuer après installation.
+Validation automatique réussie : [GitHub Actions 38174028369](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38174028369),
+17 jobs verts, 99 tests PHPUnit / 827 assertions et 10 tests JavaScript,
+Moodle 4.4 à 5.3 et contrôles des standards Moodle (commit `5ba978e`).
+Validation visuelle à effectuer après installation du build 2026101107.
