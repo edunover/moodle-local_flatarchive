@@ -129,3 +129,13 @@ $string['choicerestricted'] = 'Les résultats ne sont pas disponibles à l’exp
 $string['choicescope'] = 'Instantané des réponses soumises pour le groupe courant et les inscriptions retenues'
     . ' par Moodle. Les non-répondants et les dates de réponse ne sont pas inclus.';
 $string['choicecount'] = 'Réponses : {$a}';
+
+$string['forumscope'] = 'Seuls les discussions et messages visibles par la personne qui exporte sont inclus.'
+    . ' Les messages sont chronologiques ; les liens de réponse conservent leur filiation.';
+$string['backtoforum'] = 'Retour au forum';
+$string['forumunknownauthor'] = 'Auteur inconnu';
+$string['forummodified'] = 'Modifié : {$a}';
+$string['forumprivate'] = 'Réponse privée';
+$string['forumparent'] = 'Voir le message parent';
+$string['forumattachments'] = 'Pièces jointes';
+$string['forumempty'] = 'Aucun message accessible.';

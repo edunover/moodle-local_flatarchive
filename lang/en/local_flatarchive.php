@@ -128,3 +128,13 @@ $string['choicerestricted'] = 'Results are not available for export with your cu
 $string['choicescope'] = 'Snapshot of submitted responses for the current Moodle group and enrolment scope.'
     . ' Non-respondents and response dates are not included.';
 $string['choicecount'] = 'Responses: {$a}';
+
+$string['forumscope'] = 'Only discussions and posts visible to the exporter are included. Messages are shown'
+    . ' chronologically; reply links preserve their relationships.';
+$string['backtoforum'] = 'Back to forum';
+$string['forumunknownauthor'] = 'Unknown author';
+$string['forummodified'] = 'Modified: {$a}';
+$string['forumprivate'] = 'Private reply';
+$string['forumparent'] = 'View parent message';
+$string['forumattachments'] = 'Attachments';
+$string['forumempty'] = 'No accessible messages.';

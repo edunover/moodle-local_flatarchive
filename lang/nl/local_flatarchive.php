@@ -119,3 +119,13 @@ $string['choicerestricted'] = 'De resultaten kunnen niet worden geëxporteerd me
 $string['choicescope'] = 'Momentopname van ingediende antwoorden voor de huidige Moodle-groep en inschrijvingen.'
     . ' Niet-respondenten en antwoorddatums zijn niet opgenomen.';
 $string['choicecount'] = 'Antwoorden: {$a}';
+
+$string['forumscope'] = 'Alleen discussies en berichten die de exporteur mag bekijken worden opgenomen.'
+    . ' Berichten staan chronologisch; antwoordlinks behouden hun verband.';
+$string['backtoforum'] = 'Terug naar het forum';
+$string['forumunknownauthor'] = 'Onbekende auteur';
+$string['forummodified'] = 'Gewijzigd: {$a}';
+$string['forumprivate'] = 'Privéantwoord';
+$string['forumparent'] = 'Bovenliggend bericht bekijken';
+$string['forumattachments'] = 'Bijlagen';
+$string['forumempty'] = 'Geen toegankelijke berichten.';

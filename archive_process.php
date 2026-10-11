@@ -37,6 +37,7 @@ use local_flatarchive\archive\glossary_exporter;
 use local_flatarchive\archive\wiki_exporter;
 use local_flatarchive\archive\feedback_exporter;
 use local_flatarchive\archive\choice_exporter;
+use local_flatarchive\archive\forum_exporter;
 use local_flatarchive\archive\label_exporter;
 use local_flatarchive\archive\paths;
 use local_flatarchive\archive\resource_exporter;
@@ -65,7 +66,7 @@ $cms = $modinfo->get_cms();
 
 // Validate the whole selection before creating any files.
 foreach ($cmids as $cmid) {
-    $supported = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki', 'feedback', 'choice'];
+    $supported = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki', 'feedback', 'choice', 'forum'];
     if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, $supported, true)) {
         throw new moodle_exception('invalidselection', 'local_flatarchive');
     }
@@ -88,12 +89,13 @@ try {
     foreach ($cmids as $cmid) {
         $cm = $cms[$cmid];
 
-        if (in_array($cm->modname, ['glossary', 'wiki', 'feedback', 'choice'], true)) {
+        if (in_array($cm->modname, ['glossary', 'wiki', 'feedback', 'choice', 'forum'], true)) {
             $exporters = [
                 'wiki' => wiki_exporter::class,
                 'glossary' => glossary_exporter::class,
                 'feedback' => feedback_exporter::class,
                 'choice' => choice_exporter::class,
+                'forum' => forum_exporter::class,
             ];
             $exporter = $exporters[$cm->modname];
             $export = $exporter::render($cm, $modinfo, $tempdir);

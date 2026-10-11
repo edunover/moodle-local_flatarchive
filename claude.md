@@ -1,7 +1,7 @@
 # local_flatarchive — CLAUDE.md
 
 Plugin Moodle local pour archiver des ressources "Page", "Livre", "Zone texte et média", "Fichier" et "Dossier" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.2.0 (2026101006) MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026101101) MATURITY_ALPHA. Requiert Moodle 4.4+.
 
 ---
 
@@ -172,7 +172,7 @@ Référence : https://moodlehq.github.io/moodle-plugin-ci/
 
 Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation réussie sur les 14 combinaisons Moodle/PHP.
 
-Matrice CI (16 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 et 5.3 avec PHP 8.3/8.4. Chaque combinaison exécute les 61 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
+Matrice CI (16 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 et 5.3 avec PHP 8.3/8.4. Chaque combinaison exécute les 67 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
 
 Références des prérequis : https://moodledev.io/general/releases/4.4 ; https://moodledev.io/general/releases/4.5 ; https://moodledev.io/general/releases/5.0 ; https://moodledev.io/general/releases/5.1 ; https://moodledev.io/general/releases/5.2
 
@@ -470,3 +470,25 @@ Archive `archive_Critical thinking_202610102226.zip` vérifiée : ZIP intact,
 page `choice-111.html` liée depuis l’index, icône locale présente, 168 références locales
 sans cible manquante, aucun formulaire actif ni marqueur de fichier Moodle non résolu.
 Le multilinguisme reste différé à la fin de l’intégration des activités.
+
+### Forum — build 2026101101
+
+Une page liste les discussions accessibles, puis une page par discussion présente les
+messages chronologiquement avec liens vers les messages parents visibles, auteurs,
+dates de création et modification, médias incorporés et pièces jointes. L’index du
+cours inclut l’icône officielle. Les fichiers sont isolés par module, zone et message.
+
+La sélection de contenu utilise `forum_user_can_see_discussion` et
+`forum_user_can_see_post` avant toute copie de fichiers : droits de lecture, disponibilité
+du module, groupes séparés, discussions programmées, réponses privées et délai des
+forums Questions-réponses sont respectés. Les messages supprimés sont exclus ; l’auteur
+du message initial d’un forum à discussion unique reste masqué comme dans Moodle.
+Les auteurs supprimés sont remplacés par un libellé générique. Les profils ne sont pas exportés.
+
+Aucun marquage comme lu, abonnement, notification ou changement de complétion.
+Pas de formulaires, évaluations, notes, historique de modification ni liste d’abonnés.
+Les liens externes ou liens Moodle présents dans le texte restent des liens vers leur
+cible d’origine ; les médias locaux et la navigation générée sont autonomes.
+Le multilinguisme reste différé. Tests ajoutés pour fichiers, navigation, absence de
+marquage, groupes, dates, suppression, réponses privées, Q/R, auteurs masqués et droits.
+La validation manuelle du Forum reste à effectuer.
