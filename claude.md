@@ -626,4 +626,7 @@ submissions and feedback, dates and stored marks. Hidden-section badges appear o
 section headings; stealth activities use “hidden but available”. Every generated
 content page provides an explicit link to the course index.
 
-Validation automatique en cours ; validation manuelle du build à effectuer.
+Validation automatique réussie : [GitHub Actions 38156562670](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38156562670),
+17 jobs verts, 90 tests PHPUnit / 777 assertions et 6 tests JavaScript,
+Moodle 4.4 à 5.3 et contrôles de standards Moodle (commit `ee1d466`).
+Validation manuelle du build 2026101105 à effectuer après installation.
