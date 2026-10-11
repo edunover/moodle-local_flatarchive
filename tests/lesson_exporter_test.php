@@ -27,7 +27,9 @@ use local_flatarchive\archive\lesson_exporter;
  * @covers \local_flatarchive\archive\lesson_exporter
  */
 final class lesson_exporter_test extends \advanced_testcase {
-    /** Set up isolated Moodle data. */
+    /**
+     * Set up isolated Moodle data.
+     */
     protected function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();
@@ -83,7 +85,9 @@ final class lesson_exporter_test extends \advanced_testcase {
         return [lesson_exporter::render($info->get_cm($lesson->cmid), $info, $directory), $directory];
     }
 
-    /** Fixed jumps are local, ordered, escaped and do not write lesson state. */
+    /**
+     * Fixed jumps are local, ordered, escaped and do not write lesson state.
+     */
     public function test_graph_media_and_no_attempt_changes(): void {
         global $DB;
         [$lesson, $ids] = $this->fixture();
@@ -96,8 +100,9 @@ final class lesson_exporter_test extends \advanced_testcase {
         $DB->set_field('lesson_pages', 'contents', '<img src="@@PLUGINFILE@@/image.png" alt="Test">', ['id' => $ids[0]]);
         $DB->set_field('lesson_answers', 'answer', '<img src="@@PLUGINFILE@@/image.png" alt="Answer">', ['id' => $first]);
         $DB->set_field('lesson_answers', 'response', '<img src="@@PLUGINFILE@@/image.png" alt="Feedback">', ['id' => $first]);
-        foreach (['page_contents' => $ids[0], 'page_answers' => $first, 'page_responses' => $first, 'mediafile' => 0,
-                'essay_answers' => 999] as $area => $id) {
+        $areas = ['page_contents' => $ids[0], 'page_answers' => $first, 'page_responses' => $first,
+            'mediafile' => 0, 'essay_answers' => 999];
+        foreach ($areas as $area => $id) {
             get_file_storage()->create_file_from_string(['contextid' => $context->id, 'component' => 'mod_lesson',
                 'filearea' => $area, 'itemid' => $id, 'filepath' => '/', 'filename' => 'image.png'], $area);
         }
@@ -113,8 +118,8 @@ final class lesson_exporter_test extends \advanced_testcase {
             $this->assertStringContainsString('href="' . $prefix . '-page-' . $id . '.html"', $page);
         }
         $this->assertStringContainsString('href="' . $prefix . '.html#end"', $page);
-        foreach (['page_contents' => $ids[0], 'page_answers' => $first,
-                'page_responses' => $first, 'mediafile' => 0] as $area => $id) {
+        unset($areas['essay_answers']);
+        foreach ($areas as $area => $id) {
             $path = $directory . '/files/' . $lesson->cmid . '/' . $area . '/' . $id . '/image.png';
             $this->assertSame($area, file_get_contents($path));
         }
@@ -130,7 +135,9 @@ final class lesson_exporter_test extends \advanced_testcase {
         $this->assertSame(0, $DB->count_records('lesson_timer', ['lessonid' => $lesson->id]));
     }
 
-    /** Random jumps and foreign destinations must not become invented links. */
+    /**
+     * Random jumps and foreign destinations must not become invented links.
+     */
     public function test_dynamic_and_foreign_destinations(): void {
         [$lesson, $ids] = $this->fixture();
         [$other, $otherids] = $this->fixture();
@@ -144,7 +151,9 @@ final class lesson_exporter_test extends \advanced_testcase {
         $this->assertStringNotContainsString('-page-' . $otherids[0] . '.html', $html);
     }
 
-    /** Cycles and orphan pages must terminate without repairing the source records. */
+    /**
+     * Cycles and orphan pages must terminate without repairing the source records.
+     */
     public function test_broken_order_is_bounded(): void {
         $pages = [8 => (object)['id' => 8, 'prevpageid' => 9, 'nextpageid' => 9],
             9 => (object)['id' => 9, 'prevpageid' => 8, 'nextpageid' => 8],
@@ -152,7 +161,9 @@ final class lesson_exporter_test extends \advanced_testcase {
         $this->assertSame([10, 8, 9], array_keys(lesson_exporter::ordered_pages($pages)));
     }
 
-    /** Reading or managing attempts does not authorise bulk export of solutions. */
+    /**
+     * Reading or managing attempts does not authorise bulk export of solutions.
+     */
     public function test_non_editor_is_denied_before_file_copy(): void {
         [$lesson, $ids] = $this->fixture();
         $teacher = $this->getDataGenerator()->create_user();
@@ -162,7 +173,9 @@ final class lesson_exporter_test extends \advanced_testcase {
         $this->export($lesson);
     }
 
-    /** All core page types retain their content, including matching pairs and essays. */
+    /**
+     * All core page types retain their content, including matching pairs and essays.
+     */
     public function test_core_types_and_matching(): void {
         global $DB;
         [$lesson, $ids] = $this->fixture();
@@ -185,7 +198,9 @@ final class lesson_exporter_test extends \advanced_testcase {
         $this->assertSame(1, substr_count($html, get_string('lessonmatch', 'local_flatarchive')));
     }
 
-    /** Flash-card next-page behaviour must not be presented as a fixed path. */
+    /**
+     * Flash-card next-page behaviour must not be presented as a fixed path.
+     */
     public function test_flashcards(): void {
         global $DB;
         [$lesson, $ids] = $this->fixture();
@@ -197,7 +212,9 @@ final class lesson_exporter_test extends \advanced_testcase {
         $this->assertStringNotContainsString('-page-' . $ids[2] . '.html', $html);
     }
 
-    /** An explicit view prohibition remains effective for editors. */
+    /**
+     * An explicit view prohibition remains effective for editors.
+     */
     public function test_view_prohibition(): void {
         global $DB;
         [$lesson, $ids] = $this->fixture();
@@ -210,7 +227,9 @@ final class lesson_exporter_test extends \advanced_testcase {
         $this->export($lesson);
     }
 
-    /** Hidden modules cannot be exported by an editor lacking hidden-activity access. */
+    /**
+     * Hidden modules cannot be exported by an editor lacking hidden-activity access.
+     */
     public function test_hidden_lesson(): void {
         global $DB;
         [$lesson, $ids] = $this->fixture();
@@ -226,13 +245,17 @@ final class lesson_exporter_test extends \advanced_testcase {
         $this->export($lesson);
     }
 
-    /** Empty lessons produce a valid index. */
+    /**
+     * Empty lessons produce a valid index.
+     */
     public function test_empty_lesson(): void {
         $course = $this->getDataGenerator()->create_course();
         $lesson = $this->getDataGenerator()->create_module('lesson', ['course' => $course->id]);
         [$export, $directory] = $this->export($lesson);
         $this->assertCount(1, $export['filenames']);
-        $this->assertStringContainsString(get_string('lessonempty', 'local_flatarchive'),
-            file_get_contents($directory . '/' . $export['filename']));
+        $this->assertStringContainsString(
+            get_string('lessonempty', 'local_flatarchive'),
+            file_get_contents($directory . '/' . $export['filename'])
+        );
     }
 }

@@ -87,18 +87,35 @@ final class lesson_exporter {
                     $label = $position === 0 ? 'lessoncorrect' : 'lessonincorrect';
                 }
                 $fragment = \html_writer::tag('h3', get_string($label, 'local_flatarchive'));
-                $fragment .= self::text($answer->answer ?? '', $answer->answerformat, 'page_answers',
-                    $answer->id, $cm, $directory);
+                $fragment .= self::text(
+                    $answer->answer ?? '',
+                    $answer->answerformat,
+                    'page_answers',
+                    $answer->id,
+                    $cm,
+                    $directory
+                );
                 if (trim($answer->response ?? '') !== '') {
-                    $fragment .= \html_writer::tag('h4', get_string($pair ? 'lessonmatch' : 'lessonfeedback',
-                        'local_flatarchive'));
-                    $fragment .= self::text($answer->response, $answer->responseformat, 'page_responses',
-                        $answer->id, $cm, $directory);
+                    $feedbacklabel = get_string($pair ? 'lessonmatch' : 'lessonfeedback', 'local_flatarchive');
+                    $fragment .= \html_writer::tag('h4', $feedbacklabel);
+                    $fragment .= self::text(
+                        $answer->response,
+                        $answer->responseformat,
+                        'page_responses',
+                        $answer->id,
+                        $cm,
+                        $directory
+                    );
                 }
                 // Matching pairs do not carry individual jumps; the first two records do.
                 if (!$pair) {
                     $fragment .= \html_writer::tag('p', self::jump(
-                        (int)$answer->jumpto, $page, $pages, $map, $filename, (int)$lesson->nextpagedefault
+                        (int)$answer->jumpto,
+                        $page,
+                        $pages,
+                        $map,
+                        $filename,
+                        (int)$lesson->nextpagedefault
                     ));
                     if (!empty($lesson->custom) && (int)$page->qtype < 20) {
                         $fragment .= \html_writer::tag('p', get_string('lessonscore', 'local_flatarchive', $answer->score));
@@ -204,8 +221,15 @@ final class lesson_exporter {
      */
     private static function text(string $text, int $format, string $area, int $id, \cm_info $cm, string $directory): string {
         $context = \context_module::instance($cm->id);
-        $text = \local_flatarchive_copy_pluginfiles_and_rewrite($text, $context, 'mod_lesson', $area, $id,
-            $directory, (int)$cm->id);
+        $text = \local_flatarchive_copy_pluginfiles_and_rewrite(
+            $text,
+            $context,
+            'mod_lesson',
+            $area,
+            $id,
+            $directory,
+            (int)$cm->id
+        );
         return format_text($text, $format, ['context' => $context, 'filter' => false]);
     }
 }
