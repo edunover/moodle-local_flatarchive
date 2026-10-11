@@ -546,3 +546,7 @@ Tests : les dix types d’activités, index et pages, zones de contenu distincte
 désactivation globale des tags, rendu sans lien en ligne et exclusion des tags de
 messages supprimés. Forum épinglé et réponses imbriquées confirmés manuellement par
 l’utilisateur sur le build précédent. Validation manuelle des tags encore à effectuer.
+
+Validation automatique des tags : les 72 tests PHPUnit, six tests JavaScript et
+contrôles de standards ont réussi sur la matrice Moodle 4.4 à 5.3 :
+https://github.com/edunover/moodle-local-flatarchive/actions/runs/38148256222 (code `06d2a9c`).
