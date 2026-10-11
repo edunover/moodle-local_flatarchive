@@ -193,6 +193,9 @@ final class quiz_exporter {
             $qa->set_slot($slot->slot);
             $qa->start('deferredfeedback', 1);
             $options = new \question_display_options();
+            $options->correctness = \question_display_options::HIDDEN;
+            $options->feedback = \question_display_options::HIDDEN;
+            $options->marks = \question_display_options::MAX_ONLY;
             $options->generalfeedback = \question_display_options::VISIBLE;
             $options->rightanswer = \question_display_options::VISIBLE;
             $body .= quiz_question::render($qa, $options, (string)$slot->slot, $cm, $directory);

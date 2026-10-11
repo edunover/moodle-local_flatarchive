@@ -195,7 +195,7 @@ final class quiz_exporter_test extends \advanced_testcase {
         global $DB;
         [$quiz, $student, $questions] = $this->fixture();
         $question = $questions[0];
-        $context = \context_course::instance($quiz->course);
+        $context = \context::instance_by_id(\question_bank::load_question($question->id)->contextid);
         get_file_storage()->create_file_from_string(['contextid' => $context->id, 'component' => 'question',
             'filearea' => 'questiontext', 'itemid' => $question->id, 'filepath' => '/', 'filename' => 'image.png'], 'QuizMedia');
         $DB->set_field(
