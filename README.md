@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations et Forums) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101102) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101103) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -99,7 +99,7 @@ archive_SHORTNAME_202603291200.zip
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices and Forums) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101102) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101103) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -274,7 +274,7 @@ Référence : https://moodlehq.github.io/moodle-plugin-ci/
 
 Validation GitHub du 30 septembre 2026 : installation Moodle 4.5 réussie ; le premier passage PHPUnit a révélé le chargement de l’API externe historique et un appel de nettoyage invalide. Passage aux classes `core_external` et à `fulldelete()`. Le second passage a révélé le libellé manquant de la capacité `flatarchive:archive`, ajouté en anglais, français et néerlandais ; validation réussie sur les 14 combinaisons Moodle/PHP.
 
-Matrice CI (16 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 et 5.3 avec PHP 8.3/8.4. Chaque combinaison exécute les 69 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
+Matrice CI (16 combinaisons) : Moodle 4.4 et 4.5 avec PHP 8.1/8.2/8.3 ; Moodle 5.0 et 5.1 avec PHP 8.2/8.3/8.4 ; Moodle 5.2 et 5.3 avec PHP 8.3/8.4. Chaque combinaison exécute les 72 tests PHPUnit ; les 6 tests JavaScript sont exécutés une fois. Cette matrice couvre les branches stables à jour, pas chaque ancienne version corrective.
 
 Références des prérequis : https://moodledev.io/general/releases/4.4 ; https://moodledev.io/general/releases/4.5 ; https://moodledev.io/general/releases/5.0 ; https://moodledev.io/general/releases/5.1 ; https://moodledev.io/general/releases/5.2
 
@@ -618,3 +618,36 @@ manuellement par l’utilisateur ; ces deux améliorations restent à valider su
 Validation automatique du build 2026101102 : 69 tests PHPUnit sur les 16 configurations
 Moodle/PHP, tests JavaScript et standards réussis :
 https://github.com/edunover/moodle-local-flatarchive/actions/runs/38146037148 (code `7cdd162`).
+
+### Tags hors connexion — build 2026101103
+
+Les tags Moodle activés sont conservés sous forme d’étiquettes statiques, sans lien
+vers le site ni exécution de filtre. L’index général affiche les tags du cours et ceux
+de chaque activité sélectionnée, y compris Fichier et Texte et média. Les pages HTML
+individuelles affichent les tags de leur activité ; la table des matières d’un Livre
+les affiche également. Les tags de contenu restent sur le contenu correspondant.
+
+| Activité ou ressource | Tags de l’activité | Tags du contenu |
+| --- | --- | --- |
+| Page | Oui | — |
+| Livre | Oui | Chapitres |
+| Texte et média | Oui | — |
+| Fichier | Oui | — |
+| Dossier | Oui | — |
+| Glossaire | Oui | Entrées |
+| Wiki | Oui | Pages |
+| Feedback | Oui | — |
+| Consultation (Choice) | Oui | — |
+| Forum | Oui | Messages |
+
+Le rendu utilise les zones natives `core/course`, `core/course_modules`,
+`mod_book/book_chapters`, `mod_glossary/glossary_entries`, `mod_wiki/wiki_pages`
+et `mod_forum/forum_posts`. Les tags d’un contenu masqué ne sont jamais collectés
+séparément de ce contenu. Une zone désactivée ou sans tags n’affiche aucun bloc vide.
+Les catégories et alias des glossaires restent distincts des tags. Aucun tag de profil
+utilisateur, ni tag rattaché à un élément non exporté, n’est ajouté.
+
+Tests : les dix types d’activités, index et pages, zones de contenu distinctes,
+désactivation globale des tags, rendu sans lien en ligne et exclusion des tags de
+messages supprimés. Forum épinglé et réponses imbriquées confirmés manuellement par
+l’utilisateur sur le build précédent. Validation manuelle des tags encore à effectuer.

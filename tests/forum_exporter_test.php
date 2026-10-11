@@ -89,9 +89,12 @@ final class forum_exporter_test extends \advanced_testcase {
             get_file_storage()->create_file_from_string(['contextid' => $context->id, 'component' => 'mod_forum',
                 'filearea' => $area, 'itemid' => $post->id, 'filepath' => '/', 'filename' => $filename], 'Original bytes');
         }
+        set_config('usetags', 1);
+        \core_tag_tag::set_item_tags('mod_forum', 'forum_posts', $post->id, $context, ['visible-post-tag']);
         $before = $DB->count_records('forum_read');
         [$directory, $html, $export] = $this->export($forum);
         $this->assertCount(2, $export['filenames']);
+        $this->assertStringContainsString('visible-post-tag', $html);
         $this->assertStringContainsString('Été &amp; discussion', $html);
         $this->assertStringContainsString('ForumAuthor Example', $html);
         $this->assertStringContainsString('href="#post-' . $discussion->firstpost . '"', $html);
@@ -197,6 +200,14 @@ final class forum_exporter_test extends \advanced_testcase {
             'discussion' => $discussion->id, 'userid' => 2, 'parent' => $discussion->firstpost,
             'deleted' => 1, 'message' => 'DeletedSecret',
         ]);
+        set_config('usetags', 1);
+        \core_tag_tag::set_item_tags(
+            'mod_forum',
+            'forum_posts',
+            $post->id,
+            \context_module::instance($forum->cmid),
+            ['hidden-post-tag']
+        );
         get_file_storage()->create_file_from_string([
             'contextid' => \context_module::instance($forum->cmid)->id, 'component' => 'mod_forum',
             'filearea' => 'attachment', 'itemid' => $post->id, 'filepath' => '/', 'filename' => 'secret.txt',
@@ -204,7 +215,7 @@ final class forum_exporter_test extends \advanced_testcase {
         $this->setUser($student);
         [$directory, $html] = $this->export($forum);
         $this->assertStringContainsString('PublicDiscussion', $html);
-        foreach (['OtherGroupSecret', 'FutureSecret', 'DeletedSecret', 'secret.txt'] as $secret) {
+        foreach (['OtherGroupSecret', 'FutureSecret', 'DeletedSecret', 'secret.txt', 'hidden-post-tag'] as $secret) {
             $this->assertStringNotContainsString($secret, $html);
         }
         $this->assertDirectoryDoesNotExist($directory . '/files/' . $forum->cmid . '/attachment/' . $post->id);

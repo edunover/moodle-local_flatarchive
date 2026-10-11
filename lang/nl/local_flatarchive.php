@@ -130,3 +130,7 @@ $string['forumattachments'] = 'Bijlagen';
 $string['forumempty'] = 'Geen toegankelijke berichten.';
 
 $string['forumpinned'] = 'Vastgezet';
+
+$string['archivetags'] = 'Tags';
+$string['archiveactivitytags'] = 'Activiteitstags';
+$string['archivecoursetags'] = 'Cursustags';

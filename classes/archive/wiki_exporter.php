@@ -152,6 +152,7 @@ final class wiki_exporter {
             $body .= format_text($parsed['toc'] . $parsed['parsed_text'], FORMAT_HTML, [
                 'context' => $context, 'filter' => false, 'allowid' => true,
             ]);
+            $body .= tags::render('mod_wiki', 'wiki_pages', (int)$page->id);
             $body .= self::comments($page, $cm, $context);
             $body = self::rewrite($body, $page, $cm, $context, $spaces, $pages, $map);
             $html = \local_flatarchive_render_page_template($modinfo->get_course(), $cm, $page->title, $body, '', $badges);

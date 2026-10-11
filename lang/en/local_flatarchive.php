@@ -139,3 +139,7 @@ $string['forumattachments'] = 'Attachments';
 $string['forumempty'] = 'No accessible messages.';
 
 $string['forumpinned'] = 'Pinned';
+
+$string['archivetags'] = 'Tags';
+$string['archiveactivitytags'] = 'Activity tags';
+$string['archivecoursetags'] = 'Course tags';

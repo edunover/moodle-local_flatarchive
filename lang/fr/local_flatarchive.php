@@ -140,3 +140,7 @@ $string['forumattachments'] = 'Pièces jointes';
 $string['forumempty'] = 'Aucun message accessible.';
 
 $string['forumpinned'] = 'Épinglée';
+
+$string['archivetags'] = 'Tags';
+$string['archiveactivitytags'] = 'Tags de l’activité';
+$string['archivecoursetags'] = 'Tags du cours';

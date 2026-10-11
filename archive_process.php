@@ -177,6 +177,8 @@ try {
                         $relativeshared
                     );
                     $chaptercontent = format_text($rawcontent, $chapter->contentformat, ['context' => $pagecontext]);
+                    $chaptercontent = \local_flatarchive\archive\tags::render('mod_book', 'book_chapters', (int)$chapter->id)
+                        . $chaptercontent;
                     $chfile = paths::stem($chapter->title, 'chapter', (int)$chapter->id) . '.html';
                     $chpath = $bookdir . '/' . $chfile;
                     $html = local_flatarchive_render_page_template(
@@ -201,7 +203,14 @@ try {
             }
 
             // Table des matières du Livre (bookshortname/index.html).
-            $tochtml = local_flatarchive_render_book_toc_template($course, $cm->name, $chapterlinks, $relativeshared, $bookbadges);
+            $tochtml = local_flatarchive_render_book_toc_template(
+                $course,
+                $cm->name,
+                $chapterlinks,
+                $relativeshared,
+                $bookbadges,
+                (int)$cm->id
+            );
             local_flatarchive_write_file($bookdir . '/index.html', $tochtml);
             $zipfiles[$bookshortname . '/index.html'] = $bookdir . '/index.html';
 
@@ -228,6 +237,7 @@ try {
         }
     }
 
+    $indexitems = \local_flatarchive\archive\tags::index_items($indexitems);
     $index = \local_flatarchive\archive\index_icons::add($indexitems, $modinfo, $tempdir);
     $indexitems = $index['items'];
     $zipfiles += $index['files'];

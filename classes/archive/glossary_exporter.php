@@ -80,6 +80,7 @@ final class glossary_exporter {
                 ));
                 $body .= \html_writer::tag('p', get_string('glossaryauthor', 'local_flatarchive') . ': ' .
                     s(self::author((int)$entry->userid)));
+                $body .= tags::render('mod_glossary', 'glossary_entries', (int)$entry->id);
                 $body .= format_text($definition, $entry->definitionformat, ['context' => $filecontext, 'filter' => false]);
                 $aliases = $DB->get_fieldset_select('glossary_alias', 'alias', 'entryid = ?', [$entry->id]);
                 $categories = $DB->get_fieldset_sql(

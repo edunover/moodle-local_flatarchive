@@ -104,6 +104,7 @@ final class forum_exporter {
                         get_string('forumparent', 'local_flatarchive')
                     ));
                 }
+                $message .= tags::render('mod_forum', 'forum_posts', (int)$post->id);
                 $message .= self::text($post->message, $post->messageformat, 'post', $post->id, $cm, $directory);
                 // Copy attachments only after the native post visibility check has succeeded.
                 self::text('', FORMAT_HTML, 'attachment', $post->id, $cm, $directory);

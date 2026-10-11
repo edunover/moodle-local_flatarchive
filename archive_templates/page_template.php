@@ -17,6 +17,7 @@ defined('MOODLE_INTERNAL') || die();
  * @return string HTML complet
  */
 function local_flatarchive_render_page_template(stdClass $course, $cm, string $title, string $content, string $relativeshared = '', string $visibilitybadges = ''): string {
+    $content = ($cm ? \local_flatarchive\archive\tags::render('core', 'course_modules', (int)$cm->id) : '') . $content;
     $coursetitle = s($course->fullname);
     $sitename = s($course->shortname ?: get_string('pluginname', 'local_flatarchive'));
     $csspath = $relativeshared . 'shared/moodle.css';
