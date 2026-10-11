@@ -144,3 +144,22 @@ $string['forumpinned'] = 'Épinglée';
 $string['archivetags'] = 'Tags';
 $string['archiveactivitytags'] = 'Tags de l’activité';
 $string['archivecoursetags'] = 'Tags du cours';
+
+// Static Lesson export.
+$string['lessonscope'] = 'Contenu pédagogique et corrigés statiques. Aucune tentative ni note d’étudiant. Les sauts dynamiques sont décrits, sans être exécutés.';
+$string['backtolesson'] = 'Retour à la leçon';
+$string['lessonunknown'] = 'Type de page inconnu ({$a})';
+$string['lessonmultiple'] = 'Plusieurs réponses peuvent être sélectionnées.';
+$string['lessonessay'] = 'Question de composition : évaluation manuelle dans Moodle. Les travaux des étudiants ne sont pas archivés.';
+$string['lessonpair'] = 'Paire à apparier';
+$string['lessonanswer'] = 'Réponse / navigation';
+$string['lessoncorrect'] = 'Appariement correct';
+$string['lessonincorrect'] = 'Appariement incorrect';
+$string['lessonmatch'] = 'Valeur correspondante';
+$string['lessonfeedback'] = 'Feedback';
+$string['lessonscore'] = 'Score configuré : {$a}';
+$string['lessonempty'] = 'Cette leçon ne contient aucune page.';
+$string['lessonend'] = 'Fin de la leçon';
+$string['lessondynamic'] = 'Destination dynamique dépendant de la tentative Moodle. Utilise le sommaire pour consulter les pages.';
+$string['lessongoto'] = 'Aller à : {$a}';
+$string['lessonmissing'] = 'Destination indisponible dans cette leçon.';

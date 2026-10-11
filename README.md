@@ -6,15 +6,15 @@
 
 ## Français
 
-Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations et Forums) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
+Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums et Leçons) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101103) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101104) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
 Flatarchive permet aux enseignants d'exporter des ressources de cours vers une archive portable utilisable hors ligne :
 
-- Sélection des activités **Page**, **Livre**, **Zone texte et média**, **Fichier**, **Dossier**, **Glossaire**, **Wiki**, **Feedback** et **Consultation** et **Forum** depuis l'arborescence du cours
+- Sélection des activités **Page**, **Livre**, **Zone texte et média**, **Fichier**, **Dossier**, **Glossaire**, **Wiki**, **Feedback** et **Consultation**, **Forum** et **Leçon** depuis l'arborescence du cours
 - Génération d'un **site HTML statique** — aucune dépendance Moodle après téléchargement
 - Réécriture des liens `@@PLUGINFILE@@` en chemins relatifs et copie des fichiers embarqués
 - **Badges de visibilité** (caché / caché de la page de cours / section cachée) sur chaque page et dans l'index
@@ -97,9 +97,9 @@ archive_SHORTNAME_202603291200.zip
 
 ## English
 
-Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices and Forums) as self-contained static HTML pages bundled in a downloadable ZIP.
+Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums and Lessons) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101103) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101104) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -655,3 +655,41 @@ l’utilisateur sur le build précédent. Validation manuelle des tags encore à
 Validation automatique des tags : les 72 tests PHPUnit, six tests JavaScript et
 contrôles de standards ont réussi sur la matrice Moodle 4.4 à 5.3 :
 https://github.com/edunover/moodle-local-flatarchive/actions/runs/38148256222 (code `06d2a9c`).
+
+
+### Leçon / Lesson — build 2026101104
+
+Export du contenu pédagogique complet : sommaire dans l’ordre Moodle, une page HTML
+par page de leçon, questions, réponses configurées, feedbacks et scores configurés
+(si notation personnalisée). Les appariements distinguent les paires des feedbacks
+correct/incorrect ; les compositions sont indiquées comme évaluées manuellement.
+Les types natifs sont identifiés : contenu, QCM, vrai/faux, réponse courte, numérique,
+appariement, composition, branche et cluster. Ce sont des corrigés consultables,
+pas un moteur d’évaluation : motifs de réponse courte et plages numériques restent
+les définitions configurées dans Moodle.
+
+Les liens fixes pointent vers les pages locales : destination explicite, même page,
+page suivante, précédente et fin. Sauts aléatoires, pages non vues et mode flash-card
+sont signalés comme dynamiques sans simuler une tentative. Les références hors leçon
+ne deviennent pas des liens. Les pages orphelines sont conservées ; les cycles sont
+bornés et aucun ordre n’est réparé dans Moodle. Les liens saisis manuellement dans
+le contenu vers d’autres activités restent des liens vers leur destination d’origine.
+
+Images et fichiers des introductions, pages, réponses, feedbacks et média de leçon
+sont copiés dans `files/{cmid}/{filearea}/{itemid}/`. Icône officielle et tags de
+l’activité sont inclus. Aucune tentative, identité d’étudiant, note obtenue ni fichier
+de composition étudiant n’est exporté. Aucun filtre de contenu n’est exécuté.
+
+**Droits :** `local/flatarchive:archive`, `mod/lesson:view` et `mod/lesson:edit`.
+Le droit d’édition est nécessaire car toutes les branches et solutions deviennent
+consultables ; la leçon n’est pas proposée aux utilisateurs sans ce droit.
+
+**English:** Lesson export preserves authored pages, solutions, feedback, local media
+and fixed navigation in a static index and one HTML file per page. Full export requires
+lesson view and edit permissions. Dynamic routing is described rather than executed.
+Student attempts, grades and essay submissions are excluded.
+
+Tests PHPUnit ajoutés pour la navigation, l’ordre, les médias isolés, les droits,
+les destinations étrangères, les cycles, les types natifs, les flash-cards et les
+leçons vides. La matrice CI existante couvre Moodle 4.4 à 5.3. Validation en cours.
+Fixture manuelle : cours Critical Thinking, dernière section, leçon `cmid=112`.

@@ -37,7 +37,7 @@ final class tags_test extends \advanced_testcase {
         set_config('keeptagnamecase', 1);
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
-        $types = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki', 'feedback', 'choice', 'forum'];
+        $types = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki', 'feedback', 'choice', 'forum', 'lesson'];
         $items = [];
         foreach ($types as $type) {
             $module = $generator->create_module($type, ['course' => $course->id]);
@@ -51,7 +51,7 @@ final class tags_test extends \advanced_testcase {
             $items[$module->cmid] = '<li><a href="local.html">Title</a><ul><li>Nested</li></ul></li>';
         }
         $result = tags::index_items($items);
-        $this->assertCount(10, $result);
+        $this->assertCount(11, $result);
         foreach ($result as $html) {
             $this->assertStringContainsString('Été &amp;', $html);
             $this->assertStringContainsString('<ul><li>Nested</li></ul>', $html);

@@ -87,8 +87,13 @@ class get_tree extends external_api {
                 $cm = $modinfo->get_cm($cmid);
 
                 // The HTML exporter supports Pages, Books, text and media areas, Files and Folders.
-                $supported = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki', 'feedback', 'choice', 'forum'];
+                $supported = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki', 'feedback', 'choice', 'forum', 'lesson'];
                 if (!in_array($cm->modname, $supported, true)) {
+                    continue;
+                }
+
+                // Complete lesson exports expose solutions and require authoring permission.
+                if ($cm->modname === 'lesson' && !has_capability('mod/lesson:edit', \context_module::instance($cm->id))) {
                     continue;
                 }
 

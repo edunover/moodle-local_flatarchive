@@ -134,3 +134,22 @@ $string['forumpinned'] = 'Vastgezet';
 $string['archivetags'] = 'Tags';
 $string['archiveactivitytags'] = 'Activiteitstags';
 $string['archivecoursetags'] = 'Cursustags';
+
+// Static Lesson export.
+$string['lessonscope'] = 'Statische lesinhoud en oplossingen. Geen pogingen of cijfers van studenten. Dynamische sprongen worden beschreven, niet uitgevoerd.';
+$string['backtolesson'] = 'Terug naar de les';
+$string['lessonunknown'] = 'Onbekend paginatype ({$a})';
+$string['lessonmultiple'] = 'Meerdere antwoorden kunnen worden geselecteerd.';
+$string['lessonessay'] = 'Essayvraag: handmatige beoordeling in Moodle. Inzendingen worden niet gearchiveerd.';
+$string['lessonpair'] = 'Koppelingspaar';
+$string['lessonanswer'] = 'Antwoord / navigatie';
+$string['lessoncorrect'] = 'Correcte koppeling';
+$string['lessonincorrect'] = 'Onjuiste koppeling';
+$string['lessonmatch'] = 'Bijbehorende waarde';
+$string['lessonfeedback'] = 'Feedback';
+$string['lessonscore'] = 'Ingestelde score: {$a}';
+$string['lessonempty'] = 'Deze les bevat geen pagina’s.';
+$string['lessonend'] = 'Einde van de les';
+$string['lessondynamic'] = 'Dynamische bestemming afhankelijk van de Moodle-poging. Gebruik de lesindex om de pagina’s te bekijken.';
+$string['lessongoto'] = 'Ga naar: {$a}';
+$string['lessonmissing'] = 'Bestemming niet beschikbaar in deze les.';

@@ -37,7 +37,7 @@ final class index_icons_test extends \advanced_testcase {
         $course = $generator->create_course();
         $directory = make_request_directory();
         $items = [];
-        $types = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki', 'feedback', 'choice', 'forum', 'page'];
+        $types = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki', 'feedback', 'choice', 'forum', 'lesson', 'page'];
         foreach ($types as $type) {
             $module = $generator->create_module($type, ['course' => $course->id]);
             $items[$module->cmid] = '<li id="module-' . $module->cmid . '">'
@@ -45,7 +45,7 @@ final class index_icons_test extends \advanced_testcase {
         }
         $modinfo = get_fast_modinfo($course);
         $result = index_icons::add($items, $modinfo, $directory);
-        $this->assertCount(10, $result['files']);
+        $this->assertCount(11, $result['files']);
         $this->assertSame(array_keys($items), array_keys($result['items']));
         foreach ($result['items'] as $cmid => $html) {
             $dom = new \DOMDocument();

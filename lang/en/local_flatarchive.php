@@ -143,3 +143,22 @@ $string['forumpinned'] = 'Pinned';
 $string['archivetags'] = 'Tags';
 $string['archiveactivitytags'] = 'Activity tags';
 $string['archivecoursetags'] = 'Course tags';
+
+// Static Lesson export.
+$string['lessonscope'] = 'Static teaching content and solutions. No student attempts or grades. Dynamic jumps are described, not executed.';
+$string['backtolesson'] = 'Back to lesson';
+$string['lessonunknown'] = 'Unknown page type ({$a})';
+$string['lessonmultiple'] = 'Multiple answers may be selected.';
+$string['lessonessay'] = 'Essay question: manual assessment in Moodle. Student submissions are not archived.';
+$string['lessonpair'] = 'Matching pair';
+$string['lessonanswer'] = 'Answer / navigation';
+$string['lessoncorrect'] = 'Correct matching result';
+$string['lessonincorrect'] = 'Incorrect matching result';
+$string['lessonmatch'] = 'Corresponding value';
+$string['lessonfeedback'] = 'Feedback';
+$string['lessonscore'] = 'Configured score: {$a}';
+$string['lessonempty'] = 'This lesson has no pages.';
+$string['lessonend'] = 'End of lesson';
+$string['lessondynamic'] = 'Dynamic destination depending on the Moodle attempt. Use the lesson index to explore the pages.';
+$string['lessongoto'] = 'Go to: {$a}';
+$string['lessonmissing'] = 'Destination unavailable in this lesson.';
