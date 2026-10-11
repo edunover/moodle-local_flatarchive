@@ -669,4 +669,7 @@ attempts, using Moodle review permissions and group restrictions. Seven core que
 types have a passive offline representation. Unsupported types are identified.
 Download heading is now “Archive generated”; the success message retains ZIP size.
 
-Validation automatique en cours ; validation manuelle du Quiz à effectuer.
+Validation automatique réussie : [GitHub Actions 38161486385](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38161486385),
+17 jobs verts, 98 tests PHPUnit / 818 assertions, 6 tests JavaScript,
+Moodle 4.4 à 5.3 et contrôles de standards Moodle (commit `fbe8e27`).
+Validation manuelle du Quiz à effectuer après installation du build 2026101106.
