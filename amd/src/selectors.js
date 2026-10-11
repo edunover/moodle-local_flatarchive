@@ -40,7 +40,7 @@ define(['core/ajax', 'core/notification', 'core/str'], function(Ajax, Notificati
                 event.preventDefault();
                 return;
             }
-            if (!tree.querySelector(`${selectors.inputs}:checked`)) {
+            if (!tree.querySelector(`${selectors.inputs}:checked:not(:disabled)`)) {
                 event.preventDefault();
                 Notification.alert(strings.flatarchive, strings.nothingselected);
                 return;
@@ -52,7 +52,7 @@ define(['core/ajax', 'core/notification', 'core/str'], function(Ajax, Notificati
 
         [selectors.selectAll, selectors.deselectAll].forEach((selector, index) => {
             root.querySelector(selector).addEventListener('click', () => {
-                tree.querySelectorAll(selectors.inputs).forEach(input => { input.checked = index === 0; });
+                tree.querySelectorAll(`${selectors.inputs}:not(:disabled)`).forEach(input => { input.checked = index === 0; });
             });
         });
 
@@ -67,7 +67,7 @@ define(['core/ajax', 'core/notification', 'core/str'], function(Ajax, Notificati
 
         try {
             const keys = ['flatarchive', 'nothingselected', 'hidden', 'loading', 'status_idle',
-                'status_running', 'status_failed', 'noresources'];
+                'status_running', 'status_failed', 'noresources', 'unsupportedactivity', 'exportnotpermitted'];
             const values = await Str.get_strings(keys.map(key => ({key: key, component: 'local_flatarchive'})));
             strings = Object.fromEntries(keys.map((key, index) => [key, values[index]]));
             status.textContent = strings.loading;
@@ -98,6 +98,7 @@ define(['core/ajax', 'core/notification', 'core/str'], function(Ajax, Notificati
                     checkbox.type = 'checkbox';
                     checkbox.name = 'cmid[]';
                     checkbox.value = item.cmid;
+                    checkbox.disabled = !item.selectable;
                     const title = document.createElement('span');
                     title.textContent = item.name;
                     if (!item.visible) {
@@ -112,10 +113,19 @@ define(['core/ajax', 'core/notification', 'core/str'], function(Ajax, Notificati
                         label.appendChild(icon);
                     }
                     label.appendChild(title);
+                    if (checkbox.disabled) {
+                        label.classList.add('fa-item-disabled');
+                        const reason = document.createElement('span');
+                        reason.id = `fa-disabled-${item.cmid}`;
+                        reason.className = 'badge badge-secondary fa-export-status';
+                        reason.textContent = item.supported ? strings.exportnotpermitted : strings.unsupportedactivity;
+                        checkbox.setAttribute('aria-describedby', reason.id);
+                        label.appendChild(reason);
+                    }
                     tree.appendChild(label);
                 });
             });
-            ready = Boolean(tree.querySelector(selectors.inputs));
+            ready = Boolean(tree.querySelector(`${selectors.inputs}:not(:disabled)`));
             status.textContent = ready ? strings.status_idle : strings.noresources;
             setDisabled(!ready);
         } catch (error) {

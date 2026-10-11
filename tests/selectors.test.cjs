@@ -16,7 +16,7 @@ const sections = [{name: 'Section', visible: true, modules: [
     {cmid: 12, name: 'Glossary', type: 'glossary', visible: true},
     {cmid: 13, name: 'Wiki', type: 'wiki', visible: true},
     {cmid: 14, name: 'Feedback', type: 'feedback', visible: true}
-].map(item => ({...item, iconurl: `https://moodle.example/theme/image.php/boost/${item.type}/1/icon`,
+].map(item => ({...item, supported: true, selectable: true, iconurl: `https://moodle.example/theme/image.php/boost/${item.type}/1/icon`,
     modfullname: `Type ${item.type}`}))}];
 
 async function setup(file, response = {sections}, error = null) {
@@ -80,6 +80,37 @@ for (const file of ['amd/src/selectors.js', 'amd/build/selectors.min.js']) {
         assert.equal(document.querySelector('[data-action="start-archive"]').disabled, false);
         await ctx.module.init({courseid: 42});
         assert.equal(ctx.requests.length, 1);
+    });
+    test(`${file}: unsupported activities remain visible but never enter the POST`, async t => {
+        const modules = [
+            {...sections[0].modules[0]},
+            {cmid: 20, name: 'Assignment', supported: false, selectable: false, visible: true},
+            {cmid: 21, name: 'Lesson', supported: true, selectable: false, visible: true},
+        ];
+        const ctx = await setup(file, {sections: [{name: 'All activities', visible: true, modules}]});
+        t.after(() => ctx.dom.window.close());
+        const {document, dom} = ctx;
+        assert.equal(document.querySelectorAll('input[name="cmid[]"]').length, 3);
+        const disabled = document.querySelector('input[value="20"]');
+        assert.equal(disabled.disabled, true);
+        assert.equal(document.getElementById(disabled.getAttribute('aria-describedby')).textContent, 'unsupportedactivity');
+        assert.equal(document.querySelector('input[value="21"]').disabled, true);
+        assert.match(document.querySelector('[data-region="tree"]').textContent, /exportnotpermitted/);
+        document.querySelector('[data-action="selectall"]').click();
+        assert.equal(document.querySelectorAll('input:checked').length, 1);
+        // Even a disabled control checked by another script is ignored and not posted.
+        disabled.checked = true;
+        assert.equal(ctx.submit().defaultPrevented, false);
+        assert.deepEqual(Array.from(new dom.window.FormData(document.querySelector('form')).getAll('cmid[]')), ['7']);
+    });
+    test(`${file}: unsupported-only section is shown and export stays disabled`, async t => {
+        const ctx = await setup(file, {sections: [{name: 'Unsupported section', visible: true,
+            modules: [{cmid: 20, name: 'Assignment', supported: false, selectable: false, visible: true}]}]});
+        t.after(() => ctx.dom.window.close());
+        assert.match(ctx.document.querySelector('[data-region="tree"]').textContent, /Unsupported section/);
+        assert.equal(ctx.document.querySelector('[data-action="selectall"]').disabled, true);
+        assert.equal(ctx.document.querySelector('[data-action="start-archive"]').disabled, true);
+        assert.equal(ctx.submit().defaultPrevented, true);
     });
     test(`${file}: empty course cannot submit`, async t => {
         const ctx = await setup(file, {sections: []});

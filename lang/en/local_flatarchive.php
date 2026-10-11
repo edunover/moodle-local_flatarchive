@@ -54,7 +54,7 @@ $string['visibility_hidden'] = 'hidden';
 $string['visibility_stealth'] = 'hidden but available';
 $string['visibility_section_hidden'] = 'hidden section';
 $string['visibility_chapter_hidden'] = 'hidden chapter';
-$string['noresources'] = 'No supported resources are available to archive.';
+$string['noresources'] = 'No activities or resources are selectable for this export.';
 $string['archivefailed'] = 'The archive could not be created. Check available disk space and file permissions.';
 $string['invalidselection'] = 'The selection contains an unsupported resource or a resource outside this course.';
 
@@ -195,3 +195,6 @@ $string['quizrandomslot'] = 'Random question position. The questions actually dr
 $string['quizquestionunavailable'] = 'Question unavailable or permission to use this question is missing.';
 $string['quizunsupported'] = 'Question type not yet supported for full offline rendering: {$a}. Any available attempt summaries follow.';
 $string['backtoquiz'] = 'Back to quiz';
+
+$string['unsupportedactivity'] = 'Not supported';
+$string['exportnotpermitted'] = 'Insufficient export permissions';

@@ -24,7 +24,7 @@ use core_external\external_multiple_structure;
 use context_course;
 
 /**
- * Return supported course resources, including hidden resources for authorised users.
+ * Return course activities and their export eligibility, respecting Moodle visibility.
  *
  * @package local_flatarchive
  * @copyright 2025 Edunover
@@ -43,7 +43,7 @@ class get_tree extends external_api {
     }
 
     /**
-     * Retourne l’arborescence des sections et des ressources prises en charge du cours,
+     * Retourne l’arborescence des sections et des ressources du cours,
      * incluant les éléments visibles et cachés.
      *
      * @param int $courseid
@@ -86,22 +86,23 @@ class get_tree extends external_api {
             foreach ($cmids as $cmid) {
                 $cm = $modinfo->get_cm($cmid);
 
-                // The HTML exporter supports Pages, Books, text and media areas, Files and Folders.
-                $supported = ['page', 'book', 'label', 'resource', 'folder', 'glossary',
+                // Listing unsupported modules must not reveal inaccessible course content.
+                if (!$cm->uservisible) {
+                    continue;
+                }
+                $types = ['page', 'book', 'label', 'resource', 'folder', 'glossary',
                     'wiki', 'feedback', 'choice', 'forum', 'lesson', 'quiz'];
-                if (!in_array($cm->modname, $supported, true)) {
-                    continue;
-                }
-
+                $supported = in_array($cm->modname, $types, true);
                 // Complete lesson exports expose solutions and require authoring permission.
-                if ($cm->modname === 'lesson' && !has_capability('mod/lesson:edit', \context_module::instance($cm->id))) {
-                    continue;
-                }
+                $permitted = $cm->modname !== 'lesson' ||
+                    has_capability('mod/lesson:edit', \context_module::instance($cm->id));
 
                 $sectiondata['modules'][] = [
                     'cmid' => $cm->id,
                     'name' => $cm->name,
                     'type' => $cm->modname,
+                    'supported' => $supported,
+                    'selectable' => $supported && $permitted,
                     'iconurl' => $cm->get_icon_url()->out(false),
                     'modfullname' => (string)$cm->get_module_type_name(),
                     'visible' => (bool) $cm->visible,
@@ -109,7 +110,7 @@ class get_tree extends external_api {
                 ];
             }
 
-            // Include only sections containing supported resources.
+            // Keep sections even when every activity is unsupported.
             if (!empty($sectiondata['modules'])) {
                 $sections[] = $sectiondata;
             }
@@ -136,7 +137,9 @@ class get_tree extends external_api {
                         new external_single_structure([
                             'cmid' => new external_value(PARAM_INT, 'ID du course module'),
                             'name' => new external_value(PARAM_TEXT, 'Nom du module'),
-                            'type' => new external_value(PARAM_ALPHA, 'Type de module'),
+                            'type' => new external_value(PARAM_PLUGIN, 'Type de module'),
+                            'supported' => new external_value(PARAM_BOOL, 'Activity type supported by the exporter'),
+                            'selectable' => new external_value(PARAM_BOOL, 'User may select this activity for export'),
                             'iconurl' => new external_value(PARAM_URL, 'Activity icon URL'),
                             'modfullname' => new external_value(PARAM_TEXT, 'Localised activity type'),
                             'visible' => new external_value(PARAM_BOOL, 'Module visible'),

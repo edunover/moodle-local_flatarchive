@@ -54,7 +54,7 @@ $string['visibility_hidden'] = 'caché';
 $string['visibility_stealth'] = 'caché mais disponible';
 $string['visibility_section_hidden'] = 'section cachée';
 $string['visibility_chapter_hidden'] = 'chapitre caché';
-$string['noresources'] = 'Aucune ressource prise en charge à archiver dans ce cours.';
+$string['noresources'] = 'Aucune activité ou ressource sélectionnable pour cet export.';
 $string['archivefailed'] = 'Impossible de créer l’archive. Vérifie l’espace disque et les droits d’écriture.';
 $string['invalidselection'] = 'La sélection contient une ressource non prise en charge ou extérieure à ce cours.';
 
@@ -196,3 +196,6 @@ $string['quizrandomslot'] = 'Emplacement de question aléatoire. Les questions r
 $string['quizquestionunavailable'] = 'Question indisponible ou droit d’utilisation de cette question absent.';
 $string['quizunsupported'] = 'Type de question non encore pris en charge pour un rendu hors ligne complet : {$a}. Les résumés disponibles de la tentative suivent.';
 $string['backtoquiz'] = 'Retour au test';
+
+$string['unsupportedactivity'] = 'Non pris en charge';
+$string['exportnotpermitted'] = 'Droits insuffisants pour l’export';

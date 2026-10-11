@@ -45,7 +45,7 @@ $string['visibility_stealth'] = 'verborgen maar beschikbaar';
 $string['visibility_section_hidden'] = 'verborgen sectie';
 $string['footer_copyright'] = 'Flatarchive {$a} &#169; EDUNOVER';
 $string['visibility_chapter_hidden'] = 'verborgen hoofdstuk';
-$string['noresources'] = 'Er zijn geen ondersteunde bronnen om te archiveren.';
+$string['noresources'] = 'Er zijn geen activiteiten of bronnen selecteerbaar voor deze export.';
 $string['archivefailed'] = 'Het archief kon niet worden gemaakt. Controleer de vrije schijfruimte en schrijfrechten.';
 $string['invalidselection'] = 'De selectie bevat een niet-ondersteunde bron of een bron uit een andere cursus.';
 
@@ -186,3 +186,6 @@ $string['quizrandomslot'] = 'Willekeurige vraagpositie. De werkelijk gekozen vra
 $string['quizquestionunavailable'] = 'Vraag niet beschikbaar of geen toestemming om deze vraag te gebruiken.';
 $string['quizunsupported'] = 'Vraagtype nog niet ondersteund voor volledige offline weergave: {$a}. Beschikbare samenvattingen van de poging volgen.';
 $string['backtoquiz'] = 'Terug naar de test';
+
+$string['unsupportedactivity'] = 'Niet ondersteund';
+$string['exportnotpermitted'] = 'Onvoldoende rechten voor export';

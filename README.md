@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums et Leçons) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101106) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101107) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -99,7 +99,7 @@ archive_SHORTNAME_202603291200.zip
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums and Lessons) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101106) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101107) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -778,3 +778,23 @@ Validation automatique réussie : [GitHub Actions 38161486385](https://github.co
 17 jobs verts, 98 tests PHPUnit / 818 assertions, 6 tests JavaScript,
 Moodle 4.4 à 5.3 et contrôles de standards Moodle (commit `fbe8e27`).
 Validation manuelle du Quiz à effectuer après installation du build 2026101106.
+
+
+### Sélection complète du cours — build 2026101107
+
+La page de sélection présente toutes les activités et ressources accessibles à
+l’utilisateur, dans les sections et l’ordre du cours. Les types non pris en charge
+conservent leur nom et leur icône officielle, avec une case désactivée et le badge
+« Non pris en charge ». Les sections ne contenant que ces éléments restent visibles.
+Une Leçon non exportable faute de droit d’édition affiche un motif de droits distinct.
+Les contenus non accessibles selon Moodle ne sont pas révélés.
+
+« Tout sélectionner » ignore les cases désactivées ; aucune case désactivée n’entre
+dans l’envoi du formulaire. L’export reste bloqué si aucun élément n’est sélectionnable.
+Les validations serveur de l’export restent actives. Libellés FR/EN/NL.
+
+English: all accessible course activities are listed, including unsupported types
+with disabled checkboxes and an explicit status. Bulk selection and form submission
+exclude disabled entries. Unsupported-only sections remain visible.
+
+Validation automatique en cours ; validation visuelle à effectuer après installation.

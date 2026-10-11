@@ -17,3 +17,11 @@
     object-fit: contain;
     margin: 0;
 }
+
+.local-flatarchive .fa-item-disabled {
+    color: #5a6268;
+    cursor: not-allowed;
+}
+.local-flatarchive .fa-export-status {
+    white-space: normal;
+}

@@ -51,7 +51,7 @@ final class get_tree_test extends \externallib_advanced_testcase {
     }
 
     /**
-     * Pages and Books are selectable; unsupported resources and other courses are excluded.
+     * Supported and unsupported modules are listed, but only supported modules are selectable.
      */
     public function test_supported_modules_and_course_isolation(): void {
         $generator = $this->getDataGenerator();
@@ -59,15 +59,17 @@ final class get_tree_test extends \externallib_advanced_testcase {
         $other = $generator->create_course();
         $page = $generator->create_module('page', ['course' => $course->id, 'section' => 1, 'name' => 'Page A']);
         $book = $generator->create_module('book', ['course' => $course->id, 'section' => 1, 'name' => 'Book B']);
-        $generator->create_module('url', ['course' => $course->id, 'section' => 1]);
+        $url = $generator->create_module('url', ['course' => $course->id, 'section' => 1, 'name' => 'URL C']);
         $generator->create_module('page', ['course' => $other->id]);
 
         $result = $this->read_tree($course->id);
         $this->assertCount(1, $result['sections']);
         $modules = $result['sections'][0]['modules'];
-        $this->assertEquals([$page->cmid, $book->cmid], array_column($modules, 'cmid'));
-        $this->assertSame(['page', 'book'], array_column($modules, 'type'));
-        $this->assertSame(['Page A', 'Book B'], array_column($modules, 'name'));
+        $this->assertEquals([$page->cmid, $book->cmid, $url->cmid], array_column($modules, 'cmid'));
+        $this->assertSame(['page', 'book', 'url'], array_column($modules, 'type'));
+        $this->assertSame(['Page A', 'Book B', 'URL C'], array_column($modules, 'name'));
+        $this->assertSame([true, true, false], array_map('boolval', array_column($modules, 'supported')));
+        $this->assertSame([true, true, false], array_map('boolval', array_column($modules, 'selectable')));
         foreach ($modules as $module) {
             $cm = get_fast_modinfo($course)->get_cm($module['cmid']);
             $this->assertSame($cm->get_icon_url()->out(false), $module['iconurl']);
@@ -132,7 +134,10 @@ final class get_tree_test extends \externallib_advanced_testcase {
         $role = $DB->get_field('role', 'id', ['shortname' => 'editingteacher'], MUST_EXIST);
         assign_capability('mod/lesson:edit', CAP_PROHIBIT, $role, \context_module::instance($lesson->cmid)->id);
         $this->setUser($teacher);
-        $this->assertSame([], $this->read_tree($course->id)['sections']);
+        $modules = $this->read_tree($course->id)['sections'][0]['modules'];
+        $this->assertEquals($lesson->cmid, $modules[0]['cmid']);
+        $this->assertTrue((bool)$modules[0]['supported']);
+        $this->assertFalse((bool)$modules[0]['selectable']);
     }
 
     /**
@@ -315,13 +320,32 @@ final class get_tree_test extends \externallib_advanced_testcase {
     }
 
     /**
-     * Courses without supported resources return an empty tree.
+     * Empty courses return an empty tree, while unsupported-only sections remain visible.
      */
     public function test_empty_and_unsupported_only_courses(): void {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
         $this->assertSame(['sections' => []], $this->read_tree($course->id));
-        $generator->create_module('url', ['course' => $course->id]);
+        $url = $generator->create_module('url', ['course' => $course->id]);
+        $sections = $this->read_tree($course->id)['sections'];
+        $this->assertCount(1, $sections);
+        $this->assertEquals($url->cmid, $sections[0]['modules'][0]['cmid']);
+        $this->assertFalse((bool)$sections[0]['modules'][0]['selectable']);
+    }
+
+    /**
+     * Listing every type must not disclose hidden activities to a user without hidden-content access.
+     */
+    public function test_inaccessible_unsupported_activity_is_not_disclosed(): void {
+        global $DB;
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $generator->create_module('url', ['course' => $course->id, 'visible' => 0, 'name' => 'Private URL']);
+        $student = $generator->create_user();
+        $generator->enrol_user($student->id, $course->id, 'student');
+        $role = $DB->get_field('role', 'id', ['shortname' => 'student'], MUST_EXIST);
+        assign_capability('local/flatarchive:archive', CAP_ALLOW, $role, \context_course::instance($course->id)->id);
+        $this->setUser($student);
         $this->assertSame(['sections' => []], $this->read_tree($course->id));
     }
 
