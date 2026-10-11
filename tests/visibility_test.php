@@ -36,6 +36,7 @@ final class visibility_test extends \advanced_testcase {
         require_once($CFG->dirroot . '/local/flatarchive/archive_templates/index_template.php');
         $this->resetAfterTest();
         $this->setAdminUser();
+        set_config('allowstealth', 1);
         $generator = $this->getDataGenerator();
         $course = $generator->create_course(['format' => 'topics', 'numsections' => 2]);
         $normal = $generator->create_module('page', ['course' => $course->id, 'section' => 1]);
