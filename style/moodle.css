@@ -95,3 +95,11 @@ hr { margin: 1rem 0; border: 0; border-top: 1px solid #dee2e6; }
 }
 
 .fa-lesson-answer { border: 1px solid #d8dde3; padding: 1rem; margin-block: 1rem; border-radius: .35rem; }
+
+/* Passive Quiz review: separate questions and preserve written responses. */
+.fa-quiz-question { border: 1px solid #d7dce1; border-radius: .35rem; padding: 1rem; margin: 1rem 0; }
+.fa-quiz-question .info { color: #495057; margin-bottom: .75rem; }
+.fa-quiz-question .qtext { margin-bottom: .75rem; }
+.fa-quiz-question .feedback { background: #f5f7f9; padding: .75rem; margin-top: .75rem; }
+.fa-quiz-response { white-space: pre-wrap; }
+.fa-quiz-question img { max-width: 100%; height: auto; }

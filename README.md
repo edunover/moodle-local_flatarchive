@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums et Leçons) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101105) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101106) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -99,7 +99,7 @@ archive_SHORTNAME_202603291200.zip
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums and Lessons) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101105) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101106) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -735,3 +735,43 @@ Validation automatique réussie : [GitHub Actions 38156562670](https://github.co
 17 jobs verts, 90 tests PHPUnit / 777 assertions et 6 tests JavaScript,
 Moodle 4.4 à 5.3 et contrôles de standards Moodle (commit `ee1d466`).
 Validation manuelle du build 2026101105 à effectuer après installation.
+
+
+### Quiz — build 2026101106
+
+Le build 2026101105 a été validé manuellement le 11 octobre (archive de 19 h 27).
+
+L’export Quiz conserve une page d’accueil, un questionnaire réservé aux personnes
+ayant le droit de gérer le test et d’utiliser les questions, puis une page par
+tentative consultable. Les tentatives utilisent les versions et réponses chargées
+par le moteur de questions Moodle. Les aperçus des enseignants sont exclus.
+Les rapports des autres participants sont limités aux inscrits actifs, au groupe
+courant et aux droits natifs de relecture ; un utilisateur sans droit de rapport
+ne peut exporter que ses propres tentatives terminées si la relecture est autorisée.
+Notes, corrections, solutions et feedbacks suivent les options de relecture.
+Aucune tentative n’est créée en base, terminée, renotée ou modifiée par l’export.
+
+Types pris en charge : Description, QCM, Vrai/Faux, réponse courte, numérique,
+appariement et composition. Les contrôles sont convertis en texte et symboles
+statiques. Les médias et pièces jointes référencés sont copiés après vérification
+par le moteur de questions. Les compositions conservent le texte et les commentaires
+de correction accessibles. Les points sont ceux enregistrés pour la tentative.
+
+Les emplacements aléatoires sont signalés sans effectuer de nouveau tirage ; les
+questions réellement reçues sont présentes dans les tentatives. La banque complète
+n’est pas exportée. Les types non encore pris en charge (notamment Cloze, calculées,
+glisser-déposer et types tiers) sont signalés ; leurs résumés enregistrés sont
+conservés dans les tentatives lorsqu’ils existent. Le rendu interactif de ces types,
+les historiques détaillés de chaque étape et les règles complètes des filtres de
+tirage ne sont pas reproduits dans cette première version.
+
+Chaque document conserve les liens vers l’index du cours et vers le Quiz. Le titre
+de téléchargement devient « Archive générée » ; le message de succès conserve
+la taille réelle du ZIP. Libellés disponibles en français, anglais et néerlandais.
+
+English: Quiz export includes an authorised questionnaire and individual recorded
+attempts, using Moodle review permissions and group restrictions. Seven core question
+types have a passive offline representation. Unsupported types are identified.
+Download heading is now “Archive generated”; the success message retains ZIP size.
+
+Validation automatique en cours ; validation manuelle du Quiz à effectuer.

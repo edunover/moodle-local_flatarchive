@@ -174,8 +174,10 @@ final class quiz_question {
         }
         $isresponse = $component === 'question' && str_starts_with($area, 'response_');
         $expectedcontext = $isresponse ? \context_module::instance($cm->id)->id : $qa->get_question()->contextid;
-        if ((int)$contextid !== (int)$expectedcontext ||
-                !$qa->check_file_access($options, $component, $area, array_merge([$itemid], $parts), false)) {
+        if (
+            (int)$contextid !== (int)$expectedcontext ||
+            !$qa->check_file_access($options, $component, $area, array_merge([$itemid], $parts), false)
+        ) {
             return '';
         }
         $filename = array_pop($parts);

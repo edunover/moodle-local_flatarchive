@@ -184,6 +184,7 @@ final class quiz_exporter {
                 continue;
             }
             $question = \question_bank::load_question($slot->questionid);
+            $body .= tags::render('core_question', 'question', (int)$question->id);
             if (!quiz_question::supported($question->qtype->name())) {
                 $body .= \html_writer::tag('p', get_string('quizunsupported', 'local_flatarchive', s($question->qtype->name())));
                 continue;

@@ -110,9 +110,9 @@ final class quiz_exporter_test extends \advanced_testcase {
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
         $this->setUser($student);
         $first = $generator->create_attempt($quiz->id, $student->id);
-        $generator->submit_responses($first->id, [1 => ['answer' => 'FirstPrivateAnswer']], false, true);
+        $generator->submit_responses($first->id, [1 => 'FirstPrivateAnswer'], false, true);
         $second = $generator->create_attempt($quiz->id, $student->id);
-        $generator->submit_responses($second->id, [1 => ['answer' => 'SecondPrivateAnswer']], false, true);
+        $generator->submit_responses($second->id, [1 => 'SecondPrivateAnswer'], false, true);
         $this->setAdminUser();
         $before = $DB->get_records('quiz_attempts', ['quiz' => $quiz->id]);
         $steps = $DB->count_records('question_attempt_steps');
@@ -135,7 +135,7 @@ final class quiz_exporter_test extends \advanced_testcase {
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
         $this->setUser($student);
         $attempt = $generator->create_attempt($quiz->id, $student->id);
-        $generator->submit_responses($attempt->id, [1 => ['answer' => 'PrivateStudentAnswer']], false, true);
+        $generator->submit_responses($attempt->id, [1 => 'PrivateStudentAnswer'], false, true);
         $DB->set_field('quiz', 'reviewattempt', 0, ['id' => $quiz->id]);
         [$html, $directory, $result] = $this->export($quiz);
         $this->assertCount(1, $result['filenames']);
@@ -158,7 +158,7 @@ final class quiz_exporter_test extends \advanced_testcase {
         $attempt = $generator->get_plugin_generator('mod_quiz')->create_attempt($quiz->id, $student->id);
         $generator->get_plugin_generator('mod_quiz')->submit_responses(
             $attempt->id,
-            [1 => ['answer' => 'HiddenPrivateResponse']],
+            [1 => 'HiddenPrivateResponse'],
             false,
             true
         );
@@ -195,8 +195,12 @@ final class quiz_exporter_test extends \advanced_testcase {
         $context = \context_course::instance($quiz->course);
         get_file_storage()->create_file_from_string(['contextid' => $context->id, 'component' => 'question',
             'filearea' => 'questiontext', 'itemid' => $question->id, 'filepath' => '/', 'filename' => 'image.png'], 'QuizMedia');
-        $DB->set_field('question', 'questiontext', '<p>Illustration</p><img src="@@PLUGINFILE@@/image.png" alt="Image">',
-            ['id' => $question->id]);
+        $DB->set_field(
+            'question',
+            'questiontext',
+            '<p>Illustration</p><img src="@@PLUGINFILE@@/image.png" alt="Image">',
+            ['id' => $question->id]
+        );
         \question_bank::notify_question_edited($question->id);
         [$html, $directory] = $this->export($quiz);
         $this->assertStringNotContainsString('@@PLUGINFILE@@', $html);
@@ -206,4 +210,61 @@ final class quiz_exporter_test extends \advanced_testcase {
         $this->assertCount(1, $files);
         $this->assertSame('QuizMedia', file_get_contents($files[0]));
     }
+
+    /**
+     * Essay text, embedded files and a saved teacher comment survive without grading writes.
+     */
+    public function test_essay_and_manual_comment(): void {
+        [$quiz, $student] = $this->fixture(['essay']);
+        $generator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
+        $this->setUser($student);
+        $attempt = $generator->create_attempt($quiz->id, $student->id);
+        $attemptobj = \mod_quiz\quiz_attempt::create($attempt->id);
+        $attemptobj->get_question_usage()->process_action(1, [
+            'answer' => '<p>PrivateEssayText</p><img src="@@PLUGINFILE@@/essay.png" alt="Essay">',
+            'answerformat' => FORMAT_HTML,
+        ]);
+        $attemptobj->process_finish(time(), false);
+        $qa = $attemptobj->get_question_attempt(1);
+        $step = $qa->get_last_step_with_qt_var('answer');
+        $context = \context_module::instance($quiz->cmid);
+        get_file_storage()->create_file_from_string(['contextid' => $context->id, 'component' => 'question',
+            'filearea' => 'response_answer', 'itemid' => $step->get_id(), 'filepath' => '/',
+            'filename' => 'essay.png'], 'PrivateEssayMedia');
+        $this->setAdminUser();
+        $usage = $attemptobj->get_question_usage();
+        $usage->manual_grade(1, 'TeacherCorrectionText', 0.5, FORMAT_HTML);
+        \question_engine::save_questions_usage_by_activity($usage);
+        [$html, $directory] = $this->export($quiz);
+        $this->assertStringContainsString('PrivateEssayText', $html);
+        $this->assertStringContainsString('TeacherCorrectionText', $html);
+        $this->assertStringNotContainsString('@@PLUGINFILE@@', $html);
+        $files = glob($directory . '/files/' . $quiz->cmid . '/quiz/*/essay.png');
+        $this->assertCount(1, $files);
+        $this->assertSame('PrivateEssayMedia', file_get_contents($files[0]));
+    }
+
+    /**
+     * A visible response must not reveal a solution or feedback disabled by review options.
+     */
+    public function test_hidden_solutions(): void {
+        global $DB;
+        [$quiz, $student, $questions] = $this->fixture();
+        $DB->set_field('question', 'generalfeedback', 'SecretGeneralFeedback', ['id' => $questions[0]->id]);
+        \question_bank::notify_question_edited($questions[0]->id);
+        $generator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
+        $this->setUser($student);
+        $attempt = $generator->create_attempt($quiz->id, $student->id);
+        $generator->submit_responses($attempt->id, [1 => 'VisibleOwnResponse'], false, true);
+        $DB->set_field('quiz', 'reviewattempt', 0x11110, ['id' => $quiz->id]);
+        foreach (['reviewgeneralfeedback', 'reviewrightanswer', 'reviewmarks', 'reviewspecificfeedback'] as $field) {
+            $DB->set_field('quiz', $field, 0, ['id' => $quiz->id]);
+        }
+        [$html] = $this->export($quiz);
+        $this->assertStringContainsString('VisibleOwnResponse', $html);
+        $this->assertStringNotContainsString('SecretGeneralFeedback', $html);
+        $this->assertStringNotContainsString('rightanswer', $html);
+        $this->assertStringNotContainsString('Stored points:', $html);
+    }
+
 }
