@@ -462,6 +462,11 @@ Aucune réponse ni donnée de complétion n’est modifiée lors de l’export.
 
 Tests ajoutés : médias, réponses multiples, publication, anonymat, droits de rapport,
 groupes séparés et sélection limitée au cours ; icône Choice ajoutée au test ZIP.
-Validation manuelle Choice encore à effectuer. Le build précédent 2026101005 est
-validé manuellement et par la matrice complète :
-https://github.com/edunover/moodle-local-flatarchive/actions/runs/38081293859.
+Validation Choice terminée : 61 tests PHPUnit et 539 assertions, six tests JavaScript,
+et contrôles de standards réussis sur les 16 configurations Moodle/PHP jusqu’à Moodle 5.3 :
+https://github.com/edunover/moodle-local-flatarchive/actions/runs/38083156703 (code `f0d9f59`).
+Build 2026101006 installé et test manuel confirmé par l’utilisateur le 10 octobre 2026.
+Archive `archive_Critical thinking_202610102226.zip` vérifiée : ZIP intact,
+page `choice-111.html` liée depuis l’index, icône locale présente, 168 références locales
+sans cible manquante, aucun formulaire actif ni marqueur de fichier Moodle non résolu.
+Le multilinguisme reste différé à la fin de l’intégration des activités.
