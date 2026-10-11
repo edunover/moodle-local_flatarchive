@@ -18,8 +18,11 @@ function local_flatarchive_render_index_template(stdClass $course, int $courseid
     $sectionshtml = '';
     foreach ($sections as $section) {
         $headingid = 'section-' . (int)$section['id'];
+        $badge = array_key_exists('visible', $section) && !$section['visible'] ?
+            ' <span class="fa-vis-badge fa-vis-section">' .
+                get_string('visibility_section_hidden', 'local_flatarchive') . '</span>' : '';
         $sectionshtml .= '<section class="fa-course-section" aria-labelledby="' . $headingid . '">'
-            . '<h2 id="' . $headingid . '">' . s($section['name']) . '</h2>'
+            . '<h2 id="' . $headingid . '">' . s($section['name']) . $badge . '</h2>'
             . '<ul>' . implode("\n", $section['links']) . '</ul></section>';
     }
     $coursetitle = s($course->fullname);

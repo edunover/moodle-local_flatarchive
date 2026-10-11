@@ -130,6 +130,8 @@ jobs:
           plugin/classes/archive/tags.php plugin/tests/tags_test.php
           plugin/classes/archive/forum_exporter.php plugin/tests/forum_exporter_test.php
           plugin/classes/archive/lesson_exporter.php plugin/tests/lesson_exporter_test.php
+          plugin/classes/archive/lesson_attempts.php plugin/tests/lesson_attempts_test.php plugin/tests/visibility_test.php
+          plugin/tests/index_navigation_test.php
           plugin/classes/archive/choice_exporter.php plugin/tests/choice_exporter_test.php
           plugin/classes/archive/index_icons.php plugin/tests/index_icons_test.php
           plugin/classes/archive/feedback_exporter.php plugin/tests/feedback_exporter_test.php

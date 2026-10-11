@@ -137,6 +137,9 @@ final class lesson_exporter {
             $url = implode('/', array_map('rawurlencode', explode('/', $path)));
             $content .= \html_writer::tag('p', \html_writer::link($url, s($file->get_filename())));
         }
+        $reports = lesson_attempts::render($cm, $modinfo, $directory, $pages, $answers);
+        $content .= $reports['html'];
+        $files = array_merge($files, $reports['files']);
         $content .= \html_writer::tag('h2', get_string('lessonend', 'local_flatarchive'), ['id' => 'end']);
         $html = \local_flatarchive_render_page_template($modinfo->get_course(), $cm, $cm->name, $content, '', $badges);
         \local_flatarchive_write_file($directory . '/' . $filename, $html);

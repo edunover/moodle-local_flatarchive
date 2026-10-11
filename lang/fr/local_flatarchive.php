@@ -51,7 +51,7 @@ $string['about_course'] = 'À propos de ce cours';
 $string['coursenotfound'] = 'Cours introuvable.';
 $string['footer_copyright'] = 'Flatarchive {$a} &#169; EDUNOVER';
 $string['visibility_hidden'] = 'caché';
-$string['visibility_stealth'] = 'caché de la page de cours';
+$string['visibility_stealth'] = 'caché mais disponible';
 $string['visibility_section_hidden'] = 'section cachée';
 $string['visibility_chapter_hidden'] = 'chapitre caché';
 $string['noresources'] = 'Aucune ressource prise en charge à archiver dans ce cours.';
@@ -146,11 +146,11 @@ $string['archiveactivitytags'] = 'Tags de l’activité';
 $string['archivecoursetags'] = 'Tags du cours';
 
 // Static Lesson export.
-$string['lessonscope'] = 'Contenu pédagogique et corrigés statiques. Aucune tentative ni note d’étudiant. Les sauts dynamiques sont décrits, sans être exécutés.';
+$string['lessonscope'] = 'Contenu pédagogique et corrigés statiques. Les rapports de tentatives accessibles figurent ci-dessous. Les sauts dynamiques sont décrits sans être exécutés.';
 $string['backtolesson'] = 'Retour à la leçon';
 $string['lessonunknown'] = 'Type de page inconnu ({$a})';
 $string['lessonmultiple'] = 'Plusieurs réponses peuvent être sélectionnées.';
-$string['lessonessay'] = 'Question de composition : évaluation manuelle dans Moodle. Les travaux des étudiants ne sont pas archivés.';
+$string['lessonessay'] = 'Question de composition : évaluation manuelle dans Moodle. Consulte les rapports accessibles pour les travaux soumis.';
 $string['lessonpair'] = 'Paire à apparier';
 $string['lessonanswer'] = 'Réponse / navigation';
 $string['lessoncorrect'] = 'Appariement correct';
@@ -163,3 +163,24 @@ $string['lessonend'] = 'Fin de la leçon';
 $string['lessondynamic'] = 'Destination dynamique dépendant de la tentative Moodle. Utilise le sommaire pour consulter les pages.';
 $string['lessongoto'] = 'Aller à : {$a}';
 $string['lessonmissing'] = 'Destination indisponible dans cette leçon.';
+
+// Lesson attempt reports.
+$string['lessonattempts'] = 'Tentatives des étudiants';
+$string['lessonreportsdenied'] = 'Rapports de tentatives non inclus : droit de consultation des rapports requis.';
+$string['lessonattemptnumber'] = 'Tentative {$a}';
+$string['lessoncompleted'] = 'Terminée';
+$string['lessonincomplete'] = 'Non terminée';
+$string['lessonstarted'] = 'Début';
+$string['lessonlastactivity'] = 'Dernière activité enregistrée';
+$string['lessonrecordedgrade'] = 'Note enregistrée dans la leçon : {$a} %';
+$string['lessonanswered'] = 'Réponse enregistrée';
+$string['lessonvisited'] = 'Visites enregistrées des pages de contenu';
+$string['lessonreportsscope'] = 'Les rapports couvrent les inscrits actifs visibles dans le contexte de groupe courant. Chaque tentative est distincte ; les notes enregistrées ne sont pas recalculées.';
+$string['lessonnoattempts'] = 'Aucune tentative enregistrée visible.';
+$string['lessonunreadable'] = 'La réponse enregistrée ne peut pas être décodée.';
+$string['lessonungraded'] = 'Pas encore évaluée';
+$string['lessonearnedscore'] = 'Score attribué : {$a}';
+$string['lessonanswercorrect'] = 'Enregistrée comme correcte';
+$string['lessonanswerincorrect'] = 'Enregistrée comme incorrecte';
+
+$string['backtocourseindex'] = 'Retour à l’index du cours';

@@ -38,6 +38,7 @@ function local_flatarchive_render_about_template(stdClass $course): string {
             </div>
         </nav>
         <main class="container-fluid mt-2 flex-grow-1 flex-shrink-1">
+            <p><a class="fa-back-index" href="index.html">' . get_string('backtocourseindex', 'local_flatarchive') . '</a></p>
             <div>
                 <h1>' . $coursetitle . '</h1>
                 <hr>

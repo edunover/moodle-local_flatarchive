@@ -41,7 +41,7 @@ $string['status_failed'] = 'Mislukt';
 $string['downloadzip'] = 'ZIP downloaden';
 $string['hidden'] = 'verborgen';
 $string['visibility_hidden'] = 'verborgen';
-$string['visibility_stealth'] = 'verborgen van cursuspagina';
+$string['visibility_stealth'] = 'verborgen maar beschikbaar';
 $string['visibility_section_hidden'] = 'verborgen sectie';
 $string['footer_copyright'] = 'Flatarchive {$a} &#169; EDUNOVER';
 $string['visibility_chapter_hidden'] = 'verborgen hoofdstuk';
@@ -136,11 +136,11 @@ $string['archiveactivitytags'] = 'Activiteitstags';
 $string['archivecoursetags'] = 'Cursustags';
 
 // Static Lesson export.
-$string['lessonscope'] = 'Statische lesinhoud en oplossingen. Geen pogingen of cijfers van studenten. Dynamische sprongen worden beschreven, niet uitgevoerd.';
+$string['lessonscope'] = 'Statische lesinhoud en oplossingen. Beschikbare pogingsrapporten staan hieronder. Dynamische sprongen worden beschreven, niet uitgevoerd.';
 $string['backtolesson'] = 'Terug naar de les';
 $string['lessonunknown'] = 'Onbekend paginatype ({$a})';
 $string['lessonmultiple'] = 'Meerdere antwoorden kunnen worden geselecteerd.';
-$string['lessonessay'] = 'Essayvraag: handmatige beoordeling in Moodle. Inzendingen worden niet gearchiveerd.';
+$string['lessonessay'] = 'Essayvraag: handmatige beoordeling in Moodle. Zie toegankelijke pogingsrapporten voor inzendingen.';
 $string['lessonpair'] = 'Koppelingspaar';
 $string['lessonanswer'] = 'Antwoord / navigatie';
 $string['lessoncorrect'] = 'Correcte koppeling';
@@ -153,3 +153,24 @@ $string['lessonend'] = 'Einde van de les';
 $string['lessondynamic'] = 'Dynamische bestemming afhankelijk van de Moodle-poging. Gebruik de lesindex om de pagina’s te bekijken.';
 $string['lessongoto'] = 'Ga naar: {$a}';
 $string['lessonmissing'] = 'Bestemming niet beschikbaar in deze les.';
+
+// Lesson attempt reports.
+$string['lessonattempts'] = 'Pogingen van studenten';
+$string['lessonreportsdenied'] = 'Pogingsrapporten niet opgenomen: rapportagerechten vereist.';
+$string['lessonattemptnumber'] = 'Poging {$a}';
+$string['lessoncompleted'] = 'Voltooid';
+$string['lessonincomplete'] = 'Niet voltooid';
+$string['lessonstarted'] = 'Gestart';
+$string['lessonlastactivity'] = 'Laatst geregistreerde activiteit';
+$string['lessonrecordedgrade'] = 'Opgeslagen lescijfer: {$a}%';
+$string['lessonanswered'] = 'Beantwoord';
+$string['lessonvisited'] = 'Geregistreerde bezoeken aan inhoudspagina’s';
+$string['lessonreportsscope'] = 'Rapporten bevatten actieve ingeschreven gebruikers zichtbaar in de huidige groepscontext. Elke poging is afzonderlijk; cijfers worden niet herberekend.';
+$string['lessonnoattempts'] = 'Geen zichtbare geregistreerde pogingen.';
+$string['lessonunreadable'] = 'Het geregistreerde antwoord kon niet worden gedecodeerd.';
+$string['lessonungraded'] = 'Nog niet beoordeeld';
+$string['lessonearnedscore'] = 'Toegekende score: {$a}';
+$string['lessonanswercorrect'] = 'Als correct geregistreerd';
+$string['lessonanswerincorrect'] = 'Als onjuist geregistreerd';
+
+$string['backtocourseindex'] = 'Terug naar de cursusindex';

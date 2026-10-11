@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums et Leçons) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101104) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101105) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -99,7 +99,7 @@ archive_SHORTNAME_202603291200.zip
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums and Lessons) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101104) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101105) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -696,3 +696,39 @@ Moodle/PHP de Moodle 4.4 à 5.3, six tests JavaScript et contrôles de standards
 Exécution : https://github.com/edunover/moodle-local-flatarchive/actions/runs/38154464031
 (commit de code `4dc3633`). La validation manuelle du ZIP reste à effectuer.
 Fixture manuelle : cours Critical Thinking, dernière section, leçon `cmid=112`.
+
+
+### Tentatives de Leçon, visibilité et navigation — build 2026101105
+
+Le build précédent a été validé manuellement (archive du 11 octobre à 18 h 28).
+Les exports de Leçon incluent maintenant les rapports individuels si l’exportateur
+possède aussi `mod/lesson:viewreports`. Seuls les inscrits actifs accessibles dans
+le groupe courant sont pris en compte ; groupes séparés et droits de noms complets
+sont respectés avant lecture des réponses et copie des fichiers privés.
+
+Une page par étudiant et tentative conserve réponses enregistrées (y compris essais
+successifs sur une question), visites des pages de contenu, dates, état de fin et note
+stockée dans la leçon. Compositions : texte, médias, commentaire de correction,
+score attribué et état non encore évalué. Les notes ne sont pas recalculées et ne sont
+pas présentées comme la note finale du carnet de notes. L’association des notes et
+chronomètres aux numéros de tentative suit l’ordre chronologique utilisé par Moodle.
+Les réponses QCM multiples et les appariements sont décodés selon leur format natif.
+Les données correspondent au contenu actuel de la leçon, sans reconstitution de ses
+anciennes versions. Les sauts dynamiques restent documentés, non simulés.
+
+Dans l’index, « hidden section » figure sur le titre de section ; le badge n’est plus
+répété sur chaque activité. « hidden but available » utilise la définition native
+`cm_info::is_stealth()`, incluant une activité visible dans une section cachée.
+Une activité réellement masquée conserve le badge « hidden ». Sur les pages isolées,
+le contexte de section cachée reste indiqué. Ces badges n’altèrent aucun droit d’accès.
+
+Chaque page HTML générée comporte un lien explicite vers l’index du cours, traduit
+en français, anglais et néerlandais, avec un chemin adapté aux sous-dossiers Livre.
+Les fichiers originaux joints aux ressources sont conservés sans modification.
+
+English: permitted individual Lesson attempts now include recorded answers, essay
+submissions and feedback, dates and stored marks. Hidden-section badges appear on
+section headings; stealth activities use “hidden but available”. Every generated
+content page provides an explicit link to the course index.
+
+Validation automatique en cours ; validation manuelle du build à effectuer.

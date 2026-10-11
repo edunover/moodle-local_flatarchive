@@ -128,7 +128,7 @@ function local_flatarchive_visibility_badges(cm_info $cm, course_modinfo $modinf
     if (!$cm->visible) {
         $badges[] = '<span class="fa-vis-badge fa-vis-hidden">'
             . get_string('visibility_hidden', 'local_flatarchive') . '</span>';
-    } elseif (!$cm->visibleoncoursepage) {
+    } elseif ($cm->is_stealth()) {
         $badges[] = '<span class="fa-vis-badge fa-vis-stealth">'
             . get_string('visibility_stealth', 'local_flatarchive') . '</span>';
     }
@@ -267,13 +267,17 @@ function local_flatarchive_group_index_links(stdClass $course, course_modinfo $m
         $selected = [];
         foreach ($sectionmodules[$section->section] ?? [] as $cmid) {
             if (isset($links[$cmid])) {
-                $selected[] = $links[$cmid];
+                // The section status belongs to its heading in the course index.
+                $sectionbadge = '<span class="fa-vis-badge fa-vis-section">'
+                    . get_string('visibility_section_hidden', 'local_flatarchive') . '</span>';
+                $selected[] = str_replace($sectionbadge, '', $links[$cmid]);
             }
         }
         if ($selected) {
             $result[] = [
                 'id' => $section->id,
                 'name' => get_section_name($course, $section),
+                'visible' => (bool)$section->visible,
                 'links' => $selected,
             ];
         }

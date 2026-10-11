@@ -51,7 +51,7 @@ $string['about_course'] = 'About this course';
 $string['coursenotfound'] = 'Course not found.';
 $string['footer_copyright'] = 'Flatarchive {$a} &#169; EDUNOVER';
 $string['visibility_hidden'] = 'hidden';
-$string['visibility_stealth'] = 'hidden from course page';
+$string['visibility_stealth'] = 'hidden but available';
 $string['visibility_section_hidden'] = 'hidden section';
 $string['visibility_chapter_hidden'] = 'hidden chapter';
 $string['noresources'] = 'No supported resources are available to archive.';
@@ -145,11 +145,11 @@ $string['archiveactivitytags'] = 'Activity tags';
 $string['archivecoursetags'] = 'Course tags';
 
 // Static Lesson export.
-$string['lessonscope'] = 'Static teaching content and solutions. No student attempts or grades. Dynamic jumps are described, not executed.';
+$string['lessonscope'] = 'Static teaching content and solutions. Available attempt reports are listed below. Dynamic jumps are described, not executed.';
 $string['backtolesson'] = 'Back to lesson';
 $string['lessonunknown'] = 'Unknown page type ({$a})';
 $string['lessonmultiple'] = 'Multiple answers may be selected.';
-$string['lessonessay'] = 'Essay question: manual assessment in Moodle. Student submissions are not archived.';
+$string['lessonessay'] = 'Essay question: manual assessment in Moodle. See accessible attempt reports for submissions.';
 $string['lessonpair'] = 'Matching pair';
 $string['lessonanswer'] = 'Answer / navigation';
 $string['lessoncorrect'] = 'Correct matching result';
@@ -162,3 +162,24 @@ $string['lessonend'] = 'End of lesson';
 $string['lessondynamic'] = 'Dynamic destination depending on the Moodle attempt. Use the lesson index to explore the pages.';
 $string['lessongoto'] = 'Go to: {$a}';
 $string['lessonmissing'] = 'Destination unavailable in this lesson.';
+
+// Lesson attempt reports.
+$string['lessonattempts'] = 'Student attempts';
+$string['lessonreportsdenied'] = 'Attempt reports are not included: report permission is required.';
+$string['lessonattemptnumber'] = 'Attempt {$a}';
+$string['lessoncompleted'] = 'Completed';
+$string['lessonincomplete'] = 'Not completed';
+$string['lessonstarted'] = 'Started';
+$string['lessonlastactivity'] = 'Last recorded activity';
+$string['lessonrecordedgrade'] = 'Stored lesson grade: {$a}%';
+$string['lessonanswered'] = 'Answered';
+$string['lessonvisited'] = 'Recorded content page visits';
+$string['lessonreportsscope'] = 'Reports include active enrolled users visible in the current group context. Each retry is separate; stored grades are not recalculated.';
+$string['lessonnoattempts'] = 'No visible recorded attempts.';
+$string['lessonunreadable'] = 'Recorded response could not be decoded.';
+$string['lessonungraded'] = 'Not yet graded';
+$string['lessonearnedscore'] = 'Awarded score: {$a}';
+$string['lessonanswercorrect'] = 'Recorded as correct';
+$string['lessonanswerincorrect'] = 'Recorded as incorrect';
+
+$string['backtocourseindex'] = 'Back to course index';

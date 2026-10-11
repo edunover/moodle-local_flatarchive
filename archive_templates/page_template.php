@@ -38,6 +38,7 @@ function local_flatarchive_render_page_template(stdClass $course, $cm, string $t
             </div>
         </nav>
         <main class="container-fluid mt-2 flex-grow-1 flex-shrink-1">
+            <p><a class="fa-back-index" href="' . $relativeshared . 'index.html">' . get_string('backtocourseindex', 'local_flatarchive') . '</a></p>
             <div>
                 <h1>' . s($title) . '</h1>
                 ' . ($visibilitybadges ? '<div class="fa-vis-block">' . $visibilitybadges . '</div>' : '') . '
