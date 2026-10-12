@@ -132,3 +132,8 @@ hr { margin: 1rem 0; border: 0; border-top: 1px solid #dee2e6; }
 
 .fa-data-unapproved { display: inline-block; background: #fff3cd; color: #664d03; padding: .15rem .45rem; border: 1px solid #d6b656; border-radius: .25rem; font-size: .875rem; }
 .fa-data-entry-link { display: block; margin-block: .5rem; }
+
+.fa-settings-table { width: 100%; border-collapse: collapse; margin-block: 1rem; }
+.fa-settings-table th, .fa-settings-table td { padding: .5rem; border: 1px solid #d7dce1; text-align: start; vertical-align: top; }
+.fa-settings-table th { width: 40%; }
+.fa-settings-source { white-space: pre-wrap; overflow-wrap: anywhere; padding: 1rem; background: #f5f7f9; border: 1px solid #d7dce1; }

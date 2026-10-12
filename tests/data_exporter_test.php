@@ -25,6 +25,7 @@ use local_flatarchive\archive\data_exporter;
  * @copyright 2026 Edunover
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \local_flatarchive\archive\data_exporter
+ * @covers \local_flatarchive\archive\data_settings
  */
 final class data_exporter_test extends \advanced_testcase {
     /**
@@ -82,7 +83,7 @@ final class data_exporter_test extends \advanced_testcase {
         $before = $DB->get_record('data', ['id' => $data->id]);
         [$directory, $result, $html] = $this->export($course, $data);
         $entryfile = 'data-' . $data->cmid . '-entry-' . $id . '.html';
-        $this->assertCount(2, $result['filenames']);
+        $this->assertCount(3, $result['filenames']);
         $this->assertStringContainsString('class="catalogue"', $html);
         $this->assertStringContainsString($entryfile, $html);
         $this->assertStringContainsString(get_string('datanotapproved', 'local_flatarchive'), $html);
@@ -168,7 +169,7 @@ final class data_exporter_test extends \advanced_testcase {
         $this->getDataGenerator()->enrol_user($student->id, $course->id, 'editingteacher');
         $this->setUser($student);
         [, $result] = $this->export($course, $data);
-        $this->assertCount(1, $result['filenames']);
+        $this->assertCount(2, $result['filenames']);
     }
 
     /**
@@ -228,5 +229,44 @@ final class data_exporter_test extends \advanced_testcase {
         $this->assertStringContainsString('sample.png', $html);
         $this->assertStringNotContainsString('thumb_sample.png', $html);
         $this->assertStringContainsString('document.pdf', $html);
+    }
+
+    /**
+     * A linked settings snapshot documents readable configuration and inert template source.
+     */
+    public function test_settings_snapshot(): void {
+        global $DB;
+        [$course, $data, $field, $dg] = $this->fixture([
+            'requiredentriestoview' => 4, 'maxentries' => 12, 'groupmode' => SEPARATEGROUPS,
+            'completion' => 2, 'completionentries' => 3, 'timeavailablefrom' => 1600000000,
+            'jstemplate' => 'const secret = "DO-NOT-EXPORT-JAVASCRIPT";',
+        ]);
+        $this->getDataGenerator()->create_group(['courseid' => $course->id, 'name' => 'Research group']);
+        $dg->create_field((object)[
+            'type' => 'menu', 'name' => 'Category', 'required' => 1, 'param1' => "First choice\nSecond choice",
+        ], $data);
+        $DB->set_field('data', 'defaultsort', $field->field->id, ['id' => $data->id]);
+        $DB->set_field('data', 'config', '{"token":"DO-NOT-EXPORT-CONFIG"}', ['id' => $data->id]);
+        $before = $DB->get_record('data', ['id' => $data->id]);
+        [$directory, $result, $index] = $this->export($course, $data);
+        $filename = 'data-' . $data->cmid . '-settings.html';
+        $this->assertContains($filename, $result['filenames']);
+        $this->assertStringContainsString('href="' . $filename . '"', $index);
+        $html = file_get_contents($directory . '/' . $filename);
+        $this->assertStringContainsString('href="data-' . $data->cmid . '.html"', $html);
+        $this->assertStringContainsString('href="index.html"', $html);
+        $this->assertStringContainsString('Research group', $html);
+        $this->assertStringContainsString(get_string('groupsseparate'), $html);
+        $this->assertStringContainsString('Category', $html);
+        $this->assertStringContainsString('First choice', $html);
+        $this->assertStringContainsString('Second choice', $html);
+        $this->assertStringContainsString('[[Title]]', $html);
+        $this->assertStringContainsString('&lt;article', $html);
+        $this->assertStringContainsString('<td>12</td>', $html);
+        $this->assertStringContainsString('<td>4</td>', $html);
+        $this->assertStringContainsString(s(userdate(1600000000)), $html);
+        $this->assertStringNotContainsString('DO-NOT-EXPORT', $html);
+        $this->assertStringNotContainsString('database.css', $html);
+        $this->assertEquals($before, $DB->get_record('data', ['id' => $data->id]));
     }
 }
