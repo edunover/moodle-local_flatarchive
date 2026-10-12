@@ -801,4 +801,4 @@ Le build 2026101209 (index seul à la racine) a été validé manuellement, RAS.
 - PHPUnit : liens URL et médias, protocoles dangereux, deux tentatives, feedbacks,
   absence de données privées sans droit de correction, anonymat et groupes.
 
-Validation automatique en cours.
+Validation automatique réussie : [run 38297358444](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38297358444), 17/17 jobs verts, Moodle 4.4 à 5.3, JavaScript, paquet et `moodle-extra`. Code validé : `bb5149c`. Validation manuelle du build 2026101210 à effectuer après installation.
