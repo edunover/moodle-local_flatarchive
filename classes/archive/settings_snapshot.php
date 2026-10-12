@@ -102,9 +102,8 @@ final class settings_snapshot {
         $rows[self::label('settingsvisibility')] = !$cm->visible ? self::label('settingshidden') :
             self::label($cm->is_stealth() ? 'settingsstealth' : 'settingsvisible');
         $rows[self::label('settingsshowdescription')] = self::value($module->showdescription, 'bool', '');
-        $rows[get_string('groupmode')] = get_string(['groupsnone', 'groupsseparate', 'groupsvisible'][
-            groups_get_activity_groupmode($cm)
-        ]);
+        $groupmode = groups_get_activity_groupmode($cm);
+        $rows[get_string('groupmode')] = get_string(['groupsnone', 'groupsseparate', 'groupsvisible'][$groupmode]);
         $rows[self::label('settingsgroupforced')] = self::value($modinfo->get_course()->groupmodeforce, 'bool', '');
         $rows[get_string('grouping', 'group')] = $module->groupingid ?
             (string)$DB->get_field('groupings', 'name', ['id' => $module->groupingid]) : get_string('none');
@@ -120,6 +119,22 @@ final class settings_snapshot {
                 $rows[get_string($label, $component)] = self::value($instance->$field, $type, $cm->modname);
             }
         }
+        if (in_array($cm->modname, ['page', 'resource'], true) && !empty($instance->displayoptions)) {
+            // Moodle stores these display switches as a serialized array, never as executable objects.
+            $options = unserialize($instance->displayoptions, ['allowed_classes' => false]);
+            if (is_array($options)) {
+                foreach (['printintro', 'printheading', 'showsize', 'showtype', 'showdate'] as $key) {
+                    if (array_key_exists($key, $options)) {
+                        $rows[self::label('settings' . $key)] = self::value($options[$key], 'bool', '');
+                    }
+                }
+                foreach (['popupwidth', 'popupheight'] as $key) {
+                    if (isset($options[$key]) && is_numeric($options[$key])) {
+                        $rows[self::label('settings' . $key)] = (string)(int)$options[$key];
+                    }
+                }
+            }
+        }
         if (property_exists($instance, 'password')) {
             $rows[self::label('settingspasswordset')] = self::value($instance->password !== '', 'bool', '');
         }
@@ -131,9 +146,10 @@ final class settings_snapshot {
             $rows[self::label('settingsratingto')] = self::value($instance->assesstimefinish, 'date', '');
         }
         $body = self::intro() . self::table($rows);
-        foreach ($DB->get_records('grade_items', [
+        $grades = $DB->get_records('grade_items', [
             'itemtype' => 'mod', 'itemmodule' => $cm->modname, 'iteminstance' => $cm->instance,
-        ], 'itemnumber') as $grade) {
+        ], 'itemnumber');
+        foreach ($grades as $grade) {
             $category = $DB->get_field('grade_categories', 'fullname', ['id' => $grade->categoryid]);
             $body .= self::table([
                 get_string('name') => $grade->itemname ?: $cm->name,
@@ -273,6 +289,10 @@ final class settings_snapshot {
                 4 => 'displaydownload', 5 => 'displayopen', 6 => 'displaypopup'];
             $module = 'local_flatarchive';
             $maps['display'] = array_map(fn($key) => 'settings' . $key, $maps['display']);
+        }
+        if ($type === 'booknav') {
+            $module = 'local_flatarchive';
+            $maps['booknav'] = ['settingsnavtoc', 'settingsnavimages', 'settingsnavtext'];
         }
         $key = $maps[$type][$value] ?? null;
         if ($key && get_string_manager()->string_exists($key, $module)) {
@@ -433,7 +453,7 @@ final class settings_snapshot {
                 'available' => ['date', 'available'],
                 'deadline' => ['date', 'deadline'],
                 'completionendreached' => ['bool', 'completionendreached'],
-                'completiontimespent' => ['duration', 'completiontimespent'],
+                'completiontimespent' => ['duration', 'settingfield_completiontimespent'],
                 'allowofflineattempts' => ['bool', 'allowofflineattempts'],
             ],
             'quiz' => [

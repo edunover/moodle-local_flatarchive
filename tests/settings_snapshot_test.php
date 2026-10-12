@@ -64,6 +64,9 @@ final class settings_snapshot_test extends \advanced_testcase {
         $DB->set_field('quiz', 'reviewmarks', 0x01000, ['id' => $modules['quiz']->id]);
         $DB->set_field('choice', 'showresults', 2, ['id' => $modules['choice']->id]);
         $DB->set_field('wiki', 'firstpagetitle', '<script>unsafe()</script>', ['id' => $modules['wiki']->id]);
+        $DB->set_field('page', 'displayoptions', serialize([
+            'printintro' => 1, 'popupwidth' => 654, 'internal' => 'DO-NOT-EXPORT-OPTION',
+        ]), ['id' => $modules['page']->id]);
         $modinfo = get_fast_modinfo($course);
         $result = settings_snapshot::add($items, $modinfo, $directory);
         $this->assertCount(13, $result['files']);
@@ -78,6 +81,8 @@ final class settings_snapshot_test extends \advanced_testcase {
             $this->assertStringContainsString('fa-settings-table', $html);
         }
         $this->assertSame('<h1>Original attachment</h1>', file_get_contents($directory . '/files/original.html'));
+        $pagesettings = file_get_contents($result['files']['page-' . $modules['page']->cmid . '-settings.html']);
+        $this->assertStringContainsString('654', $pagesettings);
         $booklink = '../book-' . $modules['book']->cmid . '-settings.html';
         $this->assertStringContainsString($booklink, file_get_contents($directory . '/book dir/index.html'));
         $booksettings = file_get_contents($result['files']['book-' . $modules['book']->cmid . '-settings.html']);
