@@ -853,3 +853,11 @@ English: instructor-only complete Database export uses list and single-entry
 templates, includes pending entries with visible badges, and copies field files.
 Learner group, date and contribution restrictions do not filter this archive.
 Custom CSS is retained; interactive editing controls and custom JavaScript are omitted.
+
+Validation en attente : la première passe a identifié la suppression des balises
+HTML5 de mise en page et des écarts de commentaires aux standards Moodle, corrigés
+dans `f355e26`. Les vérifications locales de syntaxe PHP passent. La nouvelle
+[run 38267660293](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38267660293)
+n’a démarré aucun job : GitHub signale un paiement échoué ou une limite de dépenses.
+Relancer PHPUnit et les standards après réactivation de GitHub Actions ; le build
+2026101202 n’est pas encore validé par la matrice Moodle ni par un essai visuel.
