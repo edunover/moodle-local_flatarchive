@@ -709,4 +709,6 @@ Correction CSS commune aux deux vues, sans modification des réponses ou des not
 English: static Quiz choice symbols and rich-text answer labels now share the same
 line in questionnaires and recorded attempts. Long labels continue to wrap.
 
-Validation automatique en cours ; validation visuelle du correctif à effectuer.
+Validation automatique réussie : [GitHub Actions 38262748861](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38262748861),
+17 jobs verts sur Moodle 4.4 à 5.3 (commit `c3c476d`).
+Validation visuelle du correctif à effectuer après régénération de l’archive.
