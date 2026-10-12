@@ -712,3 +712,14 @@ line in questionnaires and recorded attempts. Long labels continue to wrap.
 Validation automatique réussie : [GitHub Actions 38262748861](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38262748861),
 17 jobs verts sur Moodle 4.4 à 5.3 (commit `c3c476d`).
 Validation visuelle du correctif à effectuer après régénération de l’archive.
+
+
+### Espacement des réponses du Quiz — build 2026101201
+
+Les choix du questionnaire et des tentatives enregistrées sont plus compacts :
+les marges extérieures des paragraphes des réponses sont supprimées et l’espace
+entre les choix est réduit. Les cases restent alignées avec les libellés ; les
+réponses comportant plusieurs paragraphes conservent un léger espacement interne.
+
+English: Quiz choices use compact spacing in questionnaires and recorded attempts,
+while preserving symbol alignment and spacing within multi-paragraph answers.

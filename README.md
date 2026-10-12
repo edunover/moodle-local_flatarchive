@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums et Leçons) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101200) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101201) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -99,7 +99,7 @@ archive_SHORTNAME_202603291200.zip
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums and Lessons) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101200) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101201) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -817,3 +817,14 @@ line in questionnaires and recorded attempts. Long labels continue to wrap.
 Validation automatique réussie : [GitHub Actions 38262748861](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38262748861),
 17 jobs verts sur Moodle 4.4 à 5.3 (commit `c3c476d`).
 Validation visuelle du correctif à effectuer après régénération de l’archive.
+
+
+### Espacement des réponses du Quiz — build 2026101201
+
+Les choix du questionnaire et des tentatives enregistrées sont plus compacts :
+les marges extérieures des paragraphes des réponses sont supprimées et l’espace
+entre les choix est réduit. Les cases restent alignées avec les libellés ; les
+réponses comportant plusieurs paragraphes conservent un léger espacement interne.
+
+English: Quiz choices use compact spacing in questionnaires and recorded attempts,
+while preserving symbol alignment and spacing within multi-paragraph answers.

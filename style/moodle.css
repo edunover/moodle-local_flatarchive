@@ -110,7 +110,7 @@ hr { margin: 1rem 0; border: 0; border-top: 1px solid #dee2e6; }
     display: flex;
     align-items: baseline;
     gap: .5rem;
-    margin-block: .5rem;
+    margin-block: .25rem;
 }
 .fa-quiz-question .answer > div > .fa-quiz-response {
     flex: 0 0 auto;
@@ -118,4 +118,14 @@ hr { margin: 1rem 0; border: 0; border-top: 1px solid #dee2e6; }
 }
 .fa-quiz-question .answer > div > div {
     min-width: 0;
+}
+
+/* Avoid paragraph margins inflating the distance between Quiz choices. */
+.fa-quiz-question .answer > div.r0 p,
+.fa-quiz-question .answer > div.r1 p {
+    margin-block: 0;
+}
+.fa-quiz-question .answer > div.r0 p + p,
+.fa-quiz-question .answer > div.r1 p + p {
+    margin-block-start: .25rem;
 }
