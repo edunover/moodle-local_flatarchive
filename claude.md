@@ -756,3 +756,15 @@ dans `f355e26`. Les vérifications locales de syntaxe PHP passent. La nouvelle
 n’a démarré aucun job : GitHub signale un paiement échoué ou une limite de dépenses.
 Relancer PHPUnit et les standards après réactivation de GitHub Actions ; le build
 2026101202 n’est pas encore validé par la matrice Moodle ni par un essai visuel.
+
+
+### Correction des fiches vides — build 2026101203
+
+Le nettoyage Moodle supprimait les identifiants temporaires du rendu,
+produisant des pages vides dans le build 2026101202. Les repères utilisent
+désormais des classes conservées par le nettoyage HTML.
+
+Validation réussie : https://github.com/edunover/moodle-local-flatarchive/actions/runs/38278916063
+17 jobs réussis sur Moodle 4.4 à 5.3, commit a63df75.
+Installer ce build et régénérer les archives produites avec 2026101202.
+La validation visuelle sur le site de test reste à effectuer.
