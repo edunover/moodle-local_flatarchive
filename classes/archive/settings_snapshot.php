@@ -221,7 +221,7 @@ final class settings_snapshot {
             'summary',
             0,
             $directory,
-            0
+            (int)$course->id
         );
         $body .= self::description($description, (int)($course->summaryformat ?? FORMAT_HTML), $context);
         $filename = 'course-settings.html';

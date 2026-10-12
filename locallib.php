@@ -216,6 +216,9 @@ function local_flatarchive_copy_pluginfiles_and_rewrite(
     $fs = get_file_storage();
     $files = $fs->get_area_files($context->id, $component, $filearea, $itemid, 'id', false);
     $relativepath = \local_flatarchive\archive\paths::assets($cmid, $filearea, $itemid);
+    if ($context instanceof context_course) {
+        $relativepath = preg_replace('~^files/~', 'files/course-', $relativepath);
+    }
     $filesdir = $tempdir . '/' . $relativepath;
     if (!is_dir($filesdir)) {
         mkdir($filesdir, 0755, true);
