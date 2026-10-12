@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums et Leçons) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101107) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101200) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -99,7 +99,7 @@ archive_SHORTNAME_202603291200.zip
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums and Lessons) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101107) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101200) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -801,3 +801,17 @@ Validation automatique réussie : [GitHub Actions 38174028369](https://github.co
 17 jobs verts, 99 tests PHPUnit / 827 assertions et 10 tests JavaScript,
 Moodle 4.4 à 5.3 et contrôles des standards Moodle (commit `5ba978e`).
 Validation visuelle à effectuer après installation du build 2026101107.
+
+
+### Alignement des réponses du Quiz — build 2026101200
+
+Le build 2026101107 a été validé visuellement par l’utilisateur, sans anomalie.
+Les cases statiques des réponses du Quiz sont désormais alignées avec la première
+ligne du libellé, dans le questionnaire et les tentatives enregistrées. Les libellés
+longs et les paragraphes conservent leurs retours à la ligne à côté de la case.
+Correction CSS commune aux deux vues, sans modification des réponses ou des notes.
+
+English: static Quiz choice symbols and rich-text answer labels now share the same
+line in questionnaires and recorded attempts. Long labels continue to wrap.
+
+Validation automatique en cours ; validation visuelle du correctif à effectuer.

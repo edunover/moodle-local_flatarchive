@@ -103,3 +103,19 @@ hr { margin: 1rem 0; border: 0; border-top: 1px solid #dee2e6; }
 .fa-quiz-question .feedback { background: #f5f7f9; padding: .75rem; margin-top: .75rem; }
 .fa-quiz-response { white-space: pre-wrap; }
 .fa-quiz-question img { max-width: 100%; height: auto; }
+
+/* Keep static radio/checkbox symbols aligned with their answer text, including rich HTML labels. */
+.fa-quiz-question .answer > div.r0,
+.fa-quiz-question .answer > div.r1 {
+    display: flex;
+    align-items: baseline;
+    gap: .5rem;
+    margin-block: .5rem;
+}
+.fa-quiz-question .answer > div > .fa-quiz-response {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+.fa-quiz-question .answer > div > div {
+    min-width: 0;
+}
