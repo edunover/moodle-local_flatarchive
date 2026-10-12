@@ -1003,3 +1003,7 @@ English: unused code and dependencies have been removed. Upgrade removes only th
 obsolete processing-metadata table, preserving course contents and archives. New
 installations create no plugin tables. The packaging script builds and validates
 an installable ZIP from tracked runtime files.
+
+Validation du build 2026101208 : [run 38292832714](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38292832714),
+17 jobs réussis sur Moodle 4.4 à 5.3, incluant la migration, `moodle-extra` et
+la vérification du ZIP installable. Commit `a50f3b4`.

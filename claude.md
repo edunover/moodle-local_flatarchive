@@ -756,3 +756,7 @@ course and all supported activities, including Database.
 
 Validation : [run 38290709056](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38290709056),
 17 jobs verts sur Moodle 4.4 à 5.3, commit `c012e40`.
+
+Validation du build 2026101208 : [run 38292832714](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38292832714),
+17 jobs réussis sur Moodle 4.4 à 5.3, incluant la migration, `moodle-extra` et
+la vérification du ZIP installable. Commit `a50f3b4`.
