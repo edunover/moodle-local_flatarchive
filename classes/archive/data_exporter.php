@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace local_flatarchive\archive;
 
@@ -126,6 +126,18 @@ final class data_exporter {
             $value = $field ? (string)$field->display_browse_field($record->id, $view) : '';
             $content = $DB->get_record('data_content', ['fieldid' => $definition->id, 'recordid' => $record->id]);
             if ($content) {
+                if ($definition->type === 'picture') {
+                    $url = new \moodle_url('/mod/data/view.php', ['d' => $data->id, 'rid' => $record->id]);
+                    $value = str_replace([$url->out(), $url->out(false)], $entryfile, $value);
+                    $contextid = \context_module::instance($cm->id)->id;
+                    $fs = get_file_storage();
+                    if (!$fs->file_exists($contextid, 'mod_data', 'content', $content->id, '/', 'thumb_' . $content->content)) {
+                        $value = str_replace('thumb_' . rawurlencode($content->content), rawurlencode($content->content), $value);
+                    }
+                } else if ($definition->type === 'file') {
+                    // The file link remains; its theme-hosted decorative icon would require the live site.
+                    $value = preg_replace('/<img\b[^>]*>/i', '', $value);
+                }
                 $value = self::files($value, $content->id, $cm, $directory);
             }
             $replacements['[[' . $definition->name . ']]'] = $value;
@@ -257,14 +269,50 @@ final class data_exporter {
         string $directory,
         string $badges
     ): void {
-        $body = clean_text($body, FORMAT_HTML);
-        // Editing widgets and executable template code have no role in a static archive.
         $document = new \DOMDocument();
         $previous = libxml_use_internal_errors(true);
         $document->loadHTML('<?xml encoding="UTF-8"><div id="fa-data-body">' . $body . '</div>');
+        $xpath = new \DOMXPath($document);
+        // HTML Purifier does not understand every HTML5 layout element on older Moodle versions.
+        // Temporarily use divs, sanitizing their attributes, then restore these inert structural tags.
+        $structural = [];
+        foreach ($xpath->query('//article|//section|//header|//footer|//main|//nav|//aside|//figure|//figcaption') as $node) {
+            $marker = 'fa-structure-' . bin2hex(random_bytes(12));
+            $structural[$marker] = [$node->tagName, $node->getAttribute('id')];
+            $replacement = $document->createElement('div');
+            foreach ($node->attributes as $attribute) {
+                $replacement->setAttribute($attribute->name, $attribute->value);
+            }
+            $replacement->setAttribute('id', $marker);
+            while ($node->firstChild) {
+                $replacement->appendChild($node->firstChild);
+            }
+            $node->parentNode->replaceChild($replacement, $node);
+        }
+        $clean = clean_text($document->saveHTML($document->getElementById('fa-data-body')), FORMAT_HTML);
+        $document->loadHTML('<?xml encoding="UTF-8">' . $clean);
+        foreach ($structural as $marker => [$tag, $originalid]) {
+            $node = $document->getElementById($marker);
+            if (!$node) {
+                continue;
+            }
+            $replacement = $document->createElement($tag);
+            $node->removeAttribute('id');
+            foreach ($node->attributes as $attribute) {
+                $replacement->setAttribute($attribute->name, $attribute->value);
+            }
+            if ($originalid !== '') {
+                $replacement->setAttribute('id', $originalid);
+            }
+            while ($node->firstChild) {
+                $replacement->appendChild($node->firstChild);
+            }
+            $node->parentNode->replaceChild($replacement, $node);
+        }
         libxml_clear_errors();
         libxml_use_internal_errors($previous);
         $xpath = new \DOMXPath($document);
+        // Editing widgets and executable template code have no role in a static archive.
         foreach ($xpath->query('//script|//form|//input|//button|//select|//textarea') as $node) {
             $node->parentNode->removeChild($node);
         }

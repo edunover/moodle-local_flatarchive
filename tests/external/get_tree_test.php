@@ -90,6 +90,19 @@ final class get_tree_test extends \externallib_advanced_testcase {
     }
 
     /**
+     * Database activities are selectable for instructors.
+     */
+    public function test_data_selection(): void {
+        $course = $this->getDataGenerator()->create_course();
+        $data = $this->getDataGenerator()->create_module('data', ['course' => $course->id]);
+        $result = $this->read_tree($course->id);
+        $modules = $result['sections'][0]['modules'];
+        $this->assertSame([$data->cmid], array_column($modules, 'cmid'));
+        $this->assertTrue((bool)$modules[0]['supported']);
+        $this->assertTrue((bool)$modules[0]['selectable']);
+    }
+
+    /**
      * Feedback activities are selectable only from the requested course.
      */
     public function test_feedback_selection(): void {

@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace local_flatarchive;
 
@@ -27,7 +27,9 @@ use local_flatarchive\archive\data_exporter;
  * @covers \local_flatarchive\archive\data_exporter
  */
 final class data_exporter_test extends \advanced_testcase {
-    /** Set up independent fixtures. */
+    /**
+     * Set up independent fixtures.
+     */
     protected function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();
@@ -70,7 +72,9 @@ final class data_exporter_test extends \advanced_testcase {
         return [$directory, $result, file_get_contents($directory . '/' . $result['filename'])];
     }
 
-    /** Templates, local links, approval badges and settings are preserved without source writes. */
+    /**
+     * Templates, local links, approval badges and settings are preserved without source writes.
+     */
     public function test_templates_pending_entries_and_setting_metadata(): void {
         global $DB;
         [$course, $data, $field, $dg] = $this->fixture(['requiredentriestoview' => 3]);
@@ -93,7 +97,9 @@ final class data_exporter_test extends \advanced_testcase {
         $this->assertEquals(0, $DB->get_field('data_records', 'approved', ['id' => $id]));
     }
 
-    /** A student cannot invoke the complete instructor export directly. */
+    /**
+     * A student cannot invoke the complete instructor export directly.
+     */
     public function test_student_cannot_export_all_entries(): void {
         [$course, $data, $field, $dg] = $this->fixture(['requiredentriestoview' => 5]);
         $student = $this->getDataGenerator()->create_user();
@@ -106,7 +112,9 @@ final class data_exporter_test extends \advanced_testcase {
         $this->export($course, $data);
     }
 
-    /** An instructor archive includes entries from every separate group and approval state. */
+    /**
+     * An instructor archive includes entries from every separate group and approval state.
+     */
     public function test_instructor_exports_all_groups(): void {
         [$course, $data, $field, $dg] = $this->fixture(['groupmode' => SEPARATEGROUPS]);
         $generator = $this->getDataGenerator();
@@ -124,7 +132,9 @@ final class data_exporter_test extends \advanced_testcase {
         $this->assertStringContainsString(get_string('datanotapproved', 'local_flatarchive'), $html);
     }
 
-    /** Rich-text attachments survive offline and a missing more tag gets a local link. */
+    /**
+     * Rich-text attachments survive offline and a missing more tag gets a local link.
+     */
     public function test_files_and_fallback_navigation(): void {
         global $DB;
         [$course, $data, $field, $dg] = $this->fixture();
@@ -149,7 +159,9 @@ final class data_exporter_test extends \advanced_testcase {
         $this->assertStringNotContainsString('pluginfile.php', $detail);
     }
 
-    /** Instructors can archive entries after the learner availability period. */
+    /**
+     * Instructors can archive entries after the learner availability period.
+     */
     public function test_instructor_can_export_closed_activity(): void {
         [$course, $data] = $this->fixture(['timeavailableto' => time() - 60]);
         $student = $this->getDataGenerator()->create_user();
@@ -159,7 +171,9 @@ final class data_exporter_test extends \advanced_testcase {
         $this->assertCount(1, $result['filenames']);
     }
 
-    /** Comments, tags and static metadata survive while editing controls are removed. */
+    /**
+     * Comments, tags and static metadata survive while editing controls are removed.
+     */
     public function test_comments_tags_and_passive_templates(): void {
         global $DB, $USER;
         set_config('usecomments', 1);
@@ -184,5 +198,35 @@ final class data_exporter_test extends \advanced_testcase {
         $this->assertStringNotContainsString('<form', $html);
         $this->assertStringNotContainsString('<button', $html);
         $this->assertStringNotContainsString('##edit##', $html);
+    }
+
+    /**
+     * Picture links open local entries and file bytes are available without Moodle.
+     */
+    public function test_picture_and_file_fields(): void {
+        global $DB;
+        [$course, $data, $field, $dg] = $this->fixture();
+        $id = $dg->create_entry($data, [$field->field->id => 'Files']);
+        foreach (['picture' => 'sample.png', 'file' => 'document.pdf'] as $type => $name) {
+            $definition = $dg->create_field((object)['type' => $type, 'name' => $type], $data);
+            $contentid = $DB->insert_record('data_content', (object)[
+                'fieldid' => $definition->field->id, 'recordid' => $id,
+                'content' => $name, 'content1' => 'Fixture',
+            ]);
+            get_file_storage()->create_file_from_string([
+                'contextid' => \context_module::instance($data->cmid)->id, 'component' => 'mod_data',
+                'filearea' => 'content', 'itemid' => $contentid, 'filepath' => '/', 'filename' => $name,
+            ], $type . ' bytes');
+        }
+        foreach (['listtemplate', 'singletemplate'] as $view) {
+            $DB->set_field('data', $view, '<tr><td>[[picture]] [[file]] ##more##</td></tr>', ['id' => $data->id]);
+        }
+        [$directory, , $html] = $this->export($course, $data);
+        $this->assertStringNotContainsString('pluginfile.php', $html);
+        $this->assertStringNotContainsString('/mod/data/view.php', $html);
+        $this->assertStringContainsString('data-' . $data->cmid . '-entry-' . $id . '.html', $html);
+        $this->assertStringContainsString('sample.png', $html);
+        $this->assertStringNotContainsString('thumb_sample.png', $html);
+        $this->assertStringContainsString('document.pdf', $html);
     }
 }
