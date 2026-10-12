@@ -340,3 +340,4 @@ $string['assignattempt'] = 'Attempt {$a}';
 $string['assigngroupsubmission'] = 'Group submission';
 $string['assignnotgraded'] = 'Not graded';
 $string['assignunsupported'] = 'Content not exported for this extension: {$a}';
+$string['assigngrade'] = 'Assignment grade';

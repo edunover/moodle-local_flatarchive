@@ -332,3 +332,4 @@ $string['assignattempt'] = 'Poging {$a}';
 $string['assigngroupsubmission'] = 'Groepsinzending';
 $string['assignnotgraded'] = 'Niet beoordeeld';
 $string['assignunsupported'] = 'Inhoud niet geëxporteerd voor deze uitbreiding: {$a}';
+$string['assigngrade'] = 'Opdrachtcijfer';

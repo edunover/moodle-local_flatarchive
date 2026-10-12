@@ -196,7 +196,7 @@ final class assign_exporter {
                         $value .= ' / ' . format_float($instance->grade, 2);
                     }
                 }
-                $body .= \html_writer::tag('p', get_string('grade', 'grades') . ': ' . s($value));
+                $body .= \html_writer::tag('p', get_string('assigngrade', 'local_flatarchive') . ': ' . s($value));
                 $feedback = $DB->get_record('assignfeedback_comments', ['grade' => $grade->id]);
                 if ($feedback) {
                     $body .= self::text(
