@@ -194,7 +194,7 @@ function local_flatarchive_copy_mod_icon(string $modname, string $sharedfolder):
  * Copie les fichiers du file area du module vers tempdir/files/$cmid/$filearea/$itemid/ et réécrit le contenu.
  *
  * @param string $content contenu brut (avec @@PLUGINFILE@@)
- * @param context_module $context
+ * @param context $context Contexte autorisé du cours ou de l’activité
  * @param string $component ex: mod_page, mod_book
  * @param string $filearea ex: content
  * @param int $itemid ex: 0 ou chapterid
@@ -205,7 +205,7 @@ function local_flatarchive_copy_mod_icon(string $modname, string $sharedfolder):
  */
 function local_flatarchive_copy_pluginfiles_and_rewrite(
     string $content,
-    context_module $context,
+    context $context,
     string $component,
     string $filearea,
     int $itemid,
