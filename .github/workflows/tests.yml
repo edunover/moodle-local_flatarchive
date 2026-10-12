@@ -123,10 +123,10 @@ jobs:
           MOODLE_BRANCH: ${{ matrix.branch }}
       - name: Check PHP syntax
         run: moodle-plugin-ci phplint
-      - name: Check Moodle conventions for the updated PHP files
+      - name: Check Moodle extra conventions for the updated PHP files
         if: (matrix.moodle == '5.2' || matrix.moodle == '5.3') && matrix.php == '8.4'
         run: >-
-          phpcs --standard=moodle
+          phpcs --standard=moodle-extra
           plugin/classes/archive/tags.php plugin/tests/tags_test.php
           plugin/classes/archive/forum_exporter.php plugin/tests/forum_exporter_test.php
           plugin/classes/archive/lesson_exporter.php plugin/tests/lesson_exporter_test.php

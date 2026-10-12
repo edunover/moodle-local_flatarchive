@@ -3,11 +3,11 @@
     PHP CodeSniffer configuration for local_flatarchive.
     Run from plugin root: phpcs . or vendor/bin/phpcs .
     Install: composer global require moodlehq/moodle-cs
-    Then: phpcs --standard=moodle local/flatarchive/
+    Then: phpcs --standard=moodle-extra local/flatarchive/
 -->
 <ruleset name="local_flatarchive">
     <description>Moodle coding style for local_flatarchive</description>
-    <rule ref="moodle"/>
+    <rule ref="moodle-extra"/>
     <file>.</file>
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
