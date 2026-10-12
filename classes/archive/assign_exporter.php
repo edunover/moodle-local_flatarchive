@@ -45,8 +45,10 @@ final class assign_exporter {
         $instance = $assignment->get_instance();
         $body = self::text($instance->intro, (int)$instance->introformat, 'mod_assign', 'intro', 0, $cm, $directory);
         $body .= self::files('mod_assign', 'introattachment', 0, $cm, $directory);
-        if (has_capability('moodle/course:manageactivities', $cm->context) ||
-                has_capability('mod/assign:grade', $cm->context)) {
+        if (
+            has_capability('moodle/course:manageactivities', $cm->context) ||
+            has_capability('mod/assign:grade', $cm->context)
+        ) {
             $body .= self::text(
                 $instance->activity ?? '',
                 (int)($instance->activityformat ?? FORMAT_HTML),
@@ -64,8 +66,10 @@ final class assign_exporter {
         $links = '';
         if (has_capability('mod/assign:grade', $cm->context)) {
             $participants = $assignment->list_participants(0, false);
-            if (groups_get_activity_groupmode($cm) == SEPARATEGROUPS &&
-                    !has_capability('moodle/site:accessallgroups', $cm->context)) {
+            if (
+                groups_get_activity_groupmode($cm) == SEPARATEGROUPS &&
+                !has_capability('moodle/site:accessallgroups', $cm->context)
+            ) {
                 $allowed = [];
                 foreach (groups_get_all_groups($cm->course, $USER->id, $cm->groupingid) as $group) {
                     $allowed += $assignment->list_participants($group->id, false);
@@ -146,9 +150,10 @@ final class assign_exporter {
         foreach ($submissions as $submission) {
             $attempts[(int)$submission->attemptnumber]['submission'] = $submission;
         }
-        foreach ($DB->get_records('assign_grades', [
+        $grades = $DB->get_records('assign_grades', [
             'assignment' => $instance->id, 'userid' => $participant->id,
-        ], 'attemptnumber') as $grade) {
+        ], 'attemptnumber');
+        foreach ($grades as $grade) {
             $attempts[(int)$grade->attemptnumber]['grade'] = $grade;
         }
         ksort($attempts);
@@ -157,7 +162,10 @@ final class assign_exporter {
             $body .= \html_writer::tag('h2', get_string('assignattempt', 'local_flatarchive', $number + 1));
             if (isset($attempt['submission'])) {
                 $submission = $attempt['submission'];
-                $body .= \html_writer::tag('p', s($submission->status) . ' — ' . userdate($submission->timemodified));
+                $statuskey = 'submissionstatus_' . $submission->status;
+                $status = get_string_manager()->string_exists($statuskey, 'assign') ?
+                    get_string($statuskey, 'assign') : s($submission->status);
+                $body .= \html_writer::tag('p', $status . ' — ' . userdate($submission->timemodified));
                 if ($instance->teamsubmission) {
                     $body .= \html_writer::tag('p', get_string('assigngroupsubmission', 'local_flatarchive'));
                 }
@@ -188,7 +196,7 @@ final class assign_exporter {
                         $value .= ' / ' . format_float($instance->grade, 2);
                     }
                 }
-                $body .= \html_writer::tag('p', get_string('grade') . ': ' . s($value));
+                $body .= \html_writer::tag('p', get_string('grade', 'grades') . ': ' . s($value));
                 $feedback = $DB->get_record('assignfeedback_comments', ['grade' => $grade->id]);
                 if ($feedback) {
                     $body .= self::text(
@@ -208,7 +216,10 @@ final class assign_exporter {
             $state = $DB->get_field('assign_user_flags', 'workflowstate', [
                 'assignment' => $instance->id, 'userid' => $participant->id,
             ]);
-            $body = \html_writer::tag('p', get_string('markingworkflow', 'assign') . ': ' . s((string)$state)) . $body;
+            $statekey = 'markingworkflowstate' . ($state ?: 'notmarked');
+            $statelabel = get_string_manager()->string_exists($statekey, 'assign') ?
+                get_string($statekey, 'assign') : (string)$state;
+            $body = \html_writer::tag('p', get_string('markingworkflowstate', 'assign') . ': ' . s($statelabel)) . $body;
         }
         return $body;
     }

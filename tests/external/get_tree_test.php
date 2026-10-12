@@ -339,7 +339,7 @@ final class get_tree_test extends \externallib_advanced_testcase {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
         $this->assertSame(['sections' => []], $this->read_tree($course->id));
-        $url = $generator->create_module('chat', ['course' => $course->id]);
+        $url = $generator->create_module('workshop', ['course' => $course->id]);
         $sections = $this->read_tree($course->id)['sections'];
         $this->assertCount(1, $sections);
         $this->assertEquals($url->cmid, $sections[0]['modules'][0]['cmid']);
@@ -353,7 +353,7 @@ final class get_tree_test extends \externallib_advanced_testcase {
         global $DB;
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
-        $generator->create_module('chat', ['course' => $course->id, 'visible' => 0, 'name' => 'Private URL']);
+        $generator->create_module('workshop', ['course' => $course->id, 'visible' => 0, 'name' => 'Private URL']);
         $student = $generator->create_user();
         $generator->enrol_user($student->id, $course->id, 'student');
         $role = $DB->get_field('role', 'id', ['shortname' => 'student'], MUST_EXIST);

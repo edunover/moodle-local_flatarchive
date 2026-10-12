@@ -101,7 +101,9 @@ final class assign_exporter_test extends \advanced_testcase {
         $this->assertStringContainsString('feedback%20%231.txt', $html);
         $this->assertStringNotContainsString('@@PLUGINFILE@@', $html);
         $this->assertStringContainsString('href="index.html"', $html);
-        foreach (glob($directory . '/files/' . $assignment->cmid . '/submission_files/*/image.png') as $path) {
+        $files = glob($directory . '/files/' . $assignment->cmid . '/submission_files/*/image.png');
+        $this->assertCount(2, $files);
+        foreach ($files as $path) {
             $this->assertStringStartsWith('original bytes ', file_get_contents($path));
         }
         $this->setUser($student);
@@ -117,6 +119,7 @@ final class assign_exporter_test extends \advanced_testcase {
      * Anonymous grading keeps identities out of generated reports and filenames.
      */
     public function test_anonymous_reports(): void {
+        global $DB;
         $this->resetAfterTest();
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
@@ -127,8 +130,10 @@ final class assign_exporter_test extends \advanced_testcase {
         $this->seed($assignment, (int)$student->id);
         $modinfo = get_fast_modinfo($course);
         $directory = make_temp_directory('flatarchive-assign-blind-' . random_string());
+        $mappings = $DB->count_records('assign_user_mapping');
         $result = assign_exporter::render($modinfo->get_cm($assignment->cmid), $modinfo, $directory);
         $this->assertCount(2, $result['filenames']);
+        $this->assertSame($mappings, $DB->count_records('assign_user_mapping'));
         foreach ($result['filenames'] as $file) {
             $html = file_get_contents($directory . '/' . $file);
             $this->assertStringNotContainsString('PrivateName', $html);

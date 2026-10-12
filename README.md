@@ -6,7 +6,7 @@
 
 ## Français
 
-Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums, Leçons, Tests et Bases de données) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
+Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums, Leçons, Tests, Bases de données, URL et Devoirs) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
 **Version :** 0.2.0 (2026101210) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
@@ -14,7 +14,7 @@ Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones 
 
 Flatarchive permet aux enseignants d'exporter des ressources de cours vers une archive portable utilisable hors ligne :
 
-- Sélection des activités **Page**, **Livre**, **Zone texte et média**, **Fichier**, **Dossier**, **Glossaire**, **Wiki**, **Feedback** et **Consultation**, **Forum**, **Leçon**, **Test** et **Base de données** depuis l'arborescence du cours
+- Sélection des activités **Page**, **Livre**, **Zone texte et média**, **Fichier**, **Dossier**, **Glossaire**, **Wiki**, **Feedback** et **Consultation**, **Forum**, **Leçon**, **Test**, **Base de données**, **URL** et **Devoir** depuis l'arborescence du cours
 - Génération d'un **site HTML statique** — aucune dépendance Moodle après téléchargement
 - Réécriture des liens `@@PLUGINFILE@@` en chemins relatifs et copie des fichiers embarqués
 - **Badges de visibilité** (caché / caché de la page de cours / section cachée) sur chaque page et dans l'index
@@ -97,7 +97,7 @@ Les données du cours et les archives téléchargées ne se trouvent pas dans ce
 
 ## English
 
-Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums, Lessons, Quizzes and Databases) as self-contained static HTML pages bundled in a downloadable ZIP.
+Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums, Lessons, Quizzes, Databases, URLs and Assignments) as self-contained static HTML pages bundled in a downloadable ZIP.
 
 **Version:** 0.2.0 (2026101210) · MATURITY_ALPHA · Requires Moodle 4.4+
 
@@ -105,7 +105,7 @@ Moodle local plugin — Archive course resources (Pages, Books, Text and media a
 
 Flatarchive lets teachers export selected course resources to a portable offline archive:
 
-- Selects **Page**, **Book**, **Text and media area**, **File**, **Folder**, **Glossary**, **Wiki**, **Feedback** and **Choice**, **Forum**, **Lesson**, **Quiz** and **Database** resources from the course tree
+- Selects **Page**, **Book**, **Text and media area**, **File**, **Folder**, **Glossary**, **Wiki**, **Feedback** and **Choice**, **Forum**, **Lesson**, **Quiz**, **Database**, **URL** and **Assignment** resources from the course tree
 - Generates a **static HTML website** — no Moodle dependency after download
 - Rewrites all `@@PLUGINFILE@@` links to relative paths and copies embedded files
 - Adds **visibility badges** (hidden / stealth / hidden section) on each page and in the index
