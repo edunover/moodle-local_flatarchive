@@ -6,15 +6,15 @@
 
 ## Français
 
-Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums et Leçons) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
+Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums, Leçons, Tests et Bases de données) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101207) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101208) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
 Flatarchive permet aux enseignants d'exporter des ressources de cours vers une archive portable utilisable hors ligne :
 
-- Sélection des activités **Page**, **Livre**, **Zone texte et média**, **Fichier**, **Dossier**, **Glossaire**, **Wiki**, **Feedback** et **Consultation**, **Forum** et **Leçon** depuis l'arborescence du cours
+- Sélection des activités **Page**, **Livre**, **Zone texte et média**, **Fichier**, **Dossier**, **Glossaire**, **Wiki**, **Feedback** et **Consultation**, **Forum**, **Leçon**, **Test** et **Base de données** depuis l'arborescence du cours
 - Génération d'un **site HTML statique** — aucune dépendance Moodle après téléchargement
 - Réécriture des liens `@@PLUGINFILE@@` en chemins relatifs et copie des fichiers embarqués
 - **Badges de visibilité** (caché / caché de la page de cours / section cachée) sur chaque page et dans l'index
@@ -45,15 +45,13 @@ archive_SHORTNAME_202603291200.zip
 ### Installation
 
 1. Copier le dossier du plugin dans `{racine_moodle}/local/flatarchive/`
-2. Installer les dépendances Composer :
-   ```bash
-   cd local/flatarchive
-   composer install --no-dev
-   ```
-3. Aller dans **Administration du site → Notifications** pour exécuter l'installation en base
-4. Attribuer la capacité `local/flatarchive:archive` au rôle Enseignant
+2. Aller dans **Administration du site → Notifications** pour terminer l’installation ou la mise à jour
+3. Attribuer la capacité `local/flatarchive:archive` au rôle Enseignant
 
-> `vendor/` est dans `.gitignore` — toujours exécuter `composer install` sur un nouveau serveur.
+Le ZIP est autonome : aucune bibliothèque PHP supplémentaire à installer.
+Pour une mise à jour manuelle, remplacer le dossier du plugin par celui du nouveau ZIP,
+plutôt que de superposer les fichiers, afin de retirer aussi les fichiers obsolètes.
+Les données du cours et les archives téléchargées ne se trouvent pas dans ce dossier.
 
 ### Utilisation
 
@@ -68,7 +66,6 @@ archive_SHORTNAME_202603291200.zip
 |---|---|
 | Moodle | 4.4+ |
 | PHP | 8.1+ (selon la version de Moodle / depending on Moodle version) |
-| mPDF (via Composer) | 8.2.7 |
 
 ### Types de ressources supportés
 
@@ -78,7 +75,14 @@ archive_SHORTNAME_202603291200.zip
 | `mod_book` | ✅ Complet (table des matières + chapitres) |
 | `mod_resource` | ✅ Fichier principal et fichiers associés, sans conversion |
 | `mod_folder` | ✅ Description et arborescence avec fichiers originaux |
-| `mod_url` | Prévu |
+| `mod_glossary` | ✅ Entrées, auteurs, commentaires et pièces jointes |
+| `mod_wiki` | ✅ Pages et navigation locale |
+| `mod_feedback` | ✅ Questionnaire et réponses accessibles |
+| `mod_choice` | ✅ Options et réponses accessibles |
+| `mod_forum` | ✅ Discussions, réponses imbriquées et pièces jointes |
+| `mod_lesson` | ✅ Pages et tentatives accessibles |
+| `mod_quiz` | ✅ Questionnaire et tentatives accessibles ; types de questions documentés ci-dessous |
+| `mod_data` | ✅ Fiches, modèles de présentation et paramètres |
 | `mod_label` | ✅ Texte et médias intégrés dans l’index |
 
 ### Capacité Moodle
@@ -91,21 +95,21 @@ archive_SHORTNAME_202603291200.zip
 
 - La génération est **synchrone** — les cours très volumineux peuvent dépasser le `max_execution_time` PHP sur hébergement mutualisé
 - `wait_timeout=60s` MySQL (LWS) compensé par des requêtes keepalive entre chaque module
-- L’interface utilise AMD et envoie la sélection au générateur HTML synchrone. Les jobs asynchrones et le PDF restent incomplets.
+- L’interface utilise AMD et envoie la sélection au générateur HTML synchrone.
 
 ---
 
 ## English
 
-Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums and Lessons) as self-contained static HTML pages bundled in a downloadable ZIP.
+Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums, Lessons, Quizzes and Databases) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101207) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101208) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
 Flatarchive lets teachers export selected course resources to a portable offline archive:
 
-- Selects **Page**, **Book**, **Text and media area**, **File**, **Folder**, **Glossary**, **Wiki**, **Feedback** and **Choice** and **Forum** resources from the course tree
+- Selects **Page**, **Book**, **Text and media area**, **File**, **Folder**, **Glossary**, **Wiki**, **Feedback** and **Choice**, **Forum**, **Lesson**, **Quiz** and **Database** resources from the course tree
 - Generates a **static HTML website** — no Moodle dependency after download
 - Rewrites all `@@PLUGINFILE@@` links to relative paths and copies embedded files
 - Adds **visibility badges** (hidden / stealth / hidden section) on each page and in the index
@@ -136,15 +140,13 @@ archive_SHORTNAME_202603291200.zip
 ### Installation
 
 1. Copy the plugin folder to `{moodle_root}/local/flatarchive/`
-2. Install Composer dependencies:
-   ```bash
-   cd local/flatarchive
-   composer install --no-dev
-   ```
-3. Visit **Site administration → Notifications** to run the DB install
-4. Assign the capability `local/flatarchive:archive` to the Teacher role
+2. Visit **Site administration → Notifications** to complete installation or upgrade
+3. Assign the capability `local/flatarchive:archive` to the Teacher role
 
-> `vendor/` is git-ignored — always run `composer install` on a fresh server.
+The ZIP is self-contained: no additional PHP libraries need to be installed.
+For manual upgrades, replace the plugin directory with the new ZIP contents instead
+of overlaying files, so removed files do not remain on the server. Course data and
+downloaded archives are not stored in this directory.
 
 ### Usage
 
@@ -159,7 +161,6 @@ archive_SHORTNAME_202603291200.zip
 |---|---|
 | Moodle | 4.4+ |
 | PHP | 8.1+ (selon la version de Moodle / depending on Moodle version) |
-| mPDF (via Composer) | 8.2.7 |
 
 ### Supported resource types
 
@@ -169,7 +170,14 @@ archive_SHORTNAME_202603291200.zip
 | `mod_book` | ✅ Full (TOC + chapters) |
 | `mod_resource` | ✅ Main file and companion files, without conversion |
 | `mod_folder` | ✅ Description and file tree with original files |
-| `mod_url` | Planned |
+| `mod_glossary` | ✅ Entries, authors, comments and attachments |
+| `mod_wiki` | ✅ Pages and local navigation |
+| `mod_feedback` | ✅ Questionnaire and accessible responses |
+| `mod_choice` | ✅ Options and accessible responses |
+| `mod_forum` | ✅ Discussions, nested replies and attachments |
+| `mod_lesson` | ✅ Pages and accessible attempts |
+| `mod_quiz` | ✅ Questionnaire and accessible attempts; question types documented below |
+| `mod_data` | ✅ Entries, presentation templates and settings |
 | `mod_label` | ✅ Text and media embedded in the course index |
 
 ### Capability
@@ -182,7 +190,7 @@ archive_SHORTNAME_202603291200.zip
 
 - Archive generation is **synchronous** — very large courses may hit PHP `max_execution_time` on shared hosting
 - MySQL `wait_timeout=60s` (LWS) mitigated by keepalive queries between modules
-- The AMD interface submits the selection to the synchronous HTML generator. Background jobs and PDF support remain incomplete.
+- The AMD interface submits the selection to the synchronous HTML generator.
 
 ---
 
@@ -976,3 +984,22 @@ course and all supported activities, including Database.
 
 Validation : [run 38290709056](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38290709056),
 17 jobs verts sur Moodle 4.4 à 5.3, commit `c012e40`.
+
+### Maintenance du paquet — build 2026101208
+
+Le code inutilisé et les dépendances superflues ont été retirés. La mise à jour
+supprime uniquement l’ancienne table de suivi `local_flatarchive_job` si elle existe ;
+les contenus des cours et les archives sont conservés. Une nouvelle installation
+ne crée aucune table propre au plugin.
+
+Créer le ZIP installable depuis le dépôt :
+```sh
+python3 scripts/package-plugin.py --output /chemin/local_flatarchive.zip
+```
+Le script utilise les fichiers suivis par Git et exclut les outils de développement,
+les tests et les bibliothèques locales. Son intégrité est vérifiée dans GitHub Actions.
+
+English: unused code and dependencies have been removed. Upgrade removes only the
+obsolete processing-metadata table, preserving course contents and archives. New
+installations create no plugin tables. The packaging script builds and validates
+an installable ZIP from tracked runtime files.

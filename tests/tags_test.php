@@ -38,7 +38,7 @@ final class tags_test extends \advanced_testcase {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
         $types = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki', 'feedback', 'choice', 'forum', 'lesson'];
-        $items = [];
+        $ids = [];
         foreach ($types as $type) {
             $module = $generator->create_module($type, ['course' => $course->id]);
             \core_tag_tag::set_item_tags(
@@ -48,19 +48,18 @@ final class tags_test extends \advanced_testcase {
                 \context_module::instance($module->cmid),
                 ['Été & ' . $type]
             );
-            $items[$module->cmid] = '<li><a href="local.html">Title</a><ul><li>Nested</li></ul></li>';
+            $ids[] = $module->cmid;
         }
-        $result = tags::index_items($items);
-        $this->assertCount(11, $result);
-        foreach ($result as $html) {
+        foreach ($ids as $cmid) {
+            $html = tags::render('core', 'course_modules', $cmid);
             $this->assertStringContainsString('Été &amp;', $html);
-            $this->assertStringContainsString('<ul><li>Nested</li></ul>', $html);
             $this->assertSame(1, substr_count($html, 'class="fa-tags"'));
-            $this->assertSame(1, substr_count($html, '<a '));
-            $this->assertStringEndsWith('</div></li>', $html);
+            $this->assertStringNotContainsString('<a ', $html);
         }
         set_config('usetags', 0);
-        $this->assertSame($items, tags::index_items($items));
+        foreach ($ids as $cmid) {
+            $this->assertSame('', tags::render('core', 'course_modules', $cmid));
+        }
     }
 
     /**

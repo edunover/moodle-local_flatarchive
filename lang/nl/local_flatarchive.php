@@ -32,7 +32,6 @@ $string['selectall'] = 'Alles selecteren';
 $string['deselectall'] = 'Alles deselecteren';
 $string['archiveselection'] = 'Selectie archiveren';
 $string['loading'] = 'Laden';
-$string['backendnotready'] = 'Backend nog niet gekoppeld. Volgende stap: get_tree en start_job implementeren.';
 $string['nothingselected'] = 'Selecteer minstens één bron.';
 $string['status_idle'] = 'Klaar';
 $string['status_running'] = 'Bezig';

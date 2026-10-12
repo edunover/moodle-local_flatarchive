@@ -29,6 +29,8 @@ jobs:
       - name: Verify committed AMD build
         run: git diff --exit-code -- amd/build
       - run: npm test
+      - name: Verify installable package
+        run: python3 scripts/package-plugin.py --output "$RUNNER_TEMP/flatarchive.zip"
 
   phpunit:
     name: Moodle ${{ matrix.moodle }} / PHP ${{ matrix.php }}
@@ -139,6 +141,7 @@ jobs:
           plugin/classes/archive/wiki_exporter.php plugin/tests/wiki_exporter_test.php
           plugin/classes/archive/glossary_exporter.php plugin/tests/glossary_exporter_test.php
           plugin/classes/archive/data_exporter.php plugin/tests/data_exporter_test.php
+          plugin/db/upgrade.php plugin/tests/upgrade_test.php
           plugin/classes/archive/data_settings.php
           plugin/classes/archive/settings_snapshot.php plugin/tests/settings_snapshot_test.php
           plugin/classes/archive/folder_exporter.php plugin/tests/folder_exporter_test.php

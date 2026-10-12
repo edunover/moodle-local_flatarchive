@@ -1,151 +1,54 @@
-# local_flatarchive — CLAUDE.md
+# local_flatarchive — notes techniques
 
-Plugin Moodle local pour archiver des ressources "Page", "Livre", "Zone texte et média", "Fichier" et "Dossier" d'un cours en HTML statique + ZIP téléchargeable.
-Version : 0.2.0 (2026101103) MATURITY_ALPHA. Requiert Moodle 4.4+.
+Version : 0.2.0 (2026101208), MATURITY_ALPHA, Moodle 4.4 à 5.3.
 
----
+## Documentation et versionnage
 
-## Documentation à maintenir
+Maintenir README.md et claude.md à chaque évolution significative. Incrémenter
+le build YYYYMMDDXX de version.php pour chaque livraison ; ne changer la release
+qu’à la demande de l’utilisateur. Les sections datées ci-dessous sont historiques.
 
-À chaque évolution significative du projet, mettre à jour **les deux fichiers** :
-- `README.md` — documentation publique (fonctionnalités, installation, usage, limitations)
-- `CLAUDE.md` — état technique interne (fichiers, bugs connus, conventions)
+## Architecture actuelle
 
----
+- `index.php`, `templates/index.mustache`, `amd/src/selectors.js` : sélection du cours.
+- `classes/external/get_tree.php`, `db/services.php` : service AJAX Moodle actif via core/ajax.
+- `archive_process.php` : génération HTML synchrone et assemblage du ZIP.
+- `classes/archive/` : exporteurs des 13 types pris en charge, paramètres, tags,
+  icônes, fichiers et téléchargements temporaires.
+- `locallib.php` : visibilité, version, copie des icônes/médias et structure des sections.
+- `archive_templates/` et `style/moodle.css` : documents HTML autonomes.
+- `serve_temp.php` : téléchargement dans la session de création pendant une heure.
+- `styles.css` : interface du plugin dans Moodle, distincte du style des archives.
+- `db/access.php` : capacité `local/flatarchive:archive`.
+- `db/upgrade.php` : suppression de l’ancienne table de suivi lors de la mise à jour.
+  Aucune table propre au plugin n’est créée à l’installation.
+- `scripts/package-plugin.py` : construction du ZIP à partir des fichiers suivis par Git.
 
-## Règles de versionnage
+## Conventions
 
-- À chaque changement déployé, incrémenter le numéro de build dans `version.php` : YYYYMMDDXX+1 (ex: 2026093001 → 2026093002)
-- Si le jour change, repartir à 01 (ex: 2026033001)
-- Incrémenter `$plugin->release` (mineur ou patch) uniquement sur demande explicite
+- Conserver les contrôles de connexion, contexte, capacité et sesskey selon le point d’entrée.
+- Vérifier les droits Moodle avant toute lecture de réponses, notes ou fichiers privés.
+- Utiliser get_fast_modinfo pour la structure ; aucun changement des données durant l’export.
+- JavaScript AMD via core/ajax, core/notification et core/str ; pas de fetch direct.
+- Chaînes visibles traduites dans lang/en, lang/fr et lang/nl.
+- Ne pas exécuter de scripts personnalisés dans les documents HTML exportés.
+- `moodle-extra` est le standard PHP. Ajouter les nouveaux fichiers au périmètre CI.
+- `npm ci`, `npm run build`, `npm test` pour le module AMD ; commiter amd/build.
+- PHPUnit dans Moodle et matrice GitHub Actions 4.4 à 5.3.
+- Pas de bibliothèque PHP tierce requise à l’exécution.
 
----
+## Livraison et limites
 
-## État d'avancement
+Le ZIP est autonome ; remplacer le dossier du plugin lors d’une mise à jour manuelle.
+Ne jamais inclure les dépendances de développement ou des fichiers locaux non suivis.
+La génération reste synchrone, limitée par le temps et la mémoire PHP disponibles.
+Les liens de téléchargement expirent après une heure ; les fichiers temporaires sont
+nettoyés par Moodle. Le contenu multilingue reste un chantier distinct.
 
-Le plugin est à ~70% de son objectif. L'archivage HTML (Pages + Livres) est fonctionnel de bout en bout.
-Reste à implémenter : la couche cron/jobs asynchrones et la génération PDF.
+## Validation récente
 
-### Implémenté et fonctionnel
-- `index.php` — page d'entrée avec auth + capability
-- `lib.php` — hook navigation cours
-- `db/access.php` — capability `local/flatarchive:archive`
-- `db/services.php` — déclaration du service get_tree ; les services de jobs non implémentés ne sont pas enregistrés
-- `db/install.xml` + `db/upgrade.php` — table `local_flatarchive_job`
-- `classes/external/get_tree.php` — API externe complète
-- `ajax/get_tree.php` + `ajax/start_job.php` — anciens endpoints conservés, non utilisés par l’interface AMD
-- `ajax/generate_pdf.php` — endpoint PDF via mPDF (Phase 1, un seul module)
-- `archive_process.php` — traitement synchrone : génère HTML + ZIP et redirige vers téléchargement
-  - MySQL keepalive (`SELECT 1`) après chaque module et avant création ZIP (LWS wait_timeout=60s)
-  - Icônes modules copiées depuis `mod/{modname}/pix/monologo.svg` vers `shared/icons/`
-  - Badges de visibilité (caché / stealth / section cachée)
-  - Nom ZIP : `archive_{shortname}_{YYYYMMDDHHmm}.zip`
-- `serve_temp.php` — résout un token de session, vérifie propriétaire et capacité du cours, sert le ZIP plusieurs fois pendant une heure ; suppression différée par le nettoyage temporaire Moodle
-- `locallib.php` — helpers :
-  - `flatarchive_prepare_html_for_archive()` : normalise HTML (emojis, icônes, images)
-  - `local_flatarchive_visibility_badges()` : badges HTML de visibilité
-  - `local_flatarchive_copy_mod_icon()` : copie l'icône SVG/PNG du module (Moodle 4.x : monologo.svg)
-  - `local_flatarchive_get_release()` : lit `version.php` pour obtenir la release (ex: `0.2.0 (2026100101)`)
-- `archive_templates/` — 4 templates HTML autonomes : index, about, page, book_toc
-  - Footer : `Flatarchive {release} © EDUNOVER – {coursetitle}`
-  - Badges de visibilité sur page individuelle et TOC livre
-- `style/moodle.css` — CSS minimal pour les archives HTML générées (badges, icônes, layout)
-- `templates/index.mustache` — template UI (bouton "Générer l'archive HTML" uniquement)
-- `lang/fr|en|nl/` — i18n 3 langues
-- `version.php`, `composer.json`, `composer.lock` (mpdf v8.2.7)
-
-### Fichiers vides (à implémenter ou supprimer)
-- `classes/external/start_job.php` — version web service de start_job (doublon de ajax/start_job.php)
-- `classes/external/get_status.php` — état d'un job
-- `classes/task/process_job.php` — tâche cron de traitement asynchrone
-- `classes/task/purge_temp.php` — tâche cron de nettoyage
-- `classes/pdf/mpdf_engine.php` — moteur PDF réutilisable (remplacera ajax/generate_pdf.php)
-- `classes/output/renderer.php` — renderer Moodle
-- `db/tasks.php` — déclaration des tâches cron
-- `pluginfile.php` — servir les fichiers archivés via l'API fichiers Moodle
-- `render.php` — orphelin, à supprimer
-
----
-
-## Architecture JS : AMD
-
-- `index.php` charge `local_flatarchive/selectors` via `js_call_amd()`.
-- `amd/src/selectors.js` charge Pages et Livres via `core/ajax`, affiche les erreurs avec
-  `core/notification` et charge ses chaînes avec `core/str`.
-- `templates/index.mustache` contient un formulaire POST vers `archive_process.php`,
-  avec `id`, `sesskey` et les cases `cmid[]`. Aucun job asynchrone n’est créé par l’interface.
-- `styles.css` contient le style de l’interface Moodle ; `style/moodle.css` reste réservé aux archives.
-- L’ancien `js/selectors.js` a été supprimé.
-- `npm ci && npm run build` produit le module AMD nommé et sa source map dans `amd/build/`.
-- `npm test` vérifie source et build avec Node test + jsdom.
-- `tests/external/get_tree_test.php` contient les tests PHPUnit Moodle du service d’arborescence.
-  Exécution depuis Moodle, après initialisation PHPUnit :
-  `vendor/bin/phpunit local/flatarchive/tests`.
-- Le build 2026093001 est installé sur la sandbox Moodle 4.5 ; la génération des 50 Pages du cours TEST- réussit. Le téléchargement manuel et les 203 références locales du ZIP sont validés ; l’affichage visuel hors ligne reste à vérifier.
-
----
-
-## Conventions à respecter
-
-### PHP / Moodle
-- Toujours `defined('MOODLE_INTERNAL') || die();` en tête de chaque fichier inclus
-- Sécurité systématique : `require_login()` → `validate_context()` → `require_capability()`
-- Web services : pattern strict `execute_parameters()` / `execute()` / `execute_returns()`
-- `get_course()` lève une exception si introuvable — ne pas tester `if (!$course)`
-- Utiliser `get_fast_modinfo()` pour accéder à la structure du cours
-
-### JavaScript (AMD uniquement)
-- Utiliser `core/ajax`, `core/notification`, `core/str` — pas de `fetch` brut ni de `alert()`
-- Toutes les chaînes affichées via `Str.get_string('key', 'local_flatarchive')` — zéro string hardcodée
-- Sélecteurs dans un objet `selectors` en haut du module
-- Pattern : `return { init }` avec `init(params)` appelé depuis `js_call_amd()`
-
-### Templates Mustache
-- Pas de bloc `<style>` inline — utiliser un fichier CSS séparé
-- Attributs `data-action` et `data-region` doivent correspondre exactement aux sélecteurs JS
-
-### i18n
-- Toute chaîne visible par l'utilisateur doit être dans `lang/en/local_flatarchive.php` (référence)
-- Dupliquer dans `lang/fr/` et `lang/nl/`
-
----
-
-## Points restant à traiter avant une release
-
-1. `ajax/generate_pdf.php` appelle `$PAGE->set_context($contextmodule)` avant la définition du contexte.
-2. `render.php` reste vide et orphelin.
-3. Les services de jobs et tâches cron sont encore vides : ne pas les appeler depuis l’interface.
-4. L’export ZIP et son téléchargement nécessitent des tests d’intégration Moodle supplémentaires.
-5. Les liens de téléchargement expirent après une heure et exigent la session de création ; la suppression physique dépend du nettoyage temporaire planifié de Moodle.
-
----
-
-## Dépendances
-
-- **mPDF v8.2.7** : géré via Composer (`composer.json` + `composer.lock`)
-- `vendor/` est dans `.gitignore` — recréer avec `composer install` sur un nouveau serveur
-- Appel systématique : `require_once(__DIR__ . '/vendor/autoload.php');` avant tout usage de `\Mpdf\Mpdf`
-
----
-
-## Ce qu'il ne faut pas faire
-
-- Ne pas ajouter de nouveaux fichiers non-AMD dans `js/`
-- Ne pas utiliser `alert()` ou `confirm()` natifs
-- Ne pas hardcoder de texte français dans le PHP ou le JS
-- Ne pas bypasser la vérification de capability dans les web services
-- Ne pas commiter de code de debug (`console.log`, `// DEBUG ONLY`, cache-buster `time()`)
-
-  ## Ressources de référence
-  - 'docs/moodle 4.0 e-learning.md'
-  - 'docs/Brand guidelines.md
-  - 'docs/h5p.md'
-  - 'docs/MAQ.md'
-  - 'docs/moodle DB.md'
-  - 'docs/Moodle Dispensez vos formations en ligne.md'
-  - 'docs/moodle security.md'
-  - 'docs/moodle_4_0_e_learning.md'
-  - 'docs/moodle.DB.relationships.implied.large.png'
+L’utilisateur a validé le rendu du build 2026101207 le 12 octobre (archive de 20 h 37).
+Le build 2026101208 retire le code inutilisé et teste la migration ainsi que le paquet.
 
 ## Optimisations 2026093001
 

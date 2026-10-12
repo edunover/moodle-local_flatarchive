@@ -53,22 +53,4 @@ final class tags {
             'fa-tags'
         );
     }
-
-    /**
-     * Add module tags to existing course index entries, including inline and binary resources.
-     *
-     * @param array $items Authorised HTML list items keyed by course module ID.
-     * @return array Decorated list items.
-     */
-    public static function index_items(array $items): array {
-        foreach ($items as $cmid => $item) {
-            $tags = self::render('core', 'course_modules', (int)$cmid);
-            if ($tags !== '') {
-                $items[$cmid] = preg_replace_callback('/<\/li>\s*$/', static function () use ($tags) {
-                    return $tags . '</li>';
-                }, $item, 1);
-            }
-        }
-        return $items;
-    }
 }

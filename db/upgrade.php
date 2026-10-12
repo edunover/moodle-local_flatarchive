@@ -1,30 +1,45 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * Upgrade Flatarchive installations.
+ *
+ * @package local_flatarchive
+ * @copyright 2026 Edunover
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Remove obsolete processing metadata; course contents and archive files are untouched.
+ *
+ * @param int $oldversion Installed version
+ * @return bool Success
+ */
 function xmldb_local_flatarchive_upgrade($oldversion) {
     global $DB;
 
-    $dbman = $DB->get_manager();
-
-    if ($oldversion < 2026011201) {
-
+    if ($oldversion < 2026101208) {
+        $dbman = $DB->get_manager();
         $table = new xmldb_table('local_flatarchive_job');
-
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
-        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
-        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
-        $table->add_field('cmids', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
-        $table->add_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL);
-        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
-        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
-
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
         }
-
-        upgrade_plugin_savepoint(true, 2026011201, 'local', 'flatarchive');
+        upgrade_plugin_savepoint(true, 2026101208, 'local', 'flatarchive');
     }
 
     return true;
