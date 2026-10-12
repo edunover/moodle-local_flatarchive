@@ -68,30 +68,37 @@ final class data_settings {
         $rows[self::label('settingscompletionview')] = self::yes($module->completionview);
         $rows[self::label('settingscompletiongrade')] = self::yes($module->completiongradeitemnumber !== null);
         $rows[self::label('settingscompletionexpected')] = self::date((int)$module->completionexpected);
-        foreach (['approval' => 'requireapproval', 'manageapproved' => 'manageapproved', 'comments' => 'allowcomments'] as $key => $label) {
+        $booleans = ['approval' => 'requireapproval', 'manageapproved' => 'manageapproved', 'comments' => 'allowcomments'];
+        foreach ($booleans as $key => $label) {
             $rows[get_string($label, 'data')] = self::yes($data->$key);
         }
         foreach (['requiredentries', 'requiredentriestoview', 'maxentries', 'completionentries', 'rssarticles'] as $key) {
             $rows[self::label('settings' . $key)] = $key === 'maxentries' && !$data->$key ?
                 get_string('unlimited') : (string)$data->$key;
         }
-        foreach ([
+        $dates = [
             'timeavailablefrom' => 'availablefromdate', 'timeavailableto' => 'availabletodate',
             'timeviewfrom' => 'viewfromdate', 'timeviewto' => 'viewtodate',
-        ] as $key => $label) {
+        ];
+        foreach ($dates as $key => $label) {
             $rows[get_string($label, 'data')] = self::date((int)$data->$key);
         }
-        $sortnames = [DATA_TIMEADDED => self::label('settingstimecreated'), DATA_TIMEMODIFIED => self::label('settingstimemodified'),
+        $sortnames = [DATA_TIMEADDED => self::label('settingstimecreated'),
+            DATA_TIMEMODIFIED => self::label('settingstimemodified'),
             DATA_FIRSTNAME => get_string('firstname'), DATA_LASTNAME => get_string('lastname'),
             DATA_APPROVED => self::label('settingsapprovalstatus'), DATA_TAGS => get_string('tags')];
-        $rows[self::label('settingssort')] = $fields[$data->defaultsort]->name ?? ($sortnames[$data->defaultsort] ?? get_string('default'));
-        $rows[self::label('settingssortdirection')] = self::label($data->defaultsortdir ? 'settingsdescending' : 'settingsascending');
+        $rows[self::label('settingssort')] = $fields[$data->defaultsort]->name ??
+            ($sortnames[$data->defaultsort] ?? get_string('default'));
+        $direction = $data->defaultsortdir ? 'settingsdescending' : 'settingsascending';
+        $rows[self::label('settingssortdirection')] = self::label($direction);
         $rows[self::label('settingsrating')] = self::label('settingsrating' . (int)$data->assessed);
         $rows[self::label('settingsscale')] = $data->scale < 0 ?
             (string)$DB->get_field('scale', 'name', ['id' => -$data->scale]) : (string)$data->scale;
         $rows[self::label('settingsratingfrom')] = self::date((int)$data->assesstimestart);
         $rows[self::label('settingsratingto')] = self::date((int)$data->assesstimefinish);
-        $grade = $DB->get_record('grade_items', ['itemtype' => 'mod', 'itemmodule' => 'data', 'iteminstance' => $data->id, 'itemnumber' => 0]);
+        $grade = $DB->get_record('grade_items', [
+            'itemtype' => 'mod', 'itemmodule' => 'data', 'iteminstance' => $data->id, 'itemnumber' => 0,
+        ]);
         if ($grade) {
             $rows[self::label('settingsgradepass')] = format_float($grade->gradepass);
             $category = $DB->get_field('grade_categories', 'fullname', ['id' => $grade->categoryid]);
@@ -103,7 +110,8 @@ final class data_settings {
         $body .= \html_writer::tag('h2', self::label('settingsfields'));
         foreach ($fields as $field) {
             $component = 'datafield_' . $field->type;
-            $type = get_string_manager()->string_exists('pluginname', $component) ? get_string('pluginname', $component) : $field->type;
+            $type = get_string_manager()->string_exists('pluginname', $component) ?
+                get_string('pluginname', $component) : $field->type;
             $body .= \html_writer::tag('h3', s($field->name));
             $body .= self::table([
                 self::label('settingsfieldtype') => $type,
@@ -133,8 +141,9 @@ final class data_settings {
             $body .= self::table($options);
         }
         $body .= \html_writer::tag('h2', self::label('settingstemplates'));
-        foreach (['listtemplateheader', 'listtemplate', 'listtemplatefooter', 'singletemplate',
-            'addtemplate', 'asearchtemplate', 'rsstemplate', 'rsstitletemplate', 'csstemplate'] as $key) {
+        $templates = ['listtemplateheader', 'listtemplate', 'listtemplatefooter', 'singletemplate',
+            'addtemplate', 'asearchtemplate', 'rsstemplate', 'rsstitletemplate', 'csstemplate'];
+        foreach ($templates as $key) {
             $body .= \html_writer::tag('h3', self::label('settings' . $key));
             $body .= \html_writer::tag('pre', s((string)($data->$key ?? '')), ['class' => 'fa-settings-source']);
         }
@@ -188,6 +197,6 @@ final class data_settings {
      * @return string Translated date or disabled indication
      */
     private static function date(int $value): string {
-        return $value ? userdate($value) : get_string('disabled');
+        return $value ? userdate($value) : self::label('settingscompletion0');
     }
 }

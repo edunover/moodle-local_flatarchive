@@ -66,7 +66,8 @@ final class data_exporter {
         $list = format_text($intro, $data->introformat, ['context' => $context, 'filter' => false]);
         $settingsfile = data_settings::write($cm, $modinfo, $data, $fields, $intro, $directory);
         $filenames[] = $settingsfile;
-        $list = \html_writer::tag('p', \html_writer::link($settingsfile, get_string('archivesettings', 'local_flatarchive'))) . $list;
+        $settingslink = \html_writer::link($settingsfile, get_string('archivesettings', 'local_flatarchive'));
+        $list = \html_writer::tag('p', $settingslink) . $list;
         if ($data->requiredentriestoview > 0) {
             $list .= \html_writer::tag('p', get_string('datarequiredentries', 'local_flatarchive', $data->requiredentriestoview));
         }
