@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums et Leçons) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101204) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101205) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -99,7 +99,7 @@ archive_SHORTNAME_202603291200.zip
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums and Lessons) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101204) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101205) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -912,3 +912,32 @@ qui ne font pas encore partie du périmètre CI.
 English: CI checks its explicit PHP file list with `moodle-extra`; the local PHPCS
 configuration uses the same standard. Legacy files outside that CI list are not
 covered by the successful CI coding-standard checks.
+
+
+### Paramètres du cours et des activités — build 2026101205
+
+La page Paramètres de la Base de données a été validée manuellement. Les autres
+activités prises en charge disposent désormais aussi d’un relevé local des réglages
+standard : Page, Livre, Zone texte et média, Fichier, Dossier, Glossaire, Wiki,
+Feedback, Sondage, Forum, Leçon et Test. Le lien du cours figure dans `index.html`.
+Les liens d’activité sont accessibles depuis l’index et leur page principale ;
+les Livres utilisent leur table des matières. Les fichiers originaux restent intacts.
+
+Sont conservés les réglages communs (visibilité, groupes, restrictions et achèvement),
+les principales options propres à chaque module, les informations de notation et
+les quatre périodes de relecture du Test. Ces relevés sont documentaires et ne
+reconstituent pas un formulaire d’administration Moodle. Les mots de passe ne sont
+pas copiés : seule leur présence est indiquée. Les dérogations individuelles,
+les secrets d’inscription et les configurations de plugins tiers sont exclus.
+Les paramètres d’activité exigent `moodle/course:manageactivities`, ceux du cours
+`moodle/course:update`. Les contrôles existants de la Base de données sont conservés.
+
+English: offline settings snapshots now cover the course and all supported activity
+types. Main activity pages and the course index provide local links, including
+nested Book navigation. Standard options and Quiz review periods are documented;
+password values, user overrides and third-party configuration are excluded.
+
+Validation automatique réussie : [run 38286381453](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38286381453),
+17 jobs verts, 110 tests PHPUnit / 969 assertions sur Moodle 5.3, tests JavaScript
+et `moodle-extra` réussis. Matrice Moodle 4.4 à 5.3, commit `178f43b`.
+Validation visuelle à effectuer après installation et régénération de l’archive.
