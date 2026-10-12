@@ -850,3 +850,6 @@ de champ vide et les médias locaux sont conservés.
 
 English: descriptions now precede snapshot metadata and settings tables for the
 course and all supported activities, including Database.
+
+Validation : [run 38290709056](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38290709056),
+17 jobs verts sur Moodle 4.4 à 5.3, commit `c012e40`.
