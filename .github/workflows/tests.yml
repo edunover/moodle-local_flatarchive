@@ -141,6 +141,7 @@ jobs:
           plugin/classes/archive/wiki_exporter.php plugin/tests/wiki_exporter_test.php
           plugin/classes/archive/glossary_exporter.php plugin/tests/glossary_exporter_test.php
           plugin/classes/archive/data_exporter.php plugin/tests/data_exporter_test.php
+          plugin/classes/archive/layout.php plugin/tests/layout_test.php
           plugin/db/upgrade.php plugin/tests/upgrade_test.php
           plugin/classes/archive/data_settings.php
           plugin/classes/archive/settings_snapshot.php plugin/tests/settings_snapshot_test.php

@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums, Leçons, Tests et Bases de données) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101208) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101209) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -25,21 +25,17 @@ Flatarchive permet aux enseignants d'exporter des ressources de cours vers une a
 ### Structure de l'archive
 
 ```
-archive_SHORTNAME_202603291200.zip
-├── index.html              ← index du cours avec toutes les ressources
-├── about.html              ← description du cours
-├── shared/
-│   ├── moodle.css          ← CSS autonome
-│   └── icons/
-│       ├── page.svg
-│       └── book.svg
-├── Titre--page-12.html   ← un fichier par activité Page
-├── Titre--book-34/
-│   ├── index.html          ← table des matières du livre
-│   ├── Chapitre un--chapter-56.html
-│   └── Chapitre deux--chapter-57.html
-└── files/
-    └── {cmid}/{filearea}/{itemid}/ ← images et fichiers embarqués
+archive_SHORTNAME_202610122100.zip
+├── index.html
+└── resources/
+    ├── course-settings.html
+    ├── about.html
+    ├── shared/
+    ├── files/
+    ├── Titre--page-12.html
+    └── Titre--book-34/
+        ├── index.html
+        └── Chapitre--chapter-56.html
 ```
 
 ### Installation
@@ -103,7 +99,7 @@ Les données du cours et les archives téléchargées ne se trouvent pas dans ce
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums, Lessons, Quizzes and Databases) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101208) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101209) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -120,21 +116,17 @@ Flatarchive lets teachers export selected course resources to a portable offline
 ### Archive structure
 
 ```
-archive_SHORTNAME_202603291200.zip
-├── index.html              ← course index with all resources
-├── about.html              ← course description
-├── shared/
-│   ├── moodle.css          ← standalone CSS
-│   └── icons/
-│       ├── page.svg
-│       └── book.svg
-├── Title--page-12.html         ← one file per Page activity
-├── Title--book-34/
-│   ├── index.html          ← book table of contents
-│   ├── Chapter one--chapter-56.html
-│   └── Chapter two--chapter-57.html
-└── files/
-    └── {cmid}/{filearea}/{itemid}/ ← embedded images & files
+archive_SHORTNAME_202610122100.zip
+├── index.html
+└── resources/
+    ├── course-settings.html
+    ├── about.html
+    ├── shared/
+    ├── files/
+    ├── Titre--page-12.html
+    └── Titre--book-34/
+        ├── index.html
+        └── Chapitre--chapter-56.html
 ```
 
 ### Installation
@@ -1007,3 +999,19 @@ an installable ZIP from tracked runtime files.
 Validation du build 2026101208 : [run 38292832714](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38292832714),
 17 jobs réussis sur Moodle 4.4 à 5.3, incluant la migration, `moodle-extra` et
 la vérification du ZIP installable. Commit `a50f3b4`.
+
+
+### Racine simplifiée de l’archive — build 2026101209
+
+Seul `index.html` reste à la racine, accompagné du dossier `resources/` qui regroupe
+les autres pages, paramètres, styles, icônes et fichiers joints. Les liens locaux
+sont recalculés, y compris les retours à l’index depuis les sous-dossiers Livre.
+Les pièces jointes originales ne sont pas modifiées ; les liens externes restent externes.
+Conserver le fichier index.html et le dossier resources ensemble lors d’une copie.
+
+English: the archive root contains only index.html and resources/. Generated HTML
+links are adjusted, including nested Book navigation. Original attachments remain
+byte-identical. Keep both root items together when moving or sharing the archive.
+
+Contrôle local sur l’archive utilisateur du 12 octobre à 20 h 53 : 106 fichiers,
+455 liens locaux valides, 6 fichiers joints identiques octet pour octet.

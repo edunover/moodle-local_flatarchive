@@ -266,6 +266,8 @@ try {
     local_flatarchive_write_file($tempdir . '/about.html', $abouthtml);
     $zipfiles['about.html'] = $tempdir . '/about.html';
 
+    $zipfiles = \local_flatarchive\archive\layout::organise($zipfiles);
+
     $shortname = clean_filename(clean_param($course->shortname, PARAM_FILE)) ?: 'course_' . $courseid;
     $zipname = 'archive_' . $shortname . '_' . date('YmdHi') . '.zip';
     $zippath = $tempdir . '/archive.zip';

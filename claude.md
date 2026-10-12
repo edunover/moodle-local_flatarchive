@@ -1,6 +1,6 @@
 # local_flatarchive — notes techniques
 
-Version : 0.2.0 (2026101208), MATURITY_ALPHA, Moodle 4.4 à 5.3.
+Version : 0.2.0 (2026101209), MATURITY_ALPHA, Moodle 4.4 à 5.3.
 
 ## Documentation et versionnage
 
@@ -760,3 +760,19 @@ Validation : [run 38290709056](https://github.com/edunover/moodle-local-flatarch
 Validation du build 2026101208 : [run 38292832714](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38292832714),
 17 jobs réussis sur Moodle 4.4 à 5.3, incluant la migration, `moodle-extra` et
 la vérification du ZIP installable. Commit `a50f3b4`.
+
+
+### Racine simplifiée de l’archive — build 2026101209
+
+Seul `index.html` reste à la racine, accompagné du dossier `resources/` qui regroupe
+les autres pages, paramètres, styles, icônes et fichiers joints. Les liens locaux
+sont recalculés, y compris les retours à l’index depuis les sous-dossiers Livre.
+Les pièces jointes originales ne sont pas modifiées ; les liens externes restent externes.
+Conserver le fichier index.html et le dossier resources ensemble lors d’une copie.
+
+English: the archive root contains only index.html and resources/. Generated HTML
+links are adjusted, including nested Book navigation. Original attachments remain
+byte-identical. Keep both root items together when moving or sharing the archive.
+
+Contrôle local sur l’archive utilisateur du 12 octobre à 20 h 53 : 106 fichiers,
+455 liens locaux valides, 6 fichiers joints identiques octet pour octet.
