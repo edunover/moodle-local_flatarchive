@@ -1015,3 +1015,7 @@ byte-identical. Keep both root items together when moving or sharing the archive
 
 Contrôle local sur l’archive utilisateur du 12 octobre à 20 h 53 : 106 fichiers,
 455 liens locaux valides, 6 fichiers joints identiques octet pour octet.
+
+Validation : [run 38294485057](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38294485057),
+17 jobs verts sur Moodle 4.4 à 5.3, commit `933217c`. Tests d’extraction ZIP,
+navigation et conservation des fichiers originaux réussis.
