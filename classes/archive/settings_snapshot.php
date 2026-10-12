@@ -145,7 +145,17 @@ final class settings_snapshot {
             $rows[self::label('settingsratingfrom')] = self::value($instance->assesstimestart, 'date', '');
             $rows[self::label('settingsratingto')] = self::value($instance->assesstimefinish, 'date', '');
         }
+        $description = \local_flatarchive_copy_pluginfiles_and_rewrite(
+            $instance->intro ?? '',
+            $cm->context,
+            'mod_' . $cm->modname,
+            'intro',
+            0,
+            $directory,
+            (int)$cm->id
+        );
         $body = self::intro() . self::table($rows);
+        $body .= self::description($description, (int)($instance->introformat ?? FORMAT_HTML), $cm->context);
         $grades = $DB->get_records('grade_items', [
             'itemtype' => 'mod', 'itemmodule' => $cm->modname, 'iteminstance' => $cm->instance,
         ], 'itemnumber');
@@ -203,6 +213,17 @@ final class settings_snapshot {
         $rows[self::label('settingscoursedates')] = self::value($course->showactivitydates ?? 0, 'bool', '');
         $rows[self::label('settingscoursecompletion')] = self::value($course->showcompletionconditions ?? 0, 'bool', '');
         $body = self::intro() . self::table($rows);
+        $context = \context_course::instance($course->id);
+        $description = \local_flatarchive_copy_pluginfiles_and_rewrite(
+            $course->summary ?? '',
+            $context,
+            'course',
+            'summary',
+            0,
+            $directory,
+            0
+        );
+        $body .= self::description($description, (int)($course->summaryformat ?? FORMAT_HTML), $context);
         $filename = 'course-settings.html';
         \local_flatarchive_write_file($directory . '/' . $filename, \local_flatarchive_render_page_template(
             $course,
@@ -211,6 +232,27 @@ final class settings_snapshot {
             $body
         ));
         return $filename;
+    }
+
+    /**
+     * Always show the description, including a translated empty-field indication.
+     *
+     * @param string $content Description with archive-local file URLs
+     * @param int $format Moodle text format
+     * @param \context $context Authorised content context
+     * @return string HTML section
+     */
+    public static function description(string $content, int $format, \context $context): string {
+        $html = format_text($content, $format, ['context' => $context, 'filter' => false]);
+        $text = html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = preg_replace('/[\s\x{00a0}]+/u', '', $text);
+        $hasmedia = preg_match('/<(img|video|audio|iframe|object|embed|svg)\b/i', $html);
+        if ($text === '' && !$hasmedia) {
+            $html = \html_writer::tag('p', self::label('settingsemptyfield'), ['class' => 'fa-settings-empty']);
+        }
+        return \html_writer::tag('section', \html_writer::tag('h2', get_string('description')) . $html, [
+            'class' => 'fa-settings-description',
+        ]);
     }
 
     /**

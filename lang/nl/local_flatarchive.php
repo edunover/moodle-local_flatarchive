@@ -321,3 +321,4 @@ $string['settingfield_completiontimespent'] = 'Minimale bestede tijd voor voltoo
 $string['settingsnavtoc'] = 'Alleen inhoudsopgave (oude navigatie)';
 $string['settingsnavimages'] = 'Afbeeldingen (oude navigatie)';
 $string['settingsnavtext'] = 'Tekst (oude navigatie)';
+$string['settingsemptyfield'] = 'Leeg veld';

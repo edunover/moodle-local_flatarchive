@@ -330,3 +330,4 @@ $string['settingfield_completiontimespent'] = 'Minimum time spent for completion
 $string['settingsnavtoc'] = 'Table of contents only (legacy navigation)';
 $string['settingsnavimages'] = 'Images (legacy navigation)';
 $string['settingsnavtext'] = 'Text (legacy navigation)';
+$string['settingsemptyfield'] = 'Empty field';

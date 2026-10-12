@@ -248,7 +248,6 @@ try {
         }
     }
 
-    $indexitems = \local_flatarchive\archive\tags::index_items($indexitems);
     $index = \local_flatarchive\archive\index_icons::add($indexitems, $modinfo, $tempdir);
     $indexitems = $index['items'];
     $zipfiles += $index['files'];

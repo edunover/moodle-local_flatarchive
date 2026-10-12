@@ -105,8 +105,7 @@ final class data_settings {
             $rows[self::label('settingsgradecategory')] = $category === '?' ? $modinfo->get_course()->fullname : (string)$category;
         }
         $body .= self::table($rows);
-        $body .= \html_writer::tag('h2', get_string('description'));
-        $body .= format_text($intro, $data->introformat, ['context' => $context, 'filter' => false]);
+        $body .= settings_snapshot::description($intro, (int)$data->introformat, $context);
         $body .= \html_writer::tag('h2', self::label('settingsfields'));
         foreach ($fields as $field) {
             $component = 'datafield_' . $field->type;

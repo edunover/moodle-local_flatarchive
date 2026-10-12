@@ -37,8 +37,9 @@ final class settings_snapshot_test extends \advanced_testcase {
         require_once($CFG->dirroot . '/local/flatarchive/archive_templates/index_template.php');
         $this->resetAfterTest();
         $this->setAdminUser();
+        set_config('usetags', 1);
         $generator = $this->getDataGenerator();
-        $course = $generator->create_course(['fullname' => 'Course <test>', 'enablecompletion' => 1]);
+        $course = $generator->create_course(['fullname' => 'Course <test>', 'enablecompletion' => 1, 'summary' => '']);
         $directory = make_temp_directory('flatarchive-settings-' . bin2hex(random_bytes(8)));
         mkdir($directory . '/book dir');
         mkdir($directory . '/files');
@@ -50,6 +51,13 @@ final class settings_snapshot_test extends \advanced_testcase {
         foreach ($types as $type) {
             $module = $generator->create_module($type, ['course' => $course->id, 'name' => $type . ' & test']);
             $modules[$type] = $module;
+            \core_tag_tag::set_item_tags(
+                'core',
+                'course_modules',
+                $module->cmid,
+                \context_module::instance($module->cmid),
+                ['settings-tag-' . $type]
+            );
             $filename = $type === 'book' ? 'book dir/index.html' : $type . '.html';
             if ($type === 'resource') {
                 $filename = 'files/original.html';
@@ -67,6 +75,14 @@ final class settings_snapshot_test extends \advanced_testcase {
         $DB->set_field('page', 'displayoptions', serialize([
             'printintro' => 1, 'popupwidth' => 654, 'internal' => 'DO-NOT-EXPORT-OPTION',
         ]), ['id' => $modules['page']->id]);
+        $DB->set_field('page', 'intro', '<p>Description with image</p><img src="@@PLUGINFILE@@/sample.png" alt="Sample">', [
+            'id' => $modules['page']->id,
+        ]);
+        get_file_storage()->create_file_from_string([
+            'contextid' => \context_module::instance($modules['page']->cmid)->id,
+            'component' => 'mod_page', 'filearea' => 'intro', 'itemid' => 0,
+            'filepath' => '/', 'filename' => 'sample.png',
+        ], 'image fixture');
         $modinfo = get_fast_modinfo($course);
         $result = settings_snapshot::add($items, $modinfo, $directory);
         $this->assertCount(13, $result['files']);
@@ -79,10 +95,21 @@ final class settings_snapshot_test extends \advanced_testcase {
             $this->assertStringNotContainsString('[[', $html);
             $this->assertStringNotContainsString('DO-NOT-EXPORT', $html);
             $this->assertStringContainsString('fa-settings-table', $html);
+            $this->assertStringContainsString('settings-tag-' . $type, $html);
+            $this->assertStringNotContainsString('settings-tag-', $result['items'][$module->cmid]);
+            $this->assertStringContainsString('class="fa-settings-link"', $result['items'][$module->cmid]);
+            $this->assertStringContainsString('fa-settings-description', $html);
         }
         $this->assertSame('<h1>Original attachment</h1>', file_get_contents($directory . '/files/original.html'));
         $pagesettings = file_get_contents($result['files']['page-' . $modules['page']->cmid . '-settings.html']);
         $this->assertStringContainsString('654', $pagesettings);
+        $this->assertStringContainsString('Description with image', $pagesettings);
+        $this->assertStringNotContainsString('@@PLUGINFILE@@', $pagesettings);
+        $imagepath = 'files/' . $modules['page']->cmid . '/intro/0/sample.png';
+        $this->assertStringContainsString($imagepath, $pagesettings);
+        $this->assertSame('image fixture', file_get_contents($directory . '/' . $imagepath));
+        $coursesettings = file_get_contents($result['files']['course-settings.html']);
+        $this->assertStringContainsString(get_string('settingsemptyfield', 'local_flatarchive'), $coursesettings);
         $booklink = '../book-' . $modules['book']->cmid . '-settings.html';
         $this->assertStringContainsString($booklink, file_get_contents($directory . '/book dir/index.html'));
         $booksettings = file_get_contents($result['files']['book-' . $modules['book']->cmid . '-settings.html']);
@@ -104,6 +131,21 @@ final class settings_snapshot_test extends \advanced_testcase {
         $this->assertStringContainsString('Course &lt;test&gt;', file_get_contents($result['files']['course-settings.html']));
         $this->assertSame('DO-NOT-EXPORT-QUIZ-SECRET', $DB->get_field('quiz', 'password', ['id' => $modules['quiz']->id]));
         $this->assertSame('2', $DB->get_field('choice', 'showresults', ['id' => $modules['choice']->id]));
+    }
+
+    /**
+     * Empty editors show a marker while image-only descriptions remain real content.
+     */
+    public function test_empty_and_media_descriptions(): void {
+        $this->resetAfterTest();
+        $context = \context_system::instance();
+        foreach (['', '<p><br></p>', '<p>&nbsp;</p>'] as $content) {
+            $html = settings_snapshot::description($content, FORMAT_HTML, $context);
+            $this->assertStringContainsString(get_string('settingsemptyfield', 'local_flatarchive'), $html);
+        }
+        $html = settings_snapshot::description('<img src="files/test.png" alt="">', FORMAT_HTML, $context);
+        $this->assertStringNotContainsString('fa-settings-empty', $html);
+        $this->assertStringContainsString('files/test.png', $html);
     }
 
     /**

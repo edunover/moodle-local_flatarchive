@@ -137,3 +137,16 @@ hr { margin: 1rem 0; border: 0; border-top: 1px solid #dee2e6; }
 .fa-settings-table th, .fa-settings-table td { padding: .5rem; border: 1px solid #d7dce1; text-align: start; vertical-align: top; }
 .fa-settings-table th { width: 40%; }
 .fa-settings-source { white-space: pre-wrap; overflow-wrap: anywhere; padding: 1rem; background: #f5f7f9; border: 1px solid #d7dce1; }
+
+/* Distinguish the secondary settings action from activity titles. */
+.fa-settings-link {
+    display: inline-block;
+    margin-inline-start: .75rem;
+    padding: .1rem .5rem;
+    border: 1px solid #b8c2cc;
+    border-radius: .3rem;
+    background: #f5f7f9;
+    font-size: .85em;
+    white-space: nowrap;
+}
+.fa-settings-empty { color: #59636e; font-style: italic; }

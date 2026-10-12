@@ -331,3 +331,4 @@ $string['settingfield_completiontimespent'] = 'Temps minimal requis pour l’ach
 $string['settingsnavtoc'] = 'Table des matières seule (ancienne navigation)';
 $string['settingsnavimages'] = 'Images (ancienne navigation)';
 $string['settingsnavtext'] = 'Texte (ancienne navigation)';
+$string['settingsemptyfield'] = 'Champ vide';
