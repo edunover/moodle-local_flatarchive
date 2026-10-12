@@ -154,8 +154,8 @@ final class settings_snapshot {
             $directory,
             (int)$cm->id
         );
-        $body = self::intro() . self::table($rows);
-        $body .= self::description($description, (int)($instance->introformat ?? FORMAT_HTML), $cm->context);
+        $body = self::description($description, (int)($instance->introformat ?? FORMAT_HTML), $cm->context);
+        $body .= self::intro() . self::table($rows);
         $grades = $DB->get_records('grade_items', [
             'itemtype' => 'mod', 'itemmodule' => $cm->modname, 'iteminstance' => $cm->instance,
         ], 'itemnumber');
@@ -212,7 +212,6 @@ final class settings_snapshot {
         $rows[self::label('settingscoursereports')] = self::value($course->showreports, 'bool', '');
         $rows[self::label('settingscoursedates')] = self::value($course->showactivitydates ?? 0, 'bool', '');
         $rows[self::label('settingscoursecompletion')] = self::value($course->showcompletionconditions ?? 0, 'bool', '');
-        $body = self::intro() . self::table($rows);
         $context = \context_course::instance($course->id);
         $description = \local_flatarchive_copy_pluginfiles_and_rewrite(
             $course->summary ?? '',
@@ -223,7 +222,8 @@ final class settings_snapshot {
             $directory,
             (int)$course->id
         );
-        $body .= self::description($description, (int)($course->summaryformat ?? FORMAT_HTML), $context);
+        $body = self::description($description, (int)($course->summaryformat ?? FORMAT_HTML), $context);
+        $body .= self::intro() . self::table($rows);
         $filename = 'course-settings.html';
         \local_flatarchive_write_file($directory . '/' . $filename, \local_flatarchive_render_page_template(
             $course,

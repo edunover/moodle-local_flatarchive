@@ -840,3 +840,13 @@ Validation automatique réussie : [run 38289110859](https://github.com/edunover/
 17 jobs verts sur Moodle 4.4 à 5.3, dont `moodle-extra`. Moodle 5.3 : 111 tests
 PHPUnit / 1 027 assertions. Commit `36f972f`. Validation visuelle à effectuer
 après installation et régénération de l’archive.
+
+
+### Description en tête des paramètres — build 2026101207
+
+La description précède maintenant le relevé daté et les tableaux de réglages,
+pour le cours et toutes les activités, Base de données comprise. Les indications
+de champ vide et les médias locaux sont conservés.
+
+English: descriptions now precede snapshot metadata and settings tables for the
+course and all supported activities, including Database.

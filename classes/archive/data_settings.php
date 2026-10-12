@@ -47,7 +47,8 @@ final class data_settings {
         $context = \context_module::instance($cm->id);
         require_capability('mod/data:manageentries', $context);
         $module = $DB->get_record('course_modules', ['id' => $cm->id], '*', MUST_EXIST);
-        $body = \html_writer::tag('p', \html_writer::link('data-' . $cm->id . '.html', self::label('backtodata')));
+        $body = settings_snapshot::description($intro, (int)$data->introformat, $context);
+        $body .= \html_writer::tag('p', \html_writer::link('data-' . $cm->id . '.html', self::label('backtodata')));
         $body .= \html_writer::tag('p', self::label('settingssnapshot') . ' ' . s(userdate(time())));
         $body .= \html_writer::tag('p', self::label('settingsscope'));
         $rows = [get_string('name') => $data->name];
@@ -105,7 +106,6 @@ final class data_settings {
             $rows[self::label('settingsgradecategory')] = $category === '?' ? $modinfo->get_course()->fullname : (string)$category;
         }
         $body .= self::table($rows);
-        $body .= settings_snapshot::description($intro, (int)$data->introformat, $context);
         $body .= \html_writer::tag('h2', self::label('settingsfields'));
         foreach ($fields as $field) {
             $component = 'datafield_' . $field->type;
