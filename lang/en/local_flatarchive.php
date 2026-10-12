@@ -198,3 +198,10 @@ $string['backtoquiz'] = 'Back to quiz';
 
 $string['unsupportedactivity'] = 'Not supported';
 $string['exportnotpermitted'] = 'Insufficient export permissions';
+
+// Database archive.
+$string['datanotapproved'] = 'Not approved';
+$string['backtodata'] = 'Back to database';
+$string['dataviewentry'] = 'View entry';
+$string['dataempty'] = 'No entries available for export.';
+$string['datarequiredentries'] = 'Course setting: {$a} entries required before viewing other entries. This requirement is not applied to the archive.';

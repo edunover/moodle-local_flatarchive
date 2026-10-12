@@ -199,3 +199,10 @@ $string['backtoquiz'] = 'Retour au test';
 
 $string['unsupportedactivity'] = 'Non pris en charge';
 $string['exportnotpermitted'] = 'Droits insuffisants pour l’export';
+
+// Database archive.
+$string['datanotapproved'] = 'Non approuvée';
+$string['backtodata'] = 'Retour à la base de données';
+$string['dataviewentry'] = 'Voir la fiche';
+$string['dataempty'] = 'Aucune fiche disponible pour cet export.';
+$string['datarequiredentries'] = 'Réglage du cours : {$a} contributions requises avant de consulter les autres fiches. Cette condition ne limite pas l’archive.';

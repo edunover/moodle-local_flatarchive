@@ -129,3 +129,6 @@ hr { margin: 1rem 0; border: 0; border-top: 1px solid #dee2e6; }
 .fa-quiz-question .answer > div.r1 p + p {
     margin-block-start: .25rem;
 }
+
+.fa-data-unapproved { display: inline-block; background: #fff3cd; color: #664d03; padding: .15rem .45rem; border: 1px solid #d6b656; border-radius: .25rem; font-size: .875rem; }
+.fa-data-entry-link { display: block; margin-block: .5rem; }

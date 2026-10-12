@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums et Leçons) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101201) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101202) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -99,7 +99,7 @@ archive_SHORTNAME_202603291200.zip
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums and Lessons) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101201) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101202) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -832,3 +832,24 @@ while preserving symbol alignment and spacing within multi-paragraph answers.
 Validation automatique réussie : [GitHub Actions 38264188013](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38264188013),
 17 jobs verts sur Moodle 4.4 à 5.3 (commit `8ba2a89`).
 Validation visuelle à effectuer après installation et régénération de l’archive.
+
+
+### Base de données — build 2026101202
+
+Export complet réservé au droit Moodle `mod/data:manageentries` : toutes les fiches
+et tous les groupes, y compris les fiches non approuvées (badge dans la liste et
+la fiche). Les conditions étudiantes de date et de contribution ne filtrent pas
+cet export. Le minimum de contributions avant consultation est indiqué lorsqu’il
+est activé. Les paramètres du cours ne sont pas modifiés.
+
+Le modèle de liste fournit l’index ; le modèle de fiche unique fournit une page
+par entrée. Liens locaux, retour à la liste et à l’index du cours, champs rendus
+par Moodle, fichiers locaux, auteurs, dates, tags et commentaires. Le CSS de
+l’activité est conservé dans un fichier distinct. Les formulaires et commandes
+d’édition sont retirés ; le JavaScript personnalisé n’est pas exporté. Les mises
+en page dépendant du thème Moodle ou de services externes peuvent différer.
+
+English: instructor-only complete Database export uses list and single-entry
+templates, includes pending entries with visible badges, and copies field files.
+Learner group, date and contribution restrictions do not filter this archive.
+Custom CSS is retained; interactive editing controls and custom JavaScript are omitted.

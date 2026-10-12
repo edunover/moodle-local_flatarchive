@@ -189,3 +189,10 @@ $string['backtoquiz'] = 'Terug naar de test';
 
 $string['unsupportedactivity'] = 'Niet ondersteund';
 $string['exportnotpermitted'] = 'Onvoldoende rechten voor export';
+
+// Database archive.
+$string['datanotapproved'] = 'Niet goedgekeurd';
+$string['backtodata'] = 'Terug naar de databank';
+$string['dataviewentry'] = 'Bekijk item';
+$string['dataempty'] = 'Geen items beschikbaar voor export.';
+$string['datarequiredentries'] = 'Cursusinstelling: {$a} bijdragen vereist voordat andere items zichtbaar zijn. Deze voorwaarde geldt niet voor het archief.';

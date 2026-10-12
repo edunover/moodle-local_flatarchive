@@ -91,11 +91,14 @@ class get_tree extends external_api {
                     continue;
                 }
                 $types = ['page', 'book', 'label', 'resource', 'folder', 'glossary',
-                    'wiki', 'feedback', 'choice', 'forum', 'lesson', 'quiz'];
+                    'wiki', 'feedback', 'choice', 'forum', 'lesson', 'quiz', 'data'];
                 $supported = in_array($cm->modname, $types, true);
                 // Complete lesson exports expose solutions and require authoring permission.
                 $permitted = $cm->modname !== 'lesson' ||
                     has_capability('mod/lesson:edit', \context_module::instance($cm->id));
+                if ($cm->modname === 'data') {
+                    $permitted = has_capability('mod/data:manageentries', \context_module::instance($cm->id));
+                }
 
                 $sectiondata['modules'][] = [
                     'cmid' => $cm->id,
