@@ -768,3 +768,14 @@ Validation réussie : https://github.com/edunover/moodle-local-flatarchive/actio
 17 jobs réussis sur Moodle 4.4 à 5.3, commit a63df75.
 Installer ce build et régénérer les archives produites avec 2026101202.
 La validation visuelle sur le site de test reste à effectuer.
+
+### Paramètres archivés de la Base de données — build 2026101204
+
+Validation manuelle reçue pour 2026101203. Le nouveau build ajoute une page locale
+Paramètres / Settings / Instellingen depuis la liste de la Base de données.
+Elle documente les réglages standard, les champs et les modèles de présentation
+comme texte inerte. Le CSS personnalisé n’affecte pas la page documentaire.
+JavaScript indiqué sans code ; configuration interne et paramètres de champs tiers
+exclus. L’extension aux autres activités reste une étape ultérieure.
+
+Validation automatique réussie : [run 38281756703](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38281756703), 17 jobs sur Moodle 4.4 à 5.3, commit `2f5a80c`. Validation visuelle de la page Paramètres à effectuer après installation et régénération de l’archive.

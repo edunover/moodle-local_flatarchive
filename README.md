@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums et Leçons) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101203) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101204) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -99,7 +99,7 @@ archive_SHORTNAME_202603291200.zip
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums and Lessons) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101203) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101204) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -873,3 +873,27 @@ Validation réussie : https://github.com/edunover/moodle-local-flatarchive/actio
 17 jobs réussis sur Moodle 4.4 à 5.3, commit a63df75.
 Installer ce build et régénérer les archives produites avec 2026101202.
 La validation visuelle sur le site de test reste à effectuer.
+
+### Paramètres archivés de la Base de données — build 2026101204
+
+Le build 2026101203 a été validé manuellement par l’utilisateur.
+La page principale de chaque Base de données exportée contient désormais un lien
+Paramètres / Settings / Instellingen. Il ouvre une page HTML locale avec les
+réglages de visibilité, groupes, restrictions d’accès, achèvement, contributions,
+approbation, commentaires, dates, évaluations, tri et RSS. Les groupes, groupements,
+champs de tri et barèmes sont présentés par leur nom.
+
+La page documente les champs standard et leurs principales options ainsi que les
+modèles de liste, fiche unique, ajout, recherche et RSS et le CSS, affichés comme
+source inerte. Elle utilise le style de l’archive, sans appliquer le CSS personnalisé
+de l’activité. Le JavaScript personnalisé est signalé sans copier son code ; la
+configuration interne et les paramètres de champs tiers ne sont pas exportés.
+Un retour vers l’activité et l’index du cours est présent. Ce relevé est documentaire
+et ne constitue pas un format de restauration Moodle.
+
+English: Database archives now include a linked, offline settings snapshot with
+readable activity settings, standard field definitions and inert template source.
+Custom JavaScript is indicated only; internal configuration is excluded. This first
+implementation covers Database activities, not the other activity exporters.
+
+Validation automatique réussie : [run 38281756703](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38281756703), 17 jobs sur Moodle 4.4 à 5.3, commit `2f5a80c`. Validation visuelle de la page Paramètres à effectuer après installation et régénération de l’archive.
