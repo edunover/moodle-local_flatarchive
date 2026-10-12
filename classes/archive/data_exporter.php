@@ -271,33 +271,36 @@ final class data_exporter {
     ): void {
         $document = new \DOMDocument();
         $previous = libxml_use_internal_errors(true);
-        $document->loadHTML('<?xml encoding="UTF-8"><div id="fa-data-body">' . $body . '</div>');
+        $document->loadHTML('<?xml encoding="UTF-8"><div class="fa-data-body">' . $body . '</div>');
         $xpath = new \DOMXPath($document);
         // HTML Purifier does not understand every HTML5 layout element on older Moodle versions.
         // Temporarily use divs, sanitizing their attributes, then restore these inert structural tags.
         $structural = [];
         foreach ($xpath->query('//article|//section|//header|//footer|//main|//nav|//aside|//figure|//figcaption') as $node) {
             $marker = 'fa-structure-' . bin2hex(random_bytes(12));
-            $structural[$marker] = [$node->tagName, $node->getAttribute('id')];
+            $structural[$marker] = [$node->tagName, $node->getAttribute('id'), $node->getAttribute('class')];
             $replacement = $document->createElement('div');
             foreach ($node->attributes as $attribute) {
                 $replacement->setAttribute($attribute->name, $attribute->value);
             }
-            $replacement->setAttribute('id', $marker);
+            $replacement->setAttribute('class', $node->getAttribute('class') . ' ' . $marker);
             while ($node->firstChild) {
                 $replacement->appendChild($node->firstChild);
             }
             $node->parentNode->replaceChild($replacement, $node);
         }
-        $clean = clean_text($document->saveHTML($document->getElementById('fa-data-body')), FORMAT_HTML);
+        $root = $xpath->query('//div[@class="fa-data-body"]')->item(0);
+        $clean = clean_text($document->saveHTML($root), FORMAT_HTML);
         $document->loadHTML('<?xml encoding="UTF-8">' . $clean);
-        foreach ($structural as $marker => [$tag, $originalid]) {
-            $node = $document->getElementById($marker);
+        $xpath = new \DOMXPath($document);
+        foreach ($structural as $marker => [$tag, $originalid, $originalclass]) {
+            $node = $xpath->query('//*[contains(concat(" ", normalize-space(@class), " "), " ' . $marker . ' ")]')->item(0);
             if (!$node) {
                 continue;
             }
             $replacement = $document->createElement($tag);
             $node->removeAttribute('id');
+            $node->setAttribute('class', $originalclass);
             foreach ($node->attributes as $attribute) {
                 $replacement->setAttribute($attribute->name, $attribute->value);
             }
@@ -317,7 +320,8 @@ final class data_exporter {
             $node->parentNode->removeChild($node);
         }
         $body = '';
-        foreach ($document->getElementById('fa-data-body')->childNodes as $child) {
+        $root = $xpath->query('//div[@class="fa-data-body"]')->item(0);
+        foreach ($root->childNodes as $child) {
             $body .= $document->saveHTML($child);
         }
         $html = \local_flatarchive_render_page_template($modinfo->get_course(), $cm, $cm->name, $body, '', $badges);
