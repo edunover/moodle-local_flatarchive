@@ -828,3 +828,7 @@ réponses comportant plusieurs paragraphes conservent un léger espacement inter
 
 English: Quiz choices use compact spacing in questionnaires and recorded attempts,
 while preserving symbol alignment and spacing within multi-paragraph answers.
+
+Validation automatique réussie : [GitHub Actions 38264188013](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38264188013),
+17 jobs verts sur Moodle 4.4 à 5.3 (commit `8ba2a89`).
+Validation visuelle à effectuer après installation et régénération de l’archive.
