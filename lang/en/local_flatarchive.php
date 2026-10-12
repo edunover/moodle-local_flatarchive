@@ -329,3 +329,14 @@ $string['settingsnavtoc'] = 'Table of contents only (legacy navigation)';
 $string['settingsnavimages'] = 'Images (legacy navigation)';
 $string['settingsnavtext'] = 'Text (legacy navigation)';
 $string['settingsemptyfield'] = 'Empty field';
+
+$string['urlexternalnotice'] = 'External destination: an Internet connection may be required. The destination website is not included in this archive.';
+$string['urlparametersnotice'] = 'Dynamic Moodle parameters are not added to this archived link.';
+$string['assignarchivescope'] = 'Static snapshot: online text, submitted files, assignment grades and feedback comments/files. Advanced grading forms and PDF annotations are not reproduced.';
+$string['assignanonymous'] = 'Participant {$a}';
+$string['assignrecords'] = 'Recorded submissions and grades';
+$string['assignnorecords'] = 'No submission or grade is available for this export with your permissions.';
+$string['assignattempt'] = 'Attempt {$a}';
+$string['assigngroupsubmission'] = 'Group submission';
+$string['assignnotgraded'] = 'Not graded';
+$string['assignunsupported'] = 'Content not exported for this extension: {$a}';

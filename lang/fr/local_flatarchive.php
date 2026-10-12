@@ -330,3 +330,14 @@ $string['settingsnavtoc'] = 'Table des matières seule (ancienne navigation)';
 $string['settingsnavimages'] = 'Images (ancienne navigation)';
 $string['settingsnavtext'] = 'Texte (ancienne navigation)';
 $string['settingsemptyfield'] = 'Champ vide';
+
+$string['urlexternalnotice'] = 'Destination externe : une connexion Internet peut être nécessaire. Le site de destination n’est pas inclus dans cette archive.';
+$string['urlparametersnotice'] = 'Les paramètres dynamiques Moodle ne sont pas ajoutés à ce lien archivé.';
+$string['assignarchivescope'] = 'Copie statique : texte en ligne, fichiers remis, notes du devoir, commentaires et fichiers de feedback. Les grilles d’évaluation avancée et annotations PDF ne sont pas reproduites.';
+$string['assignanonymous'] = 'Participant {$a}';
+$string['assignrecords'] = 'Remises et évaluations enregistrées';
+$string['assignnorecords'] = 'Aucune remise ou évaluation disponible pour cet export avec tes droits.';
+$string['assignattempt'] = 'Tentative {$a}';
+$string['assigngroupsubmission'] = 'Remise de groupe';
+$string['assignnotgraded'] = 'Non évalué';
+$string['assignunsupported'] = 'Contenu non exporté pour cette extension : {$a}';

@@ -321,3 +321,14 @@ $string['settingsnavtoc'] = 'Alleen inhoudsopgave (oude navigatie)';
 $string['settingsnavimages'] = 'Afbeeldingen (oude navigatie)';
 $string['settingsnavtext'] = 'Tekst (oude navigatie)';
 $string['settingsemptyfield'] = 'Leeg veld';
+
+$string['urlexternalnotice'] = 'Externe bestemming: een internetverbinding kan nodig zijn. De website is niet opgenomen in dit archief.';
+$string['urlparametersnotice'] = 'Dynamische Moodle-parameters worden niet aan deze gearchiveerde link toegevoegd.';
+$string['assignarchivescope'] = 'Statische kopie: online tekst, ingeleverde bestanden, opdrachtcijfers en feedbacktekst/bestanden. Geavanceerde beoordelingsformulieren en PDF-annotaties worden niet overgenomen.';
+$string['assignanonymous'] = 'Deelnemer {$a}';
+$string['assignrecords'] = 'Opgeslagen inzendingen en beoordelingen';
+$string['assignnorecords'] = 'Geen inzending of beoordeling beschikbaar voor deze export met jouw rechten.';
+$string['assignattempt'] = 'Poging {$a}';
+$string['assigngroupsubmission'] = 'Groepsinzending';
+$string['assignnotgraded'] = 'Niet beoordeeld';
+$string['assignunsupported'] = 'Inhoud niet geëxporteerd voor deze uitbreiding: {$a}';

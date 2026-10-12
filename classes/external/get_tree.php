@@ -91,7 +91,7 @@ class get_tree extends external_api {
                     continue;
                 }
                 $types = ['page', 'book', 'label', 'resource', 'folder', 'glossary',
-                    'wiki', 'feedback', 'choice', 'forum', 'lesson', 'quiz', 'data'];
+                    'wiki', 'feedback', 'choice', 'forum', 'lesson', 'quiz', 'data', 'url', 'assign'];
                 $supported = in_array($cm->modname, $types, true);
                 // Complete lesson exports expose solutions and require authoring permission.
                 $permitted = $cm->modname !== 'lesson' ||

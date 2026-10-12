@@ -119,7 +119,7 @@ final class settings_snapshot {
                 $rows[get_string($label, $component)] = self::value($instance->$field, $type, $cm->modname);
             }
         }
-        if (in_array($cm->modname, ['page', 'resource'], true) && !empty($instance->displayoptions)) {
+        if (in_array($cm->modname, ['page', 'resource', 'url'], true) && !empty($instance->displayoptions)) {
             // Moodle stores these display switches as a serialized array, never as executable objects.
             $options = unserialize($instance->displayoptions, ['allowed_classes' => false]);
             if (is_array($options)) {
@@ -403,6 +403,20 @@ final class settings_snapshot {
             'resource' => [
                 'display' => ['display', 'settingfield_display'],
                 'filterfiles' => ['bool', 'filterfiles'],
+            ],
+            'url' => [
+                'externalurl' => ['text', 'externalurl'],
+                'display' => ['display', 'settingfield_display'],
+            ],
+            'assign' => [
+                'allowsubmissionsfromdate' => ['date', 'allowsubmissionsfromdate'],
+                'duedate' => ['date', 'duedate'],
+                'cutoffdate' => ['date', 'cutoffdate'],
+                'submissiondrafts' => ['bool', 'submissiondrafts'],
+                'teamsubmission' => ['bool', 'teamsubmission'],
+                'blindmarking' => ['bool', 'blindmarking'],
+                'markingworkflow' => ['bool', 'markingworkflow'],
+                'maxattempts' => ['number', 'maxattempts'],
             ],
             'folder' => [
                 'display' => ['folderdisplay', 'display'],

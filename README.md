@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums, Leçons, Tests et Bases de données) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101209) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101210) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -99,7 +99,7 @@ Les données du cours et les archives téléchargées ne se trouvent pas dans ce
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums, Lessons, Quizzes and Databases) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101209) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101210) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -1019,3 +1019,25 @@ Contrôle local sur l’archive utilisateur du 12 octobre à 20 h 53 : 106 fichi
 Validation : [run 38294485057](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38294485057),
 17 jobs verts sur Moodle 4.4 à 5.3, commit `933217c`. Tests d’extraction ZIP,
 navigation et conservation des fichiers originaux réussis.
+
+## URL et Devoir — build 2026101210
+
+Le build 2026101209 (index seul à la racine) a été validé manuellement, RAS.
+
+- URL : description, médias et lien externe conservés ; aucune copie du site distant.
+  Les paramètres dynamiques personnels Moodle ne sont pas résolus.
+- Devoir : consignes, fichiers de référence, texte en ligne, fichiers remis, historique
+  des tentatives, notes du devoir et feedbacks texte/fichiers. Rapports réservés à
+  `mod/assign:grade`, avec participants Moodle, groupes séparés, allocations de correction
+  et anonymat avant révélation des identités. Les fichiers remis restent inchangés :
+  leur propre contenu peut identifier leur auteur, comme dans Moodle.
+- Remises de groupe : contenu commun, notes individuelles. Les notes sont celles du
+  devoir, pas les éventuelles dérogations du carnet de notes.
+- Grilles avancées, annotations PDF, commentaires de remise et extensions tierces
+  non exportés ; indication des extensions actives non prises en charge.
+- Settings : adresse et affichage URL ; dates, groupes de remise, anonymat, workflow
+  et nombre de tentatives du devoir, en plus des paramètres communs.
+- PHPUnit : liens URL et médias, protocoles dangereux, deux tentatives, feedbacks,
+  absence de données privées sans droit de correction, anonymat et groupes.
+
+Validation automatique en cours.

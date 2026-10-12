@@ -33,6 +33,8 @@ require_once(__DIR__ . '/archive_templates/book_toc_template.php');
 global $DB;
 
 use local_flatarchive\archive\folder_exporter;
+use local_flatarchive\archive\url_exporter;
+use local_flatarchive\archive\assign_exporter;
 use local_flatarchive\archive\glossary_exporter;
 use local_flatarchive\archive\wiki_exporter;
 use local_flatarchive\archive\feedback_exporter;
@@ -70,7 +72,7 @@ $cms = $modinfo->get_cms();
 // Validate the whole selection before creating any files.
 foreach ($cmids as $cmid) {
     $supported = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki',
-        'feedback', 'choice', 'forum', 'lesson', 'quiz', 'data'];
+        'feedback', 'choice', 'forum', 'lesson', 'quiz', 'data', 'url', 'assign'];
     if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, $supported, true)) {
         throw new moodle_exception('invalidselection', 'local_flatarchive');
     }
@@ -93,7 +95,8 @@ try {
     foreach ($cmids as $cmid) {
         $cm = $cms[$cmid];
 
-        if (in_array($cm->modname, ['glossary', 'wiki', 'feedback', 'choice', 'forum', 'lesson', 'quiz', 'data'], true)) {
+        $documenttypes = ['glossary', 'wiki', 'feedback', 'choice', 'forum', 'lesson', 'quiz', 'data', 'url', 'assign'];
+        if (in_array($cm->modname, $documenttypes, true)) {
             $exporters = [
                 'wiki' => wiki_exporter::class,
                 'glossary' => glossary_exporter::class,
@@ -103,6 +106,8 @@ try {
                 'lesson' => lesson_exporter::class,
                 'quiz' => quiz_exporter::class,
                 'data' => data_exporter::class,
+                'url' => url_exporter::class,
+                'assign' => assign_exporter::class,
             ];
             $exporter = $exporters[$cm->modname];
             $export = $exporter::render($cm, $modinfo, $tempdir);

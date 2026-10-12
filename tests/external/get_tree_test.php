@@ -68,8 +68,8 @@ final class get_tree_test extends \externallib_advanced_testcase {
         $this->assertEquals([$page->cmid, $book->cmid, $url->cmid], array_column($modules, 'cmid'));
         $this->assertSame(['page', 'book', 'url'], array_column($modules, 'type'));
         $this->assertSame(['Page A', 'Book B', 'URL C'], array_column($modules, 'name'));
-        $this->assertSame([true, true, false], array_map('boolval', array_column($modules, 'supported')));
-        $this->assertSame([true, true, false], array_map('boolval', array_column($modules, 'selectable')));
+        $this->assertSame([true, true, true], array_map('boolval', array_column($modules, 'supported')));
+        $this->assertSame([true, true, true], array_map('boolval', array_column($modules, 'selectable')));
         foreach ($modules as $module) {
             $cm = get_fast_modinfo($course)->get_cm($module['cmid']);
             $this->assertSame($cm->get_icon_url()->out(false), $module['iconurl']);
@@ -339,7 +339,7 @@ final class get_tree_test extends \externallib_advanced_testcase {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
         $this->assertSame(['sections' => []], $this->read_tree($course->id));
-        $url = $generator->create_module('url', ['course' => $course->id]);
+        $url = $generator->create_module('chat', ['course' => $course->id]);
         $sections = $this->read_tree($course->id)['sections'];
         $this->assertCount(1, $sections);
         $this->assertEquals($url->cmid, $sections[0]['modules'][0]['cmid']);
@@ -353,7 +353,7 @@ final class get_tree_test extends \externallib_advanced_testcase {
         global $DB;
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
-        $generator->create_module('url', ['course' => $course->id, 'visible' => 0, 'name' => 'Private URL']);
+        $generator->create_module('chat', ['course' => $course->id, 'visible' => 0, 'name' => 'Private URL']);
         $student = $generator->create_user();
         $generator->enrol_user($student->id, $course->id, 'student');
         $role = $DB->get_field('role', 'id', ['shortname' => 'student'], MUST_EXIST);
