@@ -45,7 +45,7 @@ final class data_exporter_test extends \advanced_testcase {
      */
     private function fixture(array $options = []): array {
         $generator = $this->getDataGenerator();
-        $course = $generator->create_course();
+        $course = $generator->create_course(['enablecompletion' => 1]);
         $data = $generator->create_module('data', $options + [
             'course' => $course->id, 'approval' => 1,
             'listtemplateheader' => '<table class="catalogue"><tbody>',
