@@ -897,3 +897,18 @@ Custom JavaScript is indicated only; internal configuration is excluded. This fi
 implementation covers Database activities, not the other activity exporters.
 
 Validation automatique réussie : [run 38281756703](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38281756703), 17 jobs sur Moodle 4.4 à 5.3, commit `2f5a80c`. Validation visuelle de la page Paramètres à effectuer après installation et régénération de l’archive.
+# Contrôle des conventions PHP
+
+Validation : [run 38284351225](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38284351225),
+17 jobs réussis sur Moodle 4.4 à 5.3, dont les deux contrôles `moodle-extra`.
+
+Le workflow GitHub Actions applique `phpcs --standard=moodle-extra` aux fichiers
+PHP explicitement listés dans `.github/workflows/tests.yml`, sur Moodle 5.2 et 5.3
+avec PHP 8.4. Ce standard inclut `moodle` et ses bonnes pratiques complémentaires.
+La configuration locale `.phpcs.xml` utilise également `moodle-extra` ; un contrôle
+local de tout le dépôt peut donc révéler des écarts dans les anciens fichiers
+qui ne font pas encore partie du périmètre CI.
+
+English: CI checks its explicit PHP file list with `moodle-extra`; the local PHPCS
+configuration uses the same standard. Legacy files outside that CI list are not
+covered by the successful CI coding-standard checks.

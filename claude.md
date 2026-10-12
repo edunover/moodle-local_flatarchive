@@ -779,3 +779,13 @@ JavaScript indiqué sans code ; configuration interne et paramètres de champs t
 exclus. L’extension aux autres activités reste une étape ultérieure.
 
 Validation automatique réussie : [run 38281756703](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38281756703), 17 jobs sur Moodle 4.4 à 5.3, commit `2f5a80c`. Validation visuelle de la page Paramètres à effectuer après installation et régénération de l’archive.
+# Standards PHP — 12 octobre 2026
+
+Validation : run 38284351225, commit `0298e88`, 17 jobs réussis, dont les deux
+contrôles `moodle-extra`. Aucune correction PHP supplémentaire nécessaire.
+
+Le workflow et `.phpcs.xml` utilisent désormais `moodle-extra`. Le périmètre CI
+reste la liste explicite des fichiers PHP maintenus dans `tests.yml`, contrôlée
+sur Moodle 5.2/5.3 avec PHP 8.4. Ne pas confondre cette validation avec un audit
+de tous les anciens fichiers du dépôt. Conserver ce standard pour les prochains
+développements et ajouter les nouveaux fichiers à la liste contrôlée.
