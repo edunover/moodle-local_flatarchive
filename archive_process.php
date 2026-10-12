@@ -229,6 +229,10 @@ try {
         }
     }
 
+    $settings = \local_flatarchive\archive\settings_snapshot::add($indexitems, $modinfo, $tempdir);
+    $indexitems = $settings['items'];
+    $zipfiles += $settings['files'];
+
     // Fichiers dans files/ (images, etc.) à inclure dans le ZIP.
     $filesdir = $tempdir . '/files';
     if (is_dir($filesdir)) {
@@ -249,7 +253,13 @@ try {
     $indexitems = $index['items'];
     $zipfiles += $index['files'];
     $sections = local_flatarchive_group_index_links($course, $modinfo, $indexitems);
-    $indexhtml = local_flatarchive_render_index_template($course, $courseid, $sections, $course->shortname);
+    $indexhtml = local_flatarchive_render_index_template(
+        $course,
+        $courseid,
+        $sections,
+        $course->shortname,
+        $settings['courselink']
+    );
     local_flatarchive_write_file($tempdir . '/index.html', $indexhtml);
     $zipfiles['index.html'] = $tempdir . '/index.html';
 

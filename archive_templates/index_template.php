@@ -12,9 +12,10 @@ defined('MOODLE_INTERNAL') || die();
  * @param int $courseid
  * @param array $sections Sections ordonnées avec nom, ID et liens relatifs rendus.
  * @param string $courseshortname nom court du cours (pour affichage)
+ * @param string $settingslink Optional local settings link
  * @return string HTML complet
  */
-function local_flatarchive_render_index_template(stdClass $course, int $courseid, array $sections, string $courseshortname): string {
+function local_flatarchive_render_index_template(stdClass $course, int $courseid, array $sections, string $courseshortname, string $settingslink = ''): string {
     $sectionshtml = '';
     foreach ($sections as $section) {
         $headingid = 'section-' . (int)$section['id'];
@@ -46,6 +47,7 @@ function local_flatarchive_render_index_template(stdClass $course, int $courseid
         <main class="container-fluid mt-2 flex-grow-1 flex-shrink-1">
             <div>
                 <h1>' . $coursetitle . '</h1>
+                ' . $settingslink . '
                 ' . \local_flatarchive\archive\tags::render('core', 'course', $courseid) . '
                 <hr>
                 ' . $sectionshtml . '
