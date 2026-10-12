@@ -818,3 +818,25 @@ Validation automatique réussie : [run 38286381453](https://github.com/edunover/
 17 jobs verts, 110 tests PHPUnit / 969 assertions sur Moodle 5.3, tests JavaScript
 et `moodle-extra` réussis. Matrice Moodle 4.4 à 5.3, commit `178f43b`.
 Validation visuelle à effectuer après installation et régénération de l’archive.
+
+
+### Lisibilité des paramètres et descriptions — build 2026101206
+
+Les liens Paramètres de l’index ont une bordure et un espacement distincts du titre.
+Les tags d’activité ne sont plus ajoutés à l’index du cours ; ils restent présents
+sur les pages de paramètres. Les tags propres aux contenus sont conservés.
+
+Les paramètres comprennent toujours une section Description : introduction de
+l’activité ou résumé du cours, avec copie des médias locaux. Un champ vide, y compris
+un paragraphe d’éditeur vide, affiche « Champ vide » (FR/EN/NL). Une image seule reste
+un contenu valide. La même convention s’applique aux paramètres de la Base de données.
+
+English: index Settings links are visually separated from activity titles. Activity
+tags remain on settings pages without being repeated in the course index. Settings
+include the activity description or course summary, local media and an explicit
+empty-field indication when appropriate.
+
+Validation automatique réussie : [run 38289110859](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38289110859),
+17 jobs verts sur Moodle 4.4 à 5.3, dont `moodle-extra`. Moodle 5.3 : 111 tests
+PHPUnit / 1 027 assertions. Commit `36f972f`. Validation visuelle à effectuer
+après installation et régénération de l’archive.
