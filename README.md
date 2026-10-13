@@ -1152,5 +1152,8 @@ native strategies are supported. Report, name and group permissions remain enfor
 No phase, grade, allocation or completion data is modified. Third-party strategies,
 gradebook overrides and event logs are outside this export.
 
-Validation automatique en cours. Le build H5P 2026101302 a été validé manuellement
+Validation automatique : [GitHub Actions 38438413436](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38438413436),
+17/17 jobs verts sur Moodle 4.4 à 5.3, code `429d1cf`.
+Validation manuelle Atelier à effectuer ; [guide](tests/fixtures/workshop/README.md).
+Le build H5P 2026101302 a été validé manuellement
 par l’utilisateur (archive du 13 octobre 2026 à 19 h 02), sans anomalie signalée.
