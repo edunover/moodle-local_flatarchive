@@ -1,6 +1,6 @@
 # local_flatarchive — notes techniques
 
-Version : 0.2.0 (2026101302), MATURITY_ALPHA, Moodle 4.4 à 5.3.
+Version : 0.2.0 (2026101303), MATURITY_ALPHA, Moodle 4.4 à 5.3.
 
 ## Documentation et versionnage
 
@@ -13,7 +13,7 @@ qu’à la demande de l’utilisateur. Les sections datées ci-dessous sont hist
 - `index.php`, `templates/index.mustache`, `amd/src/selectors.js` : sélection du cours.
 - `classes/external/get_tree.php`, `db/services.php` : service AJAX Moodle actif via core/ajax.
 - `archive_process.php` : génération HTML synchrone et assemblage du ZIP.
-- `classes/archive/` : exporteurs des 16 types pris en charge, paramètres, tags,
+- `classes/archive/` : exporteurs des 17 types pris en charge, paramètres, tags,
   icônes, fichiers et téléchargements temporaires.
 - `locallib.php` : visibilité, version, copie des icônes/médias et structure des sections.
 - `archive_templates/` et `style/moodle.css` : documents HTML autonomes.
@@ -841,3 +841,37 @@ exports. Both string and grouped hints are supported, including empty/missing va
 Validation : [GitHub Actions 38434426798](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38434426798),
 17/17 jobs verts sur Moodle 4.4 à 5.3, code `ab87d0e`.
 Régénérer l’archive après installation du correctif ; validation réelle à confirmer.
+
+
+## Atelier / Workshop — build 2026101303
+
+Export réservé à `moodle/course:manageactivities` et `mod/workshop:view` : consignes
+aux auteurs et évaluateurs, conclusion, grille et paramètres de l’activité.
+Index des travaux, page par travail, page par évaluation, fichiers originaux et
+médias locaux, retours à l’Atelier et à l’index du cours. Les attributions non encore
+évaluées sont signalées. Les exemples sont inclus pour les gestionnaires d’exemples.
+
+Les quatre stratégies natives sont prises en charge : accumulative, comments,
+numerrors et rubric. Descriptions, pondérations, barèmes, niveaux, notes et commentaires
+par critère sont conservés. Un niveau de grille est rapproché de la note stockée ;
+si plusieurs niveaux ont le même score, Moodle ne conserve pas de quoi les distinguer.
+Les stratégies tierces sont signalées comme non converties.
+
+Les notes du travail et de la qualité d’évaluation restent distinctes. Pourcentages
+stockés, conversion sur le maximum, remplacements de notes (y compris zéro) et agrégats
+existants sont archivés sans calculer de nouvelle note ni changer la phase.
+Les dérogations du carnet de notes et les journaux d’événements ne sont pas exportés.
+
+Droits : `viewallsubmissions`, `viewallassessments`, `manageexamples`, groupes séparés,
+`viewauthornames` et `viewreviewernames`. Le feedback privé de l’enseignant pour
+l’évaluateur exige `overridegrades`. L’anonymisation masque les noms dans les pages,
+mais ne modifie pas les travaux ni leurs fichiers, qui peuvent identifier leur auteur.
+
+English: Workshop exports instructions, native grading forms, submissions, example
+submissions, permitted peer/self assessments, attachments and stored grades. The four
+native strategies are supported. Report, name and group permissions remain enforced.
+No phase, grade, allocation or completion data is modified. Third-party strategies,
+gradebook overrides and event logs are outside this export.
+
+Validation automatique en cours. Le build H5P 2026101302 a été validé manuellement
+par l’utilisateur (archive du 13 octobre 2026 à 19 h 02), sans anomalie signalée.

@@ -36,6 +36,7 @@ use local_flatarchive\archive\folder_exporter;
 use local_flatarchive\archive\url_exporter;
 use local_flatarchive\archive\assign_exporter;
 use local_flatarchive\archive\h5p_exporter;
+use local_flatarchive\archive\workshop_exporter;
 use local_flatarchive\archive\glossary_exporter;
 use local_flatarchive\archive\wiki_exporter;
 use local_flatarchive\archive\feedback_exporter;
@@ -73,7 +74,7 @@ $cms = $modinfo->get_cms();
 // Validate the whole selection before creating any files.
 foreach ($cmids as $cmid) {
     $supported = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki',
-        'feedback', 'choice', 'forum', 'lesson', 'quiz', 'data', 'url', 'assign', 'h5pactivity'];
+        'feedback', 'choice', 'forum', 'lesson', 'quiz', 'data', 'url', 'assign', 'h5pactivity', 'workshop'];
     if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, $supported, true)) {
         throw new moodle_exception('invalidselection', 'local_flatarchive');
     }
@@ -97,7 +98,7 @@ try {
         $cm = $cms[$cmid];
 
         $documenttypes = ['glossary', 'wiki', 'feedback', 'choice', 'forum', 'lesson', 'quiz',
-            'data', 'url', 'assign', 'h5pactivity'];
+            'data', 'url', 'assign', 'h5pactivity', 'workshop'];
         if (in_array($cm->modname, $documenttypes, true)) {
             $exporters = [
                 'wiki' => wiki_exporter::class,
@@ -111,6 +112,7 @@ try {
                 'url' => url_exporter::class,
                 'assign' => assign_exporter::class,
                 'h5pactivity' => h5p_exporter::class,
+                'workshop' => workshop_exporter::class,
             ];
             $exporter = $exporters[$cm->modname];
             $export = $exporter::render($cm, $modinfo, $tempdir);

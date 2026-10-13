@@ -47,7 +47,7 @@ final class settings_snapshot_test extends \advanced_testcase {
         $items = [];
         $modules = [];
         $types = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki',
-            'feedback', 'choice', 'forum', 'lesson', 'quiz', 'url', 'assign', 'h5pactivity'];
+            'feedback', 'choice', 'forum', 'lesson', 'quiz', 'url', 'assign', 'h5pactivity', 'workshop'];
         foreach ($types as $type) {
             $module = $generator->create_module($type, ['course' => $course->id, 'name' => $type . ' & test']);
             $modules[$type] = $module;
@@ -85,7 +85,7 @@ final class settings_snapshot_test extends \advanced_testcase {
         ], 'image fixture');
         $modinfo = get_fast_modinfo($course);
         $result = settings_snapshot::add($items, $modinfo, $directory);
-        $this->assertCount(16, $result['files']);
+        $this->assertCount(17, $result['files']);
         foreach ($modules as $type => $module) {
             $filename = $type . '-' . $module->cmid . '-settings.html';
             $this->assertArrayHasKey($filename, $result['files']);
