@@ -838,4 +838,6 @@ chaîne d’export Course Presentation, avec conservation des solutions et netto
 
 English: Summary hints stored as plain strings no longer interrupt Presentation
 exports. Both string and grouped hints are supported, including empty/missing values.
-Validation automatique en cours ; régénérer l’archive après installation du correctif.
+Validation : [GitHub Actions 38434426798](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38434426798),
+17/17 jobs verts sur Moodle 4.4 à 5.3, code `ab87d0e`.
+Régénérer l’archive après installation du correctif ; validation réelle à confirmer.
