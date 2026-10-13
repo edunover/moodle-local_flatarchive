@@ -384,3 +384,4 @@ $string['settingfield_h5ptracking'] = 'Pogingen bijhouden';
 $string['settingfield_h5pgrademethod'] = 'Beoordelingsmethode (Moodle-waarde)';
 $string['settingfield_h5previewmode'] = 'Beoordelingsmodus (Moodle-waarde)';
 $string['settingfield_h5pdisplayoptions'] = 'Weergaveopties (Moodle-bitmasker)';
+$string['h5punresolvedlink'] = 'Niet-opgeloste link: {$a}';

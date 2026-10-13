@@ -69,7 +69,7 @@ final class h5p_renderer {
                 $html .= $this->sources($params['sources'] ?? $params['files'] ?? [], $type === 'H5P.Video' ? 'video' : 'audio');
                 break;
             case 'H5P.Link':
-                $html .= $this->external($params['linkWidget']['url'] ?? $params['url'] ?? '', $params['title'] ?? '');
+                $html .= $this->link_widget($params['linkWidget'] ?? ['url' => $params['url'] ?? ''], $params['title'] ?? '');
                 break;
             case 'H5P.Nil':
                 break;
@@ -124,7 +124,7 @@ final class h5p_renderer {
                 foreach ($params['questions'] ?? [] as $question) {
                     $html .= $this->child($question, $depth);
                 }
-                $html .= $this->feedback($params['endGame'] ?? []);
+                $html .= $this->ending($params['endGame'] ?? []);
                 break;
             case 'H5P.CoursePresentation':
                 foreach ($params['presentation']['slides'] ?? [] as $slide) {
@@ -172,7 +172,7 @@ final class h5p_renderer {
         libxml_use_internal_errors($previous);
         $allowed = ['html', 'body', 'div', 'p', 'span', 'strong', 'em', 'b', 'i', 'u', 's', 'sub', 'sup',
             'br', 'hr', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre', 'code',
-            'table', 'thead', 'tbody', 'tfoot', 'tr', 'td', 'th', 'caption', 'a', 'img'];
+            'table', 'thead', 'tbody', 'tfoot', 'tr', 'td', 'th', 'caption', 'a', 'img', 'figure', 'figcaption'];
         $nodes = iterator_to_array($doc->getElementsByTagName('*'));
         $notice = '';
         foreach ($nodes as $node) {
@@ -220,9 +220,10 @@ final class h5p_renderer {
      * @param array $file File object.
      * @param string $kind image, audio or video.
      * @param string $alt Image alternative.
+     * @param array $tracks Video text tracks.
      * @return string HTML.
      */
-    public function media(array $file, string $kind, string $alt = ''): string {
+    public function media(array $file, string $kind, string $alt = '', array $tracks = []): string {
         $path = $file['path'] ?? '';
         if ($path === '') {
             return '';
@@ -234,7 +235,18 @@ final class h5p_renderer {
         if ($kind === 'image') {
             $html = \html_writer::empty_tag('img', ['src' => $url, 'alt' => $alt, 'class' => 'flatarchive-h5p-image']);
         } else {
-            $html = \html_writer::tag($kind, \html_writer::link($url, s(basename($path))), [
+            $children = \html_writer::link($url, s(basename($path)));
+            foreach ($tracks as $track) {
+                $trackurl = $this->package->asset($track['track']['path'] ?? '');
+                $trackkind = $track['kind'] ?? 'subtitles';
+                if ($trackurl && in_array($trackkind, ['subtitles', 'captions', 'descriptions'], true)) {
+                    $children .= \html_writer::empty_tag('track', [
+                        'src' => $trackurl, 'kind' => $trackkind,
+                        'srclang' => $track['srcLang'] ?? '', 'label' => $track['label'] ?? '',
+                    ]);
+                }
+            }
+            $html = \html_writer::tag($kind, $children, [
                 'src' => $url, 'controls' => 'controls', 'preload' => 'metadata',
             ]);
         }
@@ -246,12 +258,13 @@ final class h5p_renderer {
      *
      * @param array $files Sources.
      * @param string $kind Media kind.
+     * @param array $tracks Video text tracks.
      * @return string HTML.
      */
-    public function sources(array $files, string $kind): string {
+    public function sources(array $files, string $kind, array $tracks = []): string {
         $html = '';
         foreach ($files as $file) {
-            $html .= $this->media($file, $kind);
+            $html .= $this->media($file, $kind, '', $tracks);
         }
         return $html;
     }
@@ -377,7 +390,10 @@ final class h5p_renderer {
      */
     private function interactive_video(array $params, int $depth): string {
         $video = $params['interactiveVideo'] ?? [];
-        $html = $this->sources($video['video']['files'] ?? [], 'video');
+        $start = $video['video']['startScreenOptions'] ?? [];
+        $html = $this->rich($start['title'] ?? '') . $this->rich($start['shortStartDescription'] ?? '');
+        $html .= $this->media($start['poster'] ?? [], 'image');
+        $html .= $this->sources($video['video']['files'] ?? [], 'video', $video['video']['textTracks']['videoTrack'] ?? []);
         foreach ($video['video']['textTracks']['videoTrack'] ?? [] as $track) {
             $path = $track['track']['path'] ?? '';
             $url = $this->package->asset($path);
@@ -404,7 +420,7 @@ final class h5p_renderer {
                 $html .= $this->notice('h5pjump', self::timestamp($interaction['goto']['time'] ?? 0));
             } else if (($interaction['goto']['type'] ?? '') === 'url') {
                 $goto = $interaction['goto']['url'] ?? [];
-                $html .= $this->external(($goto['protocol'] ?? 'https://') . ($goto['url'] ?? ''), $goto['url'] ?? '');
+                $html .= $this->link_widget($goto, $goto['url'] ?? '');
             }
         }
         foreach ($video['assets']['bookmarks'] ?? [] as $bookmark) {
@@ -448,6 +464,46 @@ final class h5p_renderer {
             $html .= $this->rich($range['feedback'] ?? '');
         }
         return $html;
+    }
+
+    /**
+     * Preserve outcome feedback and optional success/failure media.
+     *
+     * @param array $ending End-of-question-set data.
+     * @return string HTML.
+     */
+    public function ending(array $ending): string {
+        $html = $this->feedback($ending);
+        foreach (['successGreeting', 'successComment', 'failGreeting', 'failComment'] as $key) {
+            $html .= $this->rich($ending['oldFeedback'][$key] ?? '');
+        }
+        foreach (['successVideo' => 'h5pfeedbackoncorrect', 'failVideo' => 'h5pfeedbackonwrong'] as $key => $label) {
+            if (!empty($ending[$key])) {
+                $html .= $this->heading($label) . $this->sources($ending[$key], 'video');
+            }
+        }
+        return $html;
+    }
+
+    /**
+     * Resolve H5P link widgets, whose protocol and address are stored separately.
+     *
+     * @param array $widget Link parameters.
+     * @param string $label Link label.
+     * @return string HTML link or explicit unavailable-link notice.
+     */
+    private function link_widget(array $widget, string $label): string {
+        global $CFG;
+        $url = $widget['url'] ?? '';
+        $protocol = $widget['protocol'] ?? 'https://';
+        if (!preg_match('~^https?://~i', $url)) {
+            if (in_array($protocol, ['http://', 'https://'], true)) {
+                $url = $protocol . $url;
+            } else if ($protocol === '/') {
+                $url = $CFG->wwwroot . '/' . ltrim($url, '/');
+            }
+        }
+        return $this->external($url, $label) ?: $this->notice('h5punresolvedlink', $label . ' — ' . $url);
     }
 
     /**

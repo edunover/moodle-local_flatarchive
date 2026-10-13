@@ -393,3 +393,4 @@ $string['settingfield_h5ptracking'] = 'Suivi des tentatives';
 $string['settingfield_h5pgrademethod'] = 'Méthode de notation (valeur Moodle)';
 $string['settingfield_h5previewmode'] = 'Mode de relecture (valeur Moodle)';
 $string['settingfield_h5pdisplayoptions'] = 'Options d’affichage (masque Moodle)';
+$string['h5punresolvedlink'] = 'Lien non résolu : {$a}';

@@ -85,7 +85,7 @@ final class h5p_exporter {
             $body .= $renderer->rich($params['introPage']['title'] ?? '');
             $body .= $renderer->rich($params['introPage']['introduction'] ?? '');
             $body .= $renderer->media($params['introPage']['backgroundImage'] ?? [], 'image');
-            $body .= $renderer->feedback($params['endGame'] ?? []);
+            $body .= $renderer->ending($params['endGame'] ?? []);
         }
         if ($parts && ($version === '' || (int)trim($version) === 1)) {
             $links = [];
@@ -262,7 +262,8 @@ final class h5p_exporter {
         string $title,
         string $body
     ): void {
-        $html = \local_flatarchive_render_page_template($modinfo->get_course(), $cm, $title, $body);
+        $badges = \local_flatarchive_visibility_badges($cm, $modinfo);
+        $html = \local_flatarchive_render_page_template($modinfo->get_course(), $cm, $title, $body, '', $badges);
         \local_flatarchive_write_file($directory . '/' . $filename, $html);
     }
 }

@@ -231,6 +231,30 @@ final class h5p_exporter_test extends \advanced_testcase {
     }
 
     /**
+     * Embedded tables, separate link protocols and subtitle files remain usable.
+     */
+    public function test_embedded_widgets_and_subtitles(): void {
+        $this->resetAfterTest();
+        [$course, $activity, $file, $directory] = $this->fixture('H5P.InteractiveVideo', [], [
+            'content/film.mp4' => 'video bytes', 'content/fr.vtt' => "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nBonjour\n",
+        ]);
+        $renderer = new h5p_renderer(new h5p_package($file, $directory, $activity->cmid));
+        $html = $renderer->render('H5P.Table 1.2', ['text' => '<figure><table><tr><td>Table content</td></tr></table></figure>']);
+        $this->assertStringContainsString('Table content', $html);
+        $html = $renderer->render('H5P.Link 1.3', ['title' => 'Reference',
+            'linkWidget' => ['protocol' => 'https://', 'url' => 'example.org/reference']]);
+        $this->assertStringContainsString('href="https://example.org/reference"', $html);
+        $html = $renderer->render('H5P.InteractiveVideo 1.28', ['interactiveVideo' => ['video' => [
+            'files' => [['path' => 'film.mp4']], 'textTracks' => ['videoTrack' => [[
+                'track' => ['path' => 'fr.vtt'], 'label' => 'Français', 'srcLang' => 'fr', 'kind' => 'subtitles',
+            ]]],
+        ]]]);
+        $this->assertStringContainsString('<track', $html);
+        $this->assertStringContainsString('fr.vtt', $html);
+        $this->assertStringContainsString('srclang="fr"', $html);
+    }
+
+    /**
      * Traversal entries are rejected before any content extraction.
      */
     public function test_package_rejects_traversal(): void {

@@ -390,3 +390,4 @@ $string['settingfield_h5ptracking'] = 'Attempt tracking';
 $string['settingfield_h5pgrademethod'] = 'Grading method (Moodle value)';
 $string['settingfield_h5previewmode'] = 'Review mode (Moodle value)';
 $string['settingfield_h5pdisplayoptions'] = 'Display options (Moodle bitmask)';
+$string['h5punresolvedlink'] = 'Unresolved link: {$a}';
