@@ -58,7 +58,7 @@ final class visibility_test extends \advanced_testcase {
         $this->assertStringContainsString('fa-vis-stealth', $items[$stealth->cmid]);
         $this->assertStringContainsString('fa-vis-stealth', $items[$direct->cmid]);
         $sections = local_flatarchive_group_index_links($course, $info, $items);
-        $html = local_flatarchive_render_index_template($course, $course->id, $sections, $course->shortname);
+        $html = local_flatarchive_render_index_template($course, $course->id, $sections);
         $dom = new \DOMDocument();
         @$dom->loadHTML($html);
         $xpath = new \DOMXPath($dom);

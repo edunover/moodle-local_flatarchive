@@ -94,12 +94,18 @@ final class h5p_package {
                 $input = $zip->getStream($name);
                 $output = fopen($directory . '/' . $target, 'wb');
                 if (!$input || !$output) {
+                    if (is_resource($input)) {
+                        fclose($input);
+                    }
+                    if (is_resource($output)) {
+                        fclose($output);
+                    }
                     throw new \moodle_exception('h5pinvalid', 'local_flatarchive');
                 }
                 try {
                     $expected = $zip->statName($name)['size'];
                     $copied = stream_copy_to_stream($input, $output, $expected + 1);
-                    if ($copied !== $zip->statName($name)['size']) {
+                    if ($copied !== $expected) {
                         throw new \moodle_exception('h5pinvalid', 'local_flatarchive');
                     }
                 } finally {

@@ -85,7 +85,7 @@ final class tags_test extends \advanced_testcase {
             \context_module::instance($book->cmid),
             ['moduletag']
         );
-        $index = local_flatarchive_render_index_template($course, $course->id, [], $course->shortname);
+        $index = local_flatarchive_render_index_template($course, $course->id, []);
         $this->assertStringContainsString('coursetag', $index);
         $this->assertStringNotContainsString('moduletag', $index);
         $toc = local_flatarchive_render_book_toc_template($course, 'Book', [], '../', '', $book->cmid);

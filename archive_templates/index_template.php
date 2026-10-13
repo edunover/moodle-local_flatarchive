@@ -28,7 +28,6 @@
  * @param stdClass $course
  * @param int $courseid
  * @param array $sections Sections ordonnées avec nom, ID et liens relatifs rendus.
- * @param string $courseshortname nom court du cours (pour affichage)
  * @param string $settingslink Optional local settings link
  * @return string HTML complet
  */
@@ -36,7 +35,6 @@ function local_flatarchive_render_index_template(
     stdClass $course,
     int $courseid,
     array $sections,
-    string $courseshortname,
     string $settingslink = ''
 ): string {
     $sectionshtml = '';

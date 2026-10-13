@@ -126,7 +126,7 @@ final class settings_snapshot_test extends \advanced_testcase {
         $rows = $xpath->query('//tr[th="Marks"]/td');
         $this->assertCount(4, $rows);
         $this->assertSame(['No', 'Yes', 'No', 'No'], array_map(fn($node) => $node->textContent, iterator_to_array($rows)));
-        $index = local_flatarchive_render_index_template($course, $course->id, [], $course->shortname, $result['courselink']);
+        $index = local_flatarchive_render_index_template($course, $course->id, [], $result['courselink']);
         $this->assertStringContainsString('href="course-settings.html"', $index);
         $this->assertStringContainsString('Course &lt;test&gt;', file_get_contents($result['files']['course-settings.html']));
         $this->assertSame('DO-NOT-EXPORT-QUIZ-SECRET', $DB->get_field('quiz', 'password', ['id' => $modules['quiz']->id]));

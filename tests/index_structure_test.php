@@ -75,7 +75,7 @@ final class index_structure_test extends \advanced_testcase {
                 'links' => ['<li><a href="test%20ppt--book-83/index.html">test ppt</a></li>']],
             ['id' => 8, 'name' => 'Next section',
                 'links' => ['<li><a href="page--page-1.html">Page</a></li>']],
-        ], $course->shortname);
+        ]);
         $dom = new \DOMDocument();
         @$dom->loadHTML($html);
         $xpath = new \DOMXPath($dom);

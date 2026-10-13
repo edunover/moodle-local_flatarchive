@@ -71,7 +71,7 @@ final class label_exporter_test extends \advanced_testcase {
         }
         $items[$page->cmid] = '<li><a href="page.html">Page</a></li>';
         $sections = local_flatarchive_group_index_links($course, $modinfo, $items);
-        $html = local_flatarchive_render_index_template($course, $course->id, $sections, $course->shortname);
+        $html = local_flatarchive_render_index_template($course, $course->id, $sections);
         $dom = new \DOMDocument();
         @$dom->loadHTML($html);
         $xpath = new \DOMXPath($dom);

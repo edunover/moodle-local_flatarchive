@@ -42,6 +42,8 @@ function local_flatarchive_render_book_toc_template(
     int $cmid = 0
 ): string {
     $coursetitle = s($course->fullname);
+    $footer = get_string('footer_copyright', 'local_flatarchive', local_flatarchive_get_release());
+    $backlabel = get_string('backtocourseindex', 'local_flatarchive');
     $sitename    = s($course->shortname ?: get_string('pluginname', 'local_flatarchive'));
     $csspath     = $relativeshared . 'shared/moodle.css';
     $linkshtml   = implode("\n                    ", $chapterlinks);

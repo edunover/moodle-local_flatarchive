@@ -51,7 +51,7 @@ $string['visibility_section_hidden'] = 'section cachée';
 $string['visibility_chapter_hidden'] = 'chapitre caché';
 $string['noresources'] = 'Aucune activité ou ressource sélectionnable pour cet export.';
 $string['archivefailed'] = 'Impossible de créer l’archive. Vérifie l’espace disque et les droits d’écriture.';
-$string['invalidselection'] = 'La sélection contient une ressource non prise en charge ou extérieure à ce cours.';
+$string['invalidselection'] = 'La sélection contient une ressource non prise en charge, inaccessible ou extérieure à ce cours.';
 
 $string['flatarchive:archive'] = 'Archiver les ressources du cours';
 

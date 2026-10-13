@@ -45,7 +45,7 @@ $string['footer_copyright'] = 'Flatarchive {$a} &#169; EDUNOVER';
 $string['visibility_chapter_hidden'] = 'verborgen hoofdstuk';
 $string['noresources'] = 'Er zijn geen activiteiten of bronnen selecteerbaar voor deze export.';
 $string['archivefailed'] = 'Het archief kon niet worden gemaakt. Controleer de vrije schijfruimte en schrijfrechten.';
-$string['invalidselection'] = 'De selectie bevat een niet-ondersteunde bron of een bron uit een andere cursus.';
+$string['invalidselection'] = 'De selectie bevat een niet-ondersteunde, ontoegankelijke bron of een bron uit een andere cursus.';
 
 $string['flatarchive:archive'] = 'Cursusbronnen archiveren';
 

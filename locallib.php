@@ -94,7 +94,9 @@ function local_flatarchive_copy_mod_icon(string $modname, string $sharedfolder):
             $ext = pathinfo($filename, PATHINFO_EXTENSION);
             $dest = $icondir . '/' . $modname . '.' . $ext;
             if (!file_exists($dest)) {
-                copy($src, $dest);
+                if (!copy($src, $dest)) {
+                    throw new moodle_exception('archivefailed', 'local_flatarchive');
+                }
             }
             return 'shared/icons/' . $modname . '.' . $ext;
         }

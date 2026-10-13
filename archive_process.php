@@ -273,7 +273,6 @@ try {
         $course,
         $courseid,
         $sections,
-        $course->shortname,
         $settings['courselink']
     );
     local_flatarchive_write_file($tempdir . '/index.html', $indexhtml);
