@@ -81,7 +81,7 @@ Références des prérequis : https://moodledev.io/general/releases/4.4 ; https:
 
 ## Validation du 1er octobre 2026
 
-- GitHub Actions : 14 environnements PHPUnit et le job JavaScript réussis : https://github.com/edunover/moodle-local-flatarchive/actions/runs/36734923014 (commit `39dbae6`).
+- GitHub Actions : 14 environnements PHPUnit et le job JavaScript réussis : https://github.com/edunover/moodle-local_flatarchive/actions/runs/36734923014 (commit `39dbae6`).
 - Sandbox Moodle 4.5.11+, PHP 8.3.33 : installation du build 2026093001 réussie ; accès par le menu du cours ; sélection et génération des 50 Pages du cours TEST- réussies, sans modifier le contenu du cours.
 - Téléchargement manuel réussi, confirmé par le ZIP fourni : intégrité correcte, 54 fichiers dont 50 Pages, index.html, about.html, CSS et icône. Les 203 références locales sont valides ; aucun lien externe détecté dans les attributs href/src. La récupération automatisée du navigateur intégré échoue ; les reprises de téléchargement restent à examiner, car le ZIP est supprimé après envoi.
 - Aucun essai navigateur des Livres n’est encore confirmé. L’aperçu visuel local est bloqué par la politique du navigateur intégré (file:// non autorisé) ; la structure et les liens de l’archive ont été contrôlés directement.
@@ -103,7 +103,7 @@ L’index regroupe les ressources exportées sous les noms des sections Moodle, 
 
 ### Validation du build 2026100101
 
-Les 20 tests PHPUnit passent sur les 14 combinaisons Moodle/PHP, ainsi que les 6 tests JavaScript : https://github.com/edunover/moodle-local-flatarchive/actions/runs/36889554729 (code `1575049`). Le build 2026100101 regroupe l’index par sections et le lien de retour traduit ; le numéro de build et cette documentation ont été mis à jour après ces tests. Paquet préparé pour installation ; la sandbox reste au build 2026093001.
+Les 20 tests PHPUnit passent sur les 14 combinaisons Moodle/PHP, ainsi que les 6 tests JavaScript : https://github.com/edunover/moodle-local_flatarchive/actions/runs/36889554729 (code `1575049`). Le build 2026100101 regroupe l’index par sections et le lien de retour traduit ; le numéro de build et cette documentation ont été mis à jour après ces tests. Paquet préparé pour installation ; la sandbox reste au build 2026093001.
 
 ### Zones texte et média — build 2026100102
 
@@ -122,7 +122,7 @@ Quatre tests PHPUnit supplémentaires couvrent la sélection par un enseignant, 
 cours, le contenu inline et son ordre, les fichiers de même nom et les chemins avec espaces dans
 le ZIP, le format texte brut et le rejet d’un autre type de module. Le test JavaScript de soumission
 inclut maintenant une zone texte et média. Le contrôle Moodle CodeSniffer des fichiers PHP touchés par cette évolution est ajouté à GitHub Actions ; il ne certifie pas encore tout le code historique.
-Validation réussie : 24 tests PHPUnit sur les 14 combinaisons Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer des 9 fichiers PHP concernés. Exécution : https://github.com/edunover/moodle-local-flatarchive/actions/runs/36892945413 (code `c045465`). Non déployé sur la sandbox.
+Validation réussie : 24 tests PHPUnit sur les 14 combinaisons Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer des 9 fichiers PHP concernés. Exécution : https://github.com/edunover/moodle-local_flatarchive/actions/runs/36892945413 (code `c045465`). Non déployé sur la sandbox.
 
 ### Validation sandbox du build 2026100102
 
@@ -146,7 +146,7 @@ File resources link to their original main file from the course index. Companion
 subdirectories are preserved, isolated by module ID. No document conversion is performed.
 Four additional PHPUnit tests cover selection, main-file order, companion files, duplicate
 filenames, URL encoding, ZIP contents, missing files and wrong module types.
-Validation CI réussie : 28 tests PHPUnit sur 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. Exécution : https://github.com/edunover/moodle-local-flatarchive/actions/runs/37042345425 (code `eb8fea2`). Build 2026100201 installé sur la sandbox. Archive réelle vérifiée le 3 octobre 2026 : 127 fichiers, liens locaux valides, ressource TXT avec espaces et accents conservée octet pour octet ; section « New section » contenant le livre, la zone texte et média et le fichier.
+Validation CI réussie : 28 tests PHPUnit sur 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. Exécution : https://github.com/edunover/moodle-local_flatarchive/actions/runs/37042345425 (code `eb8fea2`). Build 2026100201 installé sur la sandbox. Archive réelle vérifiée le 3 octobre 2026 : 127 fichiers, liens locaux valides, ressource TXT avec espaces et accents conservée octet pour octet ; section « New section » contenant le livre, la zone texte et média et le fichier.
 
 ### Téléchargements répétés — build 2026100301
 
@@ -161,7 +161,7 @@ lien au bout d’une heure ne signifie pas une suppression physique immédiate.
 Repeated downloads are supported for one hour in the originating session. Expired or missing
 archives show a friendly page. Moodle cron handles eventual temporary-file cleanup.
 Trois tests PHPUnit supplémentaires couvrent les lectures répétées, l’expiration et le fichier disparu.
-Validation CI réussie : 31 tests PHPUnit et 150 assertions sur les 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37124447456), code `c76fbe3`. PHPUnit signale encore 7 dépréciations de métadonnées sur Moodle 5.x, sans échec. Build 2026100301 installé sur la sandbox le 9 octobre 2026. Deux téléchargements successifs du même ZIP sans erreur confirmés par l’utilisateur.
+Validation CI réussie : 31 tests PHPUnit et 150 assertions sur les 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local_flatarchive/actions/runs/37124447456), code `c76fbe3`. PHPUnit signale encore 7 dépréciations de métadonnées sur Moodle 5.x, sans échec. Build 2026100301 installé sur la sandbox le 9 octobre 2026. Deux téléchargements successifs du même ZIP sans erreur confirmés par l’utilisateur.
 
 ### Ressource Dossier — build 2026100901
 
@@ -182,7 +182,7 @@ Quatre tests PHPUnit supplémentaires couvrent la sélection par un enseignant, 
 cours, les sous-dossiers imbriqués et vides, les noms avec accents et caractères spéciaux, les
 homonymes, le fichier original index.html, les médias de description, les badges, les liens et
 la conservation des octets après compression/décompression. Le test JavaScript inclut un Dossier.
-Validation CI réussie : 35 tests PHPUnit et 231 assertions sur les 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37941805235), code `6639581`. Huit dépréciations PHPUnit de métadonnées restent signalées sur Moodle 5.x, sans échec. Build 2026100901 installé sur la sandbox et fonctionnement manuel confirmé par l’utilisateur le 9 octobre 2026.
+Validation CI réussie : 35 tests PHPUnit et 231 assertions sur les 14 environnements Moodle/PHP, 6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local_flatarchive/actions/runs/37941805235), code `6639581`. Huit dépréciations PHPUnit de métadonnées restent signalées sur Moodle 5.x, sans échec. Build 2026100901 installé sur la sandbox et fonctionnement manuel confirmé par l’utilisateur le 9 octobre 2026.
 
 Jeu de test manuel : `tests/fixtures/folder/` contient un DOCX, un PDF, un PNG, deux fichiers notes.txt distincts dans des sous-dossiers et un index.html original. Les empreintes SHA-256 sont dans `tests/fixtures/folder-sha256.json`. Le ZIP de préparation inclut aussi un dossier vide (Git ne conserve pas les répertoires vides).
 
@@ -220,7 +220,7 @@ fichiers et ZIP, formats HTML/texte, entrées exclues, glossaire source/principa
 et glossaire vide, mauvais type de module. Les tests vérifient aussi les pages individuelles,
 les titres, les liens aller/retour et leur conservation dans le ZIP.
 Validation CI réussie : 40 tests PHPUnit et 285 assertions sur les 14 environnements Moodle/PHP,
-6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37945527767),
+6 tests JavaScript et contrôle Moodle CodeSniffer. [Exécution GitHub Actions](https://github.com/edunover/moodle-local_flatarchive/actions/runs/37945527767),
 code `b91174f`. Neuf dépréciations PHPUnit de métadonnées sont signalées sur Moodle 5.x, sans échec.
 Build 2026100902 non déployé sur la sandbox ; validation manuelle à réaliser.
 
@@ -237,7 +237,7 @@ Les filtres dynamiques des commentaires sont désactivés ; les liens externes r
 Le build 2026100902 est installé et son fonctionnement confirmé par l’utilisateur.
 Le ZIP du 9 octobre à 17:02 est validé : 141 fichiers, 276 références locales sans cible manquante,
 une liste et trois pages de définition. Build 2026100903 : 42 tests PHPUnit et 300 assertions réussis sur les 14 configurations,
-6 tests JavaScript et contrôle Moodle CodeSniffer réussis. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/37950134719),
+6 tests JavaScript et contrôle Moodle CodeSniffer réussis. [Exécution GitHub Actions](https://github.com/edunover/moodle-local_flatarchive/actions/runs/37950134719),
 code `ca50a4c`. Validation manuelle à réaliser après installation.
 
 ### Wiki — build 2026101001
@@ -255,7 +255,7 @@ Les fichiers sont conservés dans `files/{cmid}/attachments/{subwikiid}/`.
 Six tests PHPUnit supplémentaires couvrent sélection, révisions, navigation, fichiers/ZIP,
 formats, commentaires, espaces individuels et groupes séparés, droits et wiki vide.
 Validation CI réussie : 48 tests PHPUnit et 365 assertions sur les 14 configurations,
-6 tests JavaScript et contrôle Moodle CodeSniffer réussis. [Exécution GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38057074490),
+6 tests JavaScript et contrôle Moodle CodeSniffer réussis. [Exécution GitHub Actions](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38057074490),
 code `fe091da`. Dix dépréciations PHPUnit de métadonnées sont signalées sur Moodle 5.x, sans échec.
 Build 2026101001 non installé sur la sandbox ; test manuel à réaliser.
 
@@ -284,7 +284,7 @@ la version initiale ; aucun lien de création/édition Moodle ni marqueur de fic
 subsiste dans les pages Wiki.
 
 Le build 2026101002 (taille du ZIP sur la page de téléchargement) passe la CI :
-https://github.com/edunover/moodle-local-flatarchive/actions/runs/38058888279
+https://github.com/edunover/moodle-local_flatarchive/actions/runs/38058888279
 La vérification visuelle de cet affichage sur la sandbox reste à réaliser.
 
 ### Icônes de sélection — build 2026101003
@@ -299,7 +299,7 @@ activity-type alternative text. The existing selection and submission tests cove
 
 Validation du build 2026101003 : les 14 configurations Moodle/PHP, les 6 tests JavaScript
 et le contrôle Moodle CodeSniffer passent. Vérification visuelle sur la sandbox à réaliser.
-https://github.com/edunover/moodle-local-flatarchive/actions/runs/38060730033
+https://github.com/edunover/moodle-local_flatarchive/actions/runs/38060730033
 
 ### Feedback — build 2026101004
 
@@ -334,7 +334,7 @@ exécuté sur Moodle 5.3 / PHP 8.4. Les tests JavaScript restent communs aux ver
 Référence : https://moodledev.io/general/releases/5.3
 
 Validation Feedback avant extension : les 14 configurations Moodle/PHP et le job JavaScript ont réussi :
-https://github.com/edunover/moodle-local-flatarchive/actions/runs/38080207773 (commit `47abe8f`).
+https://github.com/edunover/moodle-local_flatarchive/actions/runs/38080207773 (commit `47abe8f`).
 La validation Moodle 5.3 est en attente de la prochaine exécution.
 
 ### Icônes dans l’index hors connexion — build 2026101005
@@ -347,7 +347,7 @@ La présentation des zones Texte et média et les liens existants sont conservé
 
 Feedback : fonctionnement manuel confirmé par l’utilisateur le 10 octobre 2026.
 La matrice complète Moodle 4.4 à 5.3 a réussi avant cette modification :
-https://github.com/edunover/moodle-local-flatarchive/actions/runs/38080563571.
+https://github.com/edunover/moodle-local_flatarchive/actions/runs/38080563571.
 
 ### Consultation (Choice) — build 2026101006
 
@@ -367,7 +367,7 @@ Tests ajoutés : médias, réponses multiples, publication, anonymat, droits de 
 groupes séparés et sélection limitée au cours ; icône Choice ajoutée au test ZIP.
 Validation Choice terminée : 61 tests PHPUnit et 539 assertions, six tests JavaScript,
 et contrôles de standards réussis sur les 16 configurations Moodle/PHP jusqu’à Moodle 5.3 :
-https://github.com/edunover/moodle-local-flatarchive/actions/runs/38083156703 (code `f0d9f59`).
+https://github.com/edunover/moodle-local_flatarchive/actions/runs/38083156703 (code `f0d9f59`).
 Build 2026101006 installé et test manuel confirmé par l’utilisateur le 10 octobre 2026.
 Archive `archive_Critical thinking_202610102226.zip` vérifiée : ZIP intact,
 page `choice-111.html` liée depuis l’index, icône locale présente, 168 références locales
@@ -398,7 +398,7 @@ La validation manuelle du Forum reste à effectuer.
 
 Validation Forum : 67 tests PHPUnit et 579 assertions réussis sur les 16 configurations
 Moodle/PHP jusqu’à Moodle 5.3 ; six tests JavaScript et standards Moodle réussis.
-https://github.com/edunover/moodle-local-flatarchive/actions/runs/38144678736 (code `f450cdd`).
+https://github.com/edunover/moodle-local_flatarchive/actions/runs/38144678736 (code `f450cdd`).
 Le build 2026101101 est prêt pour installation et validation manuelle.
 
 ### Présentation du Forum — build 2026101102
@@ -415,7 +415,7 @@ manuellement par l’utilisateur ; ces deux améliorations restent à valider su
 
 Validation automatique du build 2026101102 : 69 tests PHPUnit sur les 16 configurations
 Moodle/PHP, tests JavaScript et standards réussis :
-https://github.com/edunover/moodle-local-flatarchive/actions/runs/38146037148 (code `7cdd162`).
+https://github.com/edunover/moodle-local_flatarchive/actions/runs/38146037148 (code `7cdd162`).
 
 ### Tags hors connexion — build 2026101103
 
@@ -452,7 +452,7 @@ l’utilisateur sur le build précédent. Validation manuelle des tags encore à
 
 Validation automatique des tags : les 72 tests PHPUnit, six tests JavaScript et
 contrôles de standards ont réussi sur la matrice Moodle 4.4 à 5.3 :
-https://github.com/edunover/moodle-local-flatarchive/actions/runs/38148256222 (code `06d2a9c`).
+https://github.com/edunover/moodle-local_flatarchive/actions/runs/38148256222 (code `06d2a9c`).
 
 
 ### Leçon / Lesson — build 2026101104
@@ -491,7 +491,7 @@ Tests PHPUnit ajoutés pour la navigation, l’ordre, les médias isolés, les d
 les destinations étrangères, les cycles, les types natifs, les flash-cards et les
 leçons vides. Validation automatique réussie : 83 tests PHPUnit sur les 16 configurations
 Moodle/PHP de Moodle 4.4 à 5.3, six tests JavaScript et contrôles de standards.
-Exécution : https://github.com/edunover/moodle-local-flatarchive/actions/runs/38154464031
+Exécution : https://github.com/edunover/moodle-local_flatarchive/actions/runs/38154464031
 (commit de code `4dc3633`). La validation manuelle du ZIP reste à effectuer.
 Fixture manuelle : cours Critical Thinking, dernière section, leçon `cmid=112`.
 
@@ -529,7 +529,7 @@ submissions and feedback, dates and stored marks. Hidden-section badges appear o
 section headings; stealth activities use “hidden but available”. Every generated
 content page provides an explicit link to the course index.
 
-Validation automatique réussie : [GitHub Actions 38156562670](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38156562670),
+Validation automatique réussie : [GitHub Actions 38156562670](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38156562670),
 17 jobs verts, 90 tests PHPUnit / 777 assertions et 6 tests JavaScript,
 Moodle 4.4 à 5.3 et contrôles de standards Moodle (commit `ee1d466`).
 Validation manuelle du build 2026101105 à effectuer après installation.
@@ -572,7 +572,7 @@ attempts, using Moodle review permissions and group restrictions. Seven core que
 types have a passive offline representation. Unsupported types are identified.
 Download heading is now “Archive generated”; the success message retains ZIP size.
 
-Validation automatique réussie : [GitHub Actions 38161486385](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38161486385),
+Validation automatique réussie : [GitHub Actions 38161486385](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38161486385),
 17 jobs verts, 98 tests PHPUnit / 818 assertions, 6 tests JavaScript,
 Moodle 4.4 à 5.3 et contrôles de standards Moodle (commit `fbe8e27`).
 Validation manuelle du Quiz à effectuer après installation du build 2026101106.
@@ -595,7 +595,7 @@ English: all accessible course activities are listed, including unsupported type
 with disabled checkboxes and an explicit status. Bulk selection and form submission
 exclude disabled entries. Unsupported-only sections remain visible.
 
-Validation automatique réussie : [GitHub Actions 38174028369](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38174028369),
+Validation automatique réussie : [GitHub Actions 38174028369](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38174028369),
 17 jobs verts, 99 tests PHPUnit / 827 assertions et 10 tests JavaScript,
 Moodle 4.4 à 5.3 et contrôles des standards Moodle (commit `5ba978e`).
 Validation visuelle à effectuer après installation du build 2026101107.
@@ -612,7 +612,7 @@ Correction CSS commune aux deux vues, sans modification des réponses ou des not
 English: static Quiz choice symbols and rich-text answer labels now share the same
 line in questionnaires and recorded attempts. Long labels continue to wrap.
 
-Validation automatique réussie : [GitHub Actions 38262748861](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38262748861),
+Validation automatique réussie : [GitHub Actions 38262748861](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38262748861),
 17 jobs verts sur Moodle 4.4 à 5.3 (commit `c3c476d`).
 Validation visuelle du correctif à effectuer après régénération de l’archive.
 
@@ -627,7 +627,7 @@ réponses comportant plusieurs paragraphes conservent un léger espacement inter
 English: Quiz choices use compact spacing in questionnaires and recorded attempts,
 while preserving symbol alignment and spacing within multi-paragraph answers.
 
-Validation automatique réussie : [GitHub Actions 38264188013](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38264188013),
+Validation automatique réussie : [GitHub Actions 38264188013](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38264188013),
 17 jobs verts sur Moodle 4.4 à 5.3 (commit `8ba2a89`).
 Validation visuelle à effectuer après installation et régénération de l’archive.
 
@@ -655,7 +655,7 @@ Custom CSS is retained; interactive editing controls and custom JavaScript are o
 Validation en attente : la première passe a identifié la suppression des balises
 HTML5 de mise en page et des écarts de commentaires aux standards Moodle, corrigés
 dans `f355e26`. Les vérifications locales de syntaxe PHP passent. La nouvelle
-[run 38267660293](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38267660293)
+[run 38267660293](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38267660293)
 n’a démarré aucun job : GitHub signale un paiement échoué ou une limite de dépenses.
 Relancer PHPUnit et les standards après réactivation de GitHub Actions ; le build
 2026101202 n’est pas encore validé par la matrice Moodle ni par un essai visuel.
@@ -667,7 +667,7 @@ Le nettoyage Moodle supprimait les identifiants temporaires du rendu,
 produisant des pages vides dans le build 2026101202. Les repères utilisent
 désormais des classes conservées par le nettoyage HTML.
 
-Validation réussie : https://github.com/edunover/moodle-local-flatarchive/actions/runs/38278916063
+Validation réussie : https://github.com/edunover/moodle-local_flatarchive/actions/runs/38278916063
 17 jobs réussis sur Moodle 4.4 à 5.3, commit a63df75.
 Installer ce build et régénérer les archives produites avec 2026101202.
 La validation visuelle sur le site de test reste à effectuer.
@@ -681,7 +681,7 @@ comme texte inerte. Le CSS personnalisé n’affecte pas la page documentaire.
 JavaScript indiqué sans code ; configuration interne et paramètres de champs tiers
 exclus. L’extension aux autres activités reste une étape ultérieure.
 
-Validation automatique réussie : [run 38281756703](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38281756703), 17 jobs sur Moodle 4.4 à 5.3, commit `2f5a80c`. Validation visuelle de la page Paramètres à effectuer après installation et régénération de l’archive.
+Validation automatique réussie : [run 38281756703](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38281756703), 17 jobs sur Moodle 4.4 à 5.3, commit `2f5a80c`. Validation visuelle de la page Paramètres à effectuer après installation et régénération de l’archive.
 # Standards PHP — 12 octobre 2026
 
 Validation : run 38284351225, commit `0298e88`, 17 jobs réussis, dont les deux
@@ -717,7 +717,7 @@ types. Main activity pages and the course index provide local links, including
 nested Book navigation. Standard options and Quiz review periods are documented;
 password values, user overrides and third-party configuration are excluded.
 
-Validation automatique réussie : [run 38286381453](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38286381453),
+Validation automatique réussie : [run 38286381453](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38286381453),
 17 jobs verts, 110 tests PHPUnit / 969 assertions sur Moodle 5.3, tests JavaScript
 et `moodle-extra` réussis. Matrice Moodle 4.4 à 5.3, commit `178f43b`.
 Validation visuelle à effectuer après installation et régénération de l’archive.
@@ -739,7 +739,7 @@ tags remain on settings pages without being repeated in the course index. Settin
 include the activity description or course summary, local media and an explicit
 empty-field indication when appropriate.
 
-Validation automatique réussie : [run 38289110859](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38289110859),
+Validation automatique réussie : [run 38289110859](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38289110859),
 17 jobs verts sur Moodle 4.4 à 5.3, dont `moodle-extra`. Moodle 5.3 : 111 tests
 PHPUnit / 1 027 assertions. Commit `36f972f`. Validation visuelle à effectuer
 après installation et régénération de l’archive.
@@ -754,10 +754,10 @@ de champ vide et les médias locaux sont conservés.
 English: descriptions now precede snapshot metadata and settings tables for the
 course and all supported activities, including Database.
 
-Validation : [run 38290709056](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38290709056),
+Validation : [run 38290709056](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38290709056),
 17 jobs verts sur Moodle 4.4 à 5.3, commit `c012e40`.
 
-Validation du build 2026101208 : [run 38292832714](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38292832714),
+Validation du build 2026101208 : [run 38292832714](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38292832714),
 17 jobs réussis sur Moodle 4.4 à 5.3, incluant la migration, `moodle-extra` et
 la vérification du ZIP installable. Commit `a50f3b4`.
 
@@ -777,7 +777,7 @@ byte-identical. Keep both root items together when moving or sharing the archive
 Contrôle local sur l’archive utilisateur du 12 octobre à 20 h 53 : 106 fichiers,
 455 liens locaux valides, 6 fichiers joints identiques octet pour octet.
 
-Validation : [run 38294485057](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38294485057),
+Validation : [run 38294485057](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38294485057),
 17 jobs verts sur Moodle 4.4 à 5.3, commit `933217c`. Tests d’extraction ZIP,
 navigation et conservation des fichiers originaux réussis.
 
@@ -801,7 +801,7 @@ Le build 2026101209 (index seul à la racine) a été validé manuellement, RAS.
 - PHPUnit : liens URL et médias, protocoles dangereux, deux tentatives, feedbacks,
   absence de données privées sans droit de correction, anonymat et groupes.
 
-Validation automatique réussie : [run 38297358444](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38297358444), 17/17 jobs verts, Moodle 4.4 à 5.3, JavaScript, paquet et `moodle-extra`. Code validé : `bb5149c`. Validation manuelle du build 2026101210 à effectuer après installation.
+Validation automatique réussie : [run 38297358444](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38297358444), 17/17 jobs verts, Moodle 4.4 à 5.3, JavaScript, paquet et `moodle-extra`. Code validé : `bb5149c`. Validation manuelle du build 2026101210 à effectuer après installation.
 
 
 ## H5P natif — build 2026101301
@@ -820,7 +820,7 @@ Validation automatique réussie : [run 38297358444](https://github.com/edunover/
 - Tests : cinq types, navigation, médias et intégrité du paquet, HTML inerte,
   chemins traversants, rapports, groupes, suivi désactivé et droits d’auteur de contenu.
 - Le build précédent 2026101210 a été validé manuellement par l’utilisateur, RAS.
-- Validation : https://github.com/edunover/moodle-local-flatarchive/actions/runs/38432938448
+- Validation : https://github.com/edunover/moodle-local_flatarchive/actions/runs/38432938448
   17/17 jobs verts ; 128 tests PHPUnit / 1 176 assertions sur Moodle 5.3.
   Code `d16b995`, standards moodle-extra et paquet vérifiés.
   PHPUnit signale 27 dépréciations et une notice sur Moodle 5.3, sans échec.
@@ -838,6 +838,6 @@ chaîne d’export Course Presentation, avec conservation des solutions et netto
 
 English: Summary hints stored as plain strings no longer interrupt Presentation
 exports. Both string and grouped hints are supported, including empty/missing values.
-Validation : [GitHub Actions 38434426798](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38434426798),
+Validation : [GitHub Actions 38434426798](https://github.com/edunover/moodle-local_flatarchive/actions/runs/38434426798),
 17/17 jobs verts sur Moodle 4.4 à 5.3, code `ab87d0e`.
 Régénérer l’archive après installation du correctif ; validation réelle à confirmer.

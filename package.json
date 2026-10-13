@@ -1,5 +1,5 @@
 {
-  "name": "moodle-local-flatarchive",
+  "name": "moodle-local_flatarchive",
   "private": true,
   "scripts": {
     "build": "node scripts/build-amd.cjs",
