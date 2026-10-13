@@ -1,9 +1,26 @@
 <?php
 // This file is part of Moodle - http://moodle.org/
 //
-// Template HTML pour une page d'activité (Page ou chapitre Livre) dans l'archive (local_flatarchive).
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
+/**
+ * Render an offline activity document.
+ *
+ * @package local_flatarchive
+ * @copyright 2026 Edunover
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 /**
  * Génère le HTML d'une page de contenu (mod_page ou chapitre mod_book).
@@ -16,9 +33,18 @@ defined('MOODLE_INTERNAL') || die();
  * @param string $visibilitybadges badges HTML de visibilité (généré par local_flatarchive_visibility_badges)
  * @return string HTML complet
  */
-function local_flatarchive_render_page_template(stdClass $course, $cm, string $title, string $content, string $relativeshared = '', string $visibilitybadges = ''): string {
+function local_flatarchive_render_page_template(
+    stdClass $course,
+    $cm,
+    string $title,
+    string $content,
+    string $relativeshared = '',
+    string $visibilitybadges = ''
+): string {
     $content = ($cm ? \local_flatarchive\archive\tags::render('core', 'course_modules', (int)$cm->id) : '') . $content;
     $coursetitle = s($course->fullname);
+    $footer = get_string('footer_copyright', 'local_flatarchive', local_flatarchive_get_release());
+    $backlabel = get_string('backtocourseindex', 'local_flatarchive');
     $sitename = s($course->shortname ?: get_string('pluginname', 'local_flatarchive'));
     $csspath = $relativeshared . 'shared/moodle.css';
 
@@ -38,7 +64,7 @@ function local_flatarchive_render_page_template(stdClass $course, $cm, string $t
             </div>
         </nav>
         <main class="container-fluid mt-2 flex-grow-1 flex-shrink-1">
-            <p><a class="fa-back-index" href="' . $relativeshared . 'index.html">' . get_string('backtocourseindex', 'local_flatarchive') . '</a></p>
+            <p><a class="fa-back-index" href="' . $relativeshared . 'index.html">' . $backlabel . '</a></p>
             <div>
                 <h1>' . s($title) . '</h1>
                 ' . ($visibilitybadges ? '<div class="fa-vis-block">' . $visibilitybadges . '</div>' : '') . '
@@ -50,7 +76,7 @@ function local_flatarchive_render_page_template(stdClass $course, $cm, string $t
         </main>
         <footer id="page-footer" class="py-3">
             <div class="container">
-                <div>' . get_string('footer_copyright', 'local_flatarchive', local_flatarchive_get_release()) . ' – ' . $coursetitle . '</div>
+                <div>' . $footer . ' – ' . $coursetitle . '</div>
             </div>
         </footer>
     </div>

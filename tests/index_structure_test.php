@@ -1,4 +1,19 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
 namespace local_flatarchive;
 
 defined('MOODLE_INTERNAL') || die();
@@ -16,7 +31,9 @@ require_once($CFG->dirroot . '/course/lib.php');
  * @covers ::local_flatarchive_render_index_template
  */
 final class index_structure_test extends \advanced_testcase {
-    /** Selection order must not change course order or merge identical section names. */
+    /**
+     * Selection order must not change course order or merge identical section names.
+     */
     public function test_groups_selected_resources_in_course_order(): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -47,7 +64,9 @@ final class index_structure_test extends \advanced_testcase {
         $this->assertSame([], local_flatarchive_group_index_links($course, get_fast_modinfo($course), []));
     }
 
-    /** Section headings are escaped and relative resource links retain their hierarchy. */
+    /**
+     * Section headings are escaped and relative resource links retain their hierarchy.
+     */
     public function test_index_contains_safe_section_headings_and_resource_links(): void {
         $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
@@ -63,8 +82,10 @@ final class index_structure_test extends \advanced_testcase {
         $this->assertSame(2, $xpath->query('//section')->length);
         $this->assertSame(0, $xpath->query('//script')->length);
         $this->assertSame('<script>alert(1)</script> & Section', $xpath->query('//h2[@id="section-7"]')->item(0)->textContent);
-        $this->assertSame('test%20ppt--book-83/index.html',
-            $xpath->query('//section[@aria-labelledby="section-7"]/ul/li/a')->item(0)->getAttribute('href'));
+        $this->assertSame(
+            'test%20ppt--book-83/index.html',
+            $xpath->query('//section[@aria-labelledby="section-7"]/ul/li/a')->item(0)->getAttribute('href')
+        );
         $this->assertSame('Page', $xpath->query('//section[@aria-labelledby="section-8"]/ul/li/a')->item(0)->textContent);
     }
 }

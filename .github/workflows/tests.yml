@@ -17,10 +17,10 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
           cache: npm
@@ -101,11 +101,11 @@ jobs:
           --health-cmd="healthcheck.sh --connect --innodb_initialized"
           --health-interval=10s --health-timeout=5s --health-retries=5
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           path: plugin
           persist-credentials: false
-      - uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
         with:
           php-version: ${{ matrix.php }}
           extensions: mysqli, mbstring, intl, soap, zip, gd, exif, sodium
@@ -113,7 +113,7 @@ jobs:
           coverage: none
       - name: Install Moodle test tools
         run: |
-          composer create-project --no-interaction --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci '^4.5.9'
+          composer create-project --no-interaction --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci '4.5.9'
           echo "$GITHUB_WORKSPACE/ci/bin" >> "$GITHUB_PATH"
           echo "$GITHUB_WORKSPACE/ci/vendor/bin" >> "$GITHUB_PATH"
           sudo locale-gen en_AU.UTF-8
@@ -125,37 +125,8 @@ jobs:
           MOODLE_BRANCH: ${{ matrix.branch }}
       - name: Check PHP syntax
         run: moodle-plugin-ci phplint
-      - name: Check Moodle extra conventions for the updated PHP files
-        if: (matrix.moodle == '5.2' || matrix.moodle == '5.3') && matrix.php == '8.4'
-        run: >-
-          phpcs --standard=moodle-extra
-          plugin/classes/archive/tags.php plugin/tests/tags_test.php
-          plugin/classes/archive/forum_exporter.php plugin/tests/forum_exporter_test.php
-          plugin/classes/archive/lesson_exporter.php plugin/tests/lesson_exporter_test.php
-          plugin/classes/archive/lesson_attempts.php plugin/tests/lesson_attempts_test.php plugin/tests/visibility_test.php
-          plugin/tests/index_navigation_test.php
-          plugin/classes/archive/quiz_exporter.php plugin/classes/archive/quiz_question.php plugin/tests/quiz_exporter_test.php
-          plugin/classes/archive/choice_exporter.php plugin/tests/choice_exporter_test.php
-          plugin/classes/archive/index_icons.php plugin/tests/index_icons_test.php
-          plugin/classes/archive/feedback_exporter.php plugin/tests/feedback_exporter_test.php
-          plugin/classes/archive/wiki_exporter.php plugin/tests/wiki_exporter_test.php
-          plugin/classes/archive/glossary_exporter.php plugin/tests/glossary_exporter_test.php
-          plugin/classes/archive/data_exporter.php plugin/tests/data_exporter_test.php
-          plugin/classes/archive/url_exporter.php plugin/tests/url_exporter_test.php
-          plugin/classes/archive/assign_exporter.php plugin/tests/assign_exporter_test.php
-          plugin/classes/archive/workshop_exporter.php plugin/tests/workshop_exporter_test.php
-          plugin/classes/archive/h5p_package.php plugin/classes/archive/h5p_renderer.php
-          plugin/classes/archive/h5p_exporter.php plugin/tests/h5p_exporter_test.php
-          plugin/classes/archive/layout.php plugin/tests/layout_test.php
-          plugin/db/upgrade.php plugin/tests/upgrade_test.php
-          plugin/classes/archive/data_settings.php
-          plugin/classes/archive/settings_snapshot.php plugin/tests/settings_snapshot_test.php
-          plugin/classes/archive/folder_exporter.php plugin/tests/folder_exporter_test.php
-          plugin/serve_temp.php plugin/classes/archive/temporary_archive.php plugin/tests/temporary_archive_test.php
-          plugin/classes/archive/label_exporter.php plugin/tests/label_exporter_test.php
-          plugin/classes/archive/resource_exporter.php plugin/tests/resource_exporter_test.php
-          plugin/archive_process.php plugin/classes/external/get_tree.php
-          plugin/tests/external/get_tree_test.php plugin/lang/en/local_flatarchive.php
-          plugin/lang/fr/local_flatarchive.php plugin/lang/nl/local_flatarchive.php plugin/version.php
+      - name: Check Moodle extra conventions for all PHP files
+        if: matrix.moodle == '5.3' && matrix.php == '8.4'
+        run: phpcs --standard=plugin/.phpcs.xml --extensions=php plugin
       - name: Run PHPUnit
         run: moodle-plugin-ci phpunit --fail-on-warning

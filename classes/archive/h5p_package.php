@@ -61,6 +61,9 @@ final class h5p_package {
             }
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $stat = $zip->statIndex($i);
+                if (!$stat || $stat['size'] < 0) {
+                    throw new \moodle_exception('h5pinvalid', 'local_flatarchive');
+                }
                 $name = $stat['name'];
                 $key = strtolower($name);
                 $total += $stat['size'];
@@ -94,7 +97,8 @@ final class h5p_package {
                     throw new \moodle_exception('h5pinvalid', 'local_flatarchive');
                 }
                 try {
-                    $copied = stream_copy_to_stream($input, $output);
+                    $expected = $zip->statName($name)['size'];
+                    $copied = stream_copy_to_stream($input, $output, $expected + 1);
                     if ($copied !== $zip->statName($name)['size']) {
                         throw new \moodle_exception('h5pinvalid', 'local_flatarchive');
                     }
@@ -116,7 +120,7 @@ final class h5p_package {
      * @return bool Whether the path is a plain relative path.
      */
     public static function safe_path(string $path): bool {
-        return $path !== '' && !preg_match('~[\\\\:\x00-\x1f]|^/|(?:^|/)\.{1,2}(?:/|$)|//~', $path);
+        return paths::relative($path);
     }
 
     /**
@@ -145,7 +149,11 @@ final class h5p_package {
         if (!$stat || $stat['size'] > 16777216) {
             throw new \moodle_exception('h5pinvalid', 'local_flatarchive');
         }
-        $data = json_decode($zip->getFromName($name), true, 128);
+        $json = $zip->getFromName($name, 16777217);
+        if ($json === false || strlen($json) !== $stat['size']) {
+            throw new \moodle_exception('h5pinvalid', 'local_flatarchive');
+        }
+        $data = json_decode($json, true, 128);
         if (!is_array($data) || json_last_error() !== JSON_ERROR_NONE) {
             throw new \moodle_exception('h5pinvalid', 'local_flatarchive');
         }

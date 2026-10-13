@@ -48,6 +48,11 @@ final class temporary_archive {
         if (!is_file($directory . '/archive.zip') || is_link($directory . '/archive.zip')) {
             throw new \moodle_exception('archivefailed', 'local_flatarchive');
         }
+        foreach ($SESSION->local_flatarchive_archives ?? [] as $oldtoken => $entry) {
+            if (($entry['expiresat'] ?? 0) <= time()) {
+                unset($SESSION->local_flatarchive_archives[$oldtoken]);
+            }
+        }
         $SESSION->local_flatarchive_archives[$token] = [
             'userid' => (int)$USER->id,
             'courseid' => $courseid,
@@ -73,18 +78,6 @@ final class temporary_archive {
             throw new \moodle_exception('filenotfound', 'error');
         }
         return $entry + ['directory' => $directory, 'path' => $file];
-    }
-
-    /**
-     * Explicitly remove an available archive and just its workspace.
-     * @param string $token Workspace token.
-     */
-    public static function delete(string $token): void {
-        global $CFG, $SESSION;
-        require_once($CFG->libdir . '/filelib.php');
-        $entry = self::resolve($token);
-        fulldelete($entry['directory']);
-        unset($SESSION->local_flatarchive_archives[$token]);
     }
 
     /**

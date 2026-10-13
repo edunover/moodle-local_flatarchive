@@ -89,6 +89,7 @@ final class layout {
                     $dom->removeChild($node);
                 }
             }
+            html_safety::harden($dom);
             return $dom->saveHTML();
         } finally {
             libxml_clear_errors();

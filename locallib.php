@@ -1,5 +1,26 @@
 <?php
-defined('MOODLE_INTERNAL') || die();
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * Shared archive rendering and file helpers.
+ *
+ * @package local_flatarchive
+ * @copyright 2026 Edunover
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 /**
  * Génère les badges de visibilité HTML pour un module de cours.
@@ -19,7 +40,7 @@ function local_flatarchive_visibility_badges(cm_info $cm, course_modinfo $modinf
     if (!$cm->visible) {
         $badges[] = '<span class="fa-vis-badge fa-vis-hidden">'
             . get_string('visibility_hidden', 'local_flatarchive') . '</span>';
-    } elseif ($cm->is_stealth()) {
+    } else if ($cm->is_stealth()) {
         $badges[] = '<span class="fa-vis-badge fa-vis-stealth">'
             . get_string('visibility_stealth', 'local_flatarchive') . '</span>';
     }
@@ -119,7 +140,11 @@ function local_flatarchive_copy_pluginfiles_and_rewrite(
             continue;
         }
         $path = $f->get_filepath() . $f->get_filename();
-        $dest = $filesdir . '/' . ltrim($path, '/');
+        $relativefile = ltrim($path, '/');
+        if (!\local_flatarchive\archive\paths::relative($relativefile)) {
+            throw new moodle_exception('archivefailed', 'local_flatarchive');
+        }
+        $dest = $filesdir . '/' . $relativefile;
         $fulldir = dirname($dest);
         if (!is_dir($fulldir)) {
             mkdir($fulldir, 0755, true);

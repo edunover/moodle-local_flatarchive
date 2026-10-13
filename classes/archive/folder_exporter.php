@@ -41,6 +41,9 @@ final class folder_exporter {
             throw new \coding_exception('The folder exporter requires a folder resource');
         }
         $folder = $DB->get_record('folder', ['id' => $cm->instance], 'id, intro, introformat', MUST_EXIST);
+        if (!selection::permitted($cm)) {
+            throw new \moodle_exception('invalidselection', 'local_flatarchive');
+        }
         $context = \context_module::instance($cm->id);
         $intro = \local_flatarchive_copy_pluginfiles_and_rewrite(
             $folder->intro,

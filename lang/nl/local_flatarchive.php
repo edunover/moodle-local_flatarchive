@@ -35,7 +35,6 @@ $string['loading'] = 'Laden';
 $string['nothingselected'] = 'Selecteer minstens één bron.';
 $string['status_idle'] = 'Klaar';
 $string['status_running'] = 'Bezig';
-$string['status_done'] = 'Klaar';
 $string['status_failed'] = 'Mislukt';
 $string['downloadzip'] = 'ZIP downloaden';
 $string['hidden'] = 'verborgen';

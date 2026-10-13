@@ -48,9 +48,9 @@ final class temporary_archive_test extends \advanced_testcase {
     }
 
     /**
-     * Simultaneous exports remain distinct and cleanup leaves neighbours intact.
+     * Simultaneous exports remain distinct and independently available.
      */
-    public function test_unique_workspaces_and_scoped_cleanup(): void {
+    public function test_unique_workspaces(): void {
         global $SESSION;
         $first = $this->archive();
         $second = $this->archive();
@@ -59,8 +59,8 @@ final class temporary_archive_test extends \advanced_testcase {
         $this->assertSame(42, $resolved['courseid']);
         $this->assertSame('Course.zip', $resolved['filename']);
         $this->assertSame('test archive', file_get_contents($resolved['path']));
-        temporary_archive::delete($first['token']);
-        $this->assertDirectoryDoesNotExist($first['directory']);
+        $SESSION->local_flatarchive_archives[$first['token']]['expiresat'] = time() - 1;
+        $this->archive();
         $this->assertArrayNotHasKey($first['token'], $SESSION->local_flatarchive_archives);
         $this->assertFileExists(temporary_archive::resolve($second['token'])['path']);
     }

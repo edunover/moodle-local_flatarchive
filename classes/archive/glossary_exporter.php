@@ -39,6 +39,9 @@ final class glossary_exporter {
         if ($cm->modname !== 'glossary') {
             throw new \coding_exception('The glossary exporter requires a glossary');
         }
+        if (!selection::permitted($cm)) {
+            throw new \moodle_exception('invalidselection', 'local_flatarchive');
+        }
         $context = \context_module::instance($cm->id);
         require_capability('mod/glossary:view', $context);
         $glossary = $DB->get_record('glossary', ['id' => $cm->instance], '*', MUST_EXIST);

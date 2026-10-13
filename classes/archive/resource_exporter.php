@@ -42,6 +42,9 @@ final class resource_exporter {
         if ($cm->modname !== 'resource') {
             throw new \coding_exception('The resource exporter requires a file resource');
         }
+        if (!selection::permitted($cm)) {
+            throw new \moodle_exception('invalidselection', 'local_flatarchive');
+        }
         $context = \context_module::instance($cm->id);
         $files = get_file_storage()->get_area_files(
             $context->id,

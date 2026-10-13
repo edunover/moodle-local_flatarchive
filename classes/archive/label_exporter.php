@@ -44,6 +44,9 @@ final class label_exporter {
             throw new \coding_exception('The label exporter requires a text and media area');
         }
         $label = $DB->get_record('label', ['id' => $cm->instance], 'id, intro, introformat', MUST_EXIST);
+        if (!selection::permitted($cm)) {
+            throw new \moodle_exception('invalidselection', 'local_flatarchive');
+        }
         $context = \context_module::instance($cm->id);
         $content = \local_flatarchive_copy_pluginfiles_and_rewrite(
             $label->intro,

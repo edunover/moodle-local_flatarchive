@@ -13,11 +13,16 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     root = Path(__file__).resolve().parent.parent
-    excluded_dirs = {".github", "tests", "scripts", "node_modules", "vendor", "ajax"}
-    excluded_files = {"claude.md", "package.json", "package-lock.json", ".gitignore", ".phpcs.xml"}
+    runtime_dirs = {"amd", "archive_templates", "classes", "db", "lang", "style", "templates", "docs"}
+    runtime_files = {"README.md", "SECURITY.md", "index.php", "lib.php", "locallib.php", "archive_process.php",
+                     "serve_temp.php", "styles.css", "version.php"}
     tracked = subprocess.check_output(["git", "ls-files", "-z"], cwd=root).decode().split("\0")
-    files = sorted(name for name in tracked if name and Path(name).parts[0] not in excluded_dirs
-                   and name not in excluded_files)
+    files = sorted(name for name in tracked if name and
+                   (Path(name).parts[0] in runtime_dirs or name in runtime_files))
+    for name in files:
+        path = root / name
+        if path.is_symlink() or not path.is_file() or not path.resolve().is_relative_to(root):
+            raise RuntimeError(f"Invalid release file: {name}")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(args.output, "w", zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
         for name in files:

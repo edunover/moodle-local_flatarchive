@@ -26,7 +26,6 @@ require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/filelib.php');
 require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/archive_templates/index_template.php');
-require_once(__DIR__ . '/archive_templates/about_template.php');
 require_once(__DIR__ . '/archive_templates/page_template.php');
 require_once(__DIR__ . '/archive_templates/book_toc_template.php');
 
@@ -52,12 +51,15 @@ use local_flatarchive\archive\temporary_archive;
 
 $courseid = required_param('id', PARAM_INT);
 $cmids = array_values(array_unique(optional_param_array('cmid', [], PARAM_INT)));
-require_sesskey();
 
 $course = get_course($courseid);
 require_login($course);
 $context = context_course::instance($courseid);
 require_capability('local/flatarchive:archive', $context);
+require_sesskey();
+if (!data_submitted()) {
+    throw new moodle_exception('invalidrequest');
+}
 
 if (empty($cmids)) {
     throw new moodle_exception('noselection', 'local_flatarchive');
@@ -72,13 +74,7 @@ $modinfo = get_fast_modinfo($course);
 $cms = $modinfo->get_cms();
 
 // Validate the whole selection before creating any files.
-foreach ($cmids as $cmid) {
-    $supported = ['page', 'book', 'label', 'resource', 'folder', 'glossary', 'wiki',
-        'feedback', 'choice', 'forum', 'lesson', 'quiz', 'data', 'url', 'assign', 'h5pactivity', 'workshop'];
-    if (!isset($cms[$cmid]) || !in_array($cms[$cmid]->modname, $supported, true)) {
-        throw new moodle_exception('invalidselection', 'local_flatarchive');
-    }
-}
+\local_flatarchive\archive\selection::validate($modinfo, $cmids);
 $workspace = temporary_archive::create();
 $tempdir = $workspace['directory'];
 try {
@@ -156,7 +152,11 @@ try {
                 (int) $cm->id,
                 ''
             );
-            $pagecontent = format_text($rawcontent, $pageinstance->contentformat, ['context' => $pagecontext]);
+            $pagecontent = format_text(
+                $rawcontent,
+                $pageinstance->contentformat,
+                ['context' => $pagecontext, 'filter' => false, 'noclean' => false]
+            );
             $pagefile = paths::stem($cm->name, 'page', (int)$cm->id) . '.html';
             $pagepath = $tempdir . '/' . $pagefile;
             $badges = local_flatarchive_visibility_badges($cm, $modinfo);
@@ -182,6 +182,9 @@ try {
             $chapters = $DB->get_recordset('book_chapters', ['bookid' => $cm->instance], 'pagenum, id');
             try {
                 foreach ($chapters as $chapter) {
+                    if ($chapter->hidden && !has_capability('mod/book:viewhiddenchapters', $pagecontext)) {
+                        continue;
+                    }
                     $rawcontent = $chapter->content;
                     $rawcontent = local_flatarchive_copy_pluginfiles_and_rewrite(
                         $rawcontent,
@@ -193,7 +196,11 @@ try {
                         (int) $cm->id,
                         $relativeshared
                     );
-                    $chaptercontent = format_text($rawcontent, $chapter->contentformat, ['context' => $pagecontext]);
+                    $chaptercontent = format_text(
+                        $rawcontent,
+                        $chapter->contentformat,
+                        ['context' => $pagecontext, 'filter' => false, 'noclean' => false]
+                    );
                     $chaptercontent = \local_flatarchive\archive\tags::render('mod_book', 'book_chapters', (int)$chapter->id)
                         . $chaptercontent;
                     $chfile = paths::stem($chapter->title, 'chapter', (int)$chapter->id) . '.html';
@@ -271,10 +278,6 @@ try {
     );
     local_flatarchive_write_file($tempdir . '/index.html', $indexhtml);
     $zipfiles['index.html'] = $tempdir . '/index.html';
-
-    $abouthtml = local_flatarchive_render_about_template($course);
-    local_flatarchive_write_file($tempdir . '/about.html', $abouthtml);
-    $zipfiles['about.html'] = $tempdir . '/about.html';
 
     $zipfiles = \local_flatarchive\archive\layout::organise($zipfiles);
 

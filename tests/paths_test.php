@@ -1,7 +1,20 @@
 <?php
-namespace local_flatarchive;
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_flatarchive;
 
 use local_flatarchive\archive\paths;
 
@@ -13,7 +26,9 @@ use local_flatarchive\archive\paths;
  * @covers \local_flatarchive\archive\paths
  */
 final class paths_test extends \basic_testcase {
-    /** Same titles, case variants and reserved index names must remain distinct. */
+    /**
+     * Same titles, case variants and reserved index names must remain distinct.
+     */
     public function test_resource_names_do_not_collide(): void {
         $names = [
             paths::stem('index', 'page', 1) . '.html',
@@ -26,7 +41,9 @@ final class paths_test extends \basic_testcase {
         $this->assertNotContains('index.html', $names);
     }
 
-    /** Titles cannot escape their folder or create Windows-reserved names. */
+    /**
+     * Titles cannot escape their folder or create Windows-reserved names.
+     */
     public function test_unsafe_and_empty_titles_are_normalised(): void {
         foreach (['../a/b', 'CON', 'NUL', '..', '', '<>:"\\|?*', str_repeat('😀', 200)] as $title) {
             $name = paths::stem($title, 'page', 12);
@@ -37,14 +54,18 @@ final class paths_test extends \basic_testcase {
         }
     }
 
-    /** Repeated media filenames in different chapters need different directories. */
+    /**
+     * Repeated media filenames in different chapters need different directories.
+     */
     public function test_chapter_file_areas_are_isolated(): void {
         $this->assertSame('files/5/chapter/7', paths::assets(5, 'chapter', 7));
         $this->assertNotSame(paths::assets(5, 'chapter', 7), paths::assets(5, 'chapter', 8));
         $this->assertNotSame(paths::assets(5, 'content', 0), paths::assets(6, 'content', 0));
     }
 
-    /** Internal callers cannot accidentally build a traversal path. */
+    /**
+     * Internal callers cannot accidentally build a traversal path.
+     */
     public function test_invalid_file_area_is_rejected(): void {
         $this->expectException(\coding_exception::class);
         paths::assets(5, '../chapter', 7);

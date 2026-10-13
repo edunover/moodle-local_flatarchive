@@ -1,7 +1,20 @@
 <?php
-namespace local_flatarchive\archive;
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_flatarchive\archive;
 
 /**
  * Collision-free paths within an offline archive.
@@ -42,5 +55,14 @@ final class paths {
             throw new \coding_exception('Invalid archive file area');
         }
         return 'files/' . $cmid . '/' . $filearea . '/' . $itemid;
+    }
+
+    /**
+     * Reject paths which could escape a file area or package directory.
+     * @param string $path Candidate path
+     * @return bool Whether the path is a plain relative path
+     */
+    public static function relative(string $path): bool {
+        return $path !== '' && !preg_match('~[\\\\:\x00-\x1f]|^/|(?:^|/)\.{1,2}(?:/|$)|//~', $path);
     }
 }

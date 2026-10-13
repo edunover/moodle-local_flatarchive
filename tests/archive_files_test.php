@@ -1,4 +1,19 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
 namespace local_flatarchive;
 
 defined('MOODLE_INTERNAL') || die();
@@ -14,7 +29,9 @@ require_once($CFG->libdir . '/filelib.php');
  * @covers ::local_flatarchive_copy_pluginfiles_and_rewrite
  */
 final class archive_files_test extends \advanced_testcase {
-    /** Same-name chapter attachments must survive copying and ZIP creation. */
+    /**
+     * Same-name chapter attachments must survive copying and ZIP creation.
+     */
     public function test_chapter_files_are_copied_without_overwriting(): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -30,8 +47,14 @@ final class archive_files_test extends \advanced_testcase {
                 'itemid' => $itemid, 'filepath' => '/nested/', 'filename' => 'image.png',
             ], $content);
             $html = local_flatarchive_copy_pluginfiles_and_rewrite(
-                '<img src="@@PLUGINFILE@@/nested/image.png">', $context, 'mod_book', 'chapter',
-                $itemid, $dir, (int)$book->cmid, '../'
+                '<img src="@@PLUGINFILE@@/nested/image.png">',
+                $context,
+                'mod_book',
+                'chapter',
+                $itemid,
+                $dir,
+                (int)$book->cmid,
+                '../'
             );
             $relative = 'files/' . $book->cmid . '/chapter/' . $itemid . '/nested/image.png';
             $this->assertSame('<img src="../' . $relative . '">', $html);
@@ -41,7 +64,8 @@ final class archive_files_test extends \advanced_testcase {
         $packer = get_file_packer('application/zip');
         $this->assertTrue($packer->archive_to_pathname($zipfiles, $dir . '/test.zip'));
         $this->assertNotFalse($packer->extract_to_pathname($dir . '/test.zip', $dir . '/unpacked'));
-        $this->assertSame('first image', file_get_contents($dir . '/unpacked/files/' . $book->cmid . '/chapter/101/nested/image.png'));
-        $this->assertSame('different image', file_get_contents($dir . '/unpacked/files/' . $book->cmid . '/chapter/102/nested/image.png'));
+        $base = $dir . '/unpacked/files/' . $book->cmid . '/chapter/';
+        $this->assertSame('first image', file_get_contents($base . '101/nested/image.png'));
+        $this->assertSame('different image', file_get_contents($base . '102/nested/image.png'));
     }
 }

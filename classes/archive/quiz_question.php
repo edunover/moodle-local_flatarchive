@@ -78,7 +78,7 @@ final class quiz_question {
             $html = $qa->render($options, $number);
         }
         $dom = new \DOMDocument();
-        @$dom->loadHTML('<?xml encoding="UTF-8"><div id="fa-question-root">' . $html . '</div>');
+        @$dom->loadHTML('<?xml encoding="UTF-8"><div id="fa-question-root">' . $html . '</div>', LIBXML_NONET);
         $xpath = new \DOMXPath($dom);
         foreach (iterator_to_array($xpath->query('//script|//style|//button|//input[@type="hidden"]')) as $node) {
             $node->parentNode->removeChild($node);
@@ -197,7 +197,9 @@ final class quiz_question {
         $destination = $directory . '/' . $relative;
         if (!is_file($destination)) {
             make_writable_directory(dirname($destination));
-            $file->copy_content_to($destination);
+            if (!$file->copy_content_to($destination)) {
+                throw new \moodle_exception('archivefailed', 'local_flatarchive');
+            }
         }
         return implode('/', array_map('rawurlencode', explode('/', $relative)));
     }

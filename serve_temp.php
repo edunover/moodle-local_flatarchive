@@ -51,7 +51,7 @@ $course = get_course($archive['courseid']);
 require_login($course);
 require_capability('local/flatarchive:archive', context_course::instance($course->id));
 
-// Keep the session lock until completion to prevent concurrent explicit deletion.
+// Serve only the resolved ZIP; never accept a client-provided filesystem path.
 header('Content-Type: application/zip');
 header('Content-Disposition: attachment; filename="archive.zip"; filename*=UTF-8\'\'' . rawurlencode($archive['filename']));
 header('Content-Length: ' . filesize($archive['path']));

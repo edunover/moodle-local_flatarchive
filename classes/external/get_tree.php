@@ -90,25 +90,8 @@ class get_tree extends external_api {
                 if (!$cm->uservisible) {
                     continue;
                 }
-                $types = ['page', 'book', 'label', 'resource', 'folder', 'glossary',
-                    'wiki', 'feedback', 'choice', 'forum', 'lesson', 'quiz', 'data', 'url', 'assign', 'h5pactivity', 'workshop'];
-                $supported = in_array($cm->modname, $types, true);
-                // Complete lesson exports expose solutions and require authoring permission.
-                $permitted = $cm->modname !== 'lesson' ||
-                    has_capability('mod/lesson:edit', \context_module::instance($cm->id));
-                if ($cm->modname === 'data') {
-                    $permitted = has_capability('mod/data:manageentries', \context_module::instance($cm->id));
-                }
-
-                if ($cm->modname === 'h5pactivity') {
-                    $permitted = has_capability('moodle/course:manageactivities', \context_module::instance($cm->id))
-                        && has_capability('mod/h5pactivity:view', \context_module::instance($cm->id));
-                }
-
-                if ($cm->modname === 'workshop') {
-                    $permitted = has_capability('moodle/course:manageactivities', $cm->context)
-                        && has_capability('mod/workshop:view', $cm->context);
-                }
+                $supported = \local_flatarchive\archive\selection::supported($cm->modname);
+                $permitted = \local_flatarchive\archive\selection::permitted($cm);
 
                 $sectiondata['modules'][] = [
                     'cmid' => $cm->id,

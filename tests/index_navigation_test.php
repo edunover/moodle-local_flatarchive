@@ -24,7 +24,6 @@ namespace local_flatarchive;
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers ::local_flatarchive_render_page_template
  * @covers ::local_flatarchive_render_book_toc_template
- * @covers ::local_flatarchive_render_about_template
  */
 final class index_navigation_test extends \advanced_testcase {
     /**
@@ -33,7 +32,7 @@ final class index_navigation_test extends \advanced_testcase {
     public function test_all_document_templates(): void {
         global $CFG;
         require_once($CFG->dirroot . '/local/flatarchive/locallib.php');
-        foreach (['page', 'book_toc', 'about'] as $template) {
+        foreach (['page', 'book_toc'] as $template) {
             require_once($CFG->dirroot . '/local/flatarchive/archive_templates/' . $template . '_template.php');
         }
         $this->resetAfterTest();
@@ -42,7 +41,6 @@ final class index_navigation_test extends \advanced_testcase {
             [local_flatarchive_render_page_template($course, null, 'Report', 'Content'), 'index.html'],
             [local_flatarchive_render_page_template($course, null, 'Chapter', 'Content', '../'), '../index.html'],
             [local_flatarchive_render_book_toc_template($course, 'Book', []), '../index.html'],
-            [local_flatarchive_render_about_template($course), 'index.html'],
         ];
         foreach ($cases as [$html, $href]) {
             $dom = new \DOMDocument();

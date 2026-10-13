@@ -172,7 +172,7 @@ final class h5p_renderer {
         }
         $doc = new \DOMDocument();
         $previous = libxml_use_internal_errors(true);
-        $doc->loadHTML('<?xml encoding="utf-8" ?><div>' . clean_text($html, FORMAT_HTML) . '</div>');
+        $doc->loadHTML('<?xml encoding="utf-8" ?><div>' . clean_text($html, FORMAT_HTML) . '</div>', LIBXML_NONET);
         libxml_clear_errors();
         libxml_use_internal_errors($previous);
         $allowed = ['html', 'body', 'div', 'p', 'span', 'strong', 'em', 'b', 'i', 'u', 's', 'sub', 'sup',

@@ -275,7 +275,7 @@ final class data_exporter {
     ): void {
         $document = new \DOMDocument();
         $previous = libxml_use_internal_errors(true);
-        $document->loadHTML('<?xml encoding="UTF-8"><div class="fa-data-body">' . $body . '</div>');
+        $document->loadHTML('<?xml encoding="UTF-8"><div class="fa-data-body">' . $body . '</div>', LIBXML_NONET);
         $xpath = new \DOMXPath($document);
         // HTML Purifier does not understand every HTML5 layout element on older Moodle versions.
         // Temporarily use divs, sanitizing their attributes, then restore these inert structural tags.
@@ -295,7 +295,7 @@ final class data_exporter {
         }
         $root = $xpath->query('//div[@class="fa-data-body"]')->item(0);
         $clean = clean_text($document->saveHTML($root), FORMAT_HTML);
-        $document->loadHTML('<?xml encoding="UTF-8">' . $clean);
+        $document->loadHTML('<?xml encoding="UTF-8">' . $clean, LIBXML_NONET);
         $xpath = new \DOMXPath($document);
         foreach ($structural as $marker => [$tag, $originalid, $originalclass]) {
             $node = $xpath->query('//*[contains(concat(" ", normalize-space(@class), " "), " ' . $marker . ' ")]')->item(0);
