@@ -1,6 +1,6 @@
 # local_flatarchive — notes techniques
 
-Version : 0.2.0 (2026101210), MATURITY_ALPHA, Moodle 4.4 à 5.3.
+Version : 0.2.0 (2026101301), MATURITY_ALPHA, Moodle 4.4 à 5.3.
 
 ## Documentation et versionnage
 
@@ -13,7 +13,7 @@ qu’à la demande de l’utilisateur. Les sections datées ci-dessous sont hist
 - `index.php`, `templates/index.mustache`, `amd/src/selectors.js` : sélection du cours.
 - `classes/external/get_tree.php`, `db/services.php` : service AJAX Moodle actif via core/ajax.
 - `archive_process.php` : génération HTML synchrone et assemblage du ZIP.
-- `classes/archive/` : exporteurs des 15 types pris en charge, paramètres, tags,
+- `classes/archive/` : exporteurs des 16 types pris en charge, paramètres, tags,
   icônes, fichiers et téléchargements temporaires.
 - `locallib.php` : visibilité, version, copie des icônes/médias et structure des sections.
 - `archive_templates/` et `style/moodle.css` : documents HTML autonomes.
@@ -802,3 +802,22 @@ Le build 2026101209 (index seul à la racine) a été validé manuellement, RAS.
   absence de données privées sans droit de correction, anonymat et groupes.
 
 Validation automatique réussie : [run 38297358444](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38297358444), 17/17 jobs verts, Moodle 4.4 à 5.3, JavaScript, paquet et `moodle-extra`. Code validé : `bb5149c`. Validation manuelle du build 2026101210 à effectuer après installation.
+
+
+## H5P natif — build 2026101301 (validation en cours)
+
+- `h5p_package` lit les JSON et extrait uniquement les médias passifs d’un paquet
+  `mod_h5pactivity/package/0`, sans déployer de bibliothèque H5P ni modifier Moodle.
+  Le paquet original reste dans `files/{cmid}/h5p/0/source.h5p` ; médias dans `media/`.
+- `h5p_renderer` convertit les bibliothèques vers du HTML nettoyé. Les contenus
+  imbriqués sont bornés à 16 niveaux. Type/version majeure inconnue : avertissement.
+  Les pages de présentation sont linéarisées et ne visent pas une copie pixel à pixel.
+- `h5p_exporter` produit la page principale, les pages de questions/diapositives et
+  les tentatives historiques autorisées. Contrôle manageactivities pour les solutions ;
+  reviewattempts + gestionnaire natif Moodle pour chaque rapport (groupes/inscription).
+  Aucun calcul de score, ni nouvelle tentative, ni consultation enregistrée.
+- Sélection AJAX, dispatch, settings, FR/EN/NL, CSS et périmètre moodle-extra étendus.
+- Tests : cinq types, navigation, médias et intégrité du paquet, HTML inerte,
+  chemins traversants, rapports, groupes, suivi désactivé et droits d’auteur de contenu.
+- Le build précédent 2026101210 a été validé manuellement par l’utilisateur, RAS.
+- PHPUnit et contrôle Moodle 4.4–5.3 à lancer ; aucune validation annoncée avant résultat.

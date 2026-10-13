@@ -333,3 +333,54 @@ $string['assigngroupsubmission'] = 'Groepsinzending';
 $string['assignnotgraded'] = 'Niet beoordeeld';
 $string['assignunsupported'] = 'Inhoud niet geëxporteerd voor deze uitbreiding: {$a}';
 $string['assigngrade'] = 'Opdrachtcijfer';
+
+// Native H5P static export.
+$string['h5pinvalid'] = 'Het H5P-pakket ontbreekt, is ongeldig of overschrijdt de archieflimieten.';
+$string['h5pstaticnotice'] = 'Statische leeskopie: oefeningen kunnen hier niet worden ingevuld. Oplossingen en feedback blijven ' .
+    'bewaard. Het oorspronkelijke H5P-pakket is apart bijgevoegd; niet-ondersteunde elementen worden ' .
+    'aangegeven.';
+$string['h5psource'] = 'Oorspronkelijk H5P-pakket downloaden';
+$string['h5punsupported'] = 'Element niet omgezet naar statische HTML: {$a}. Raadpleeg het oorspronkelijke H5P-pakket.';
+$string['h5pmediaunavailable'] = 'Media niet ingesloten: {$a}. Externe media vereisen internet; andere bestanden blijven in het ' .
+    'oorspronkelijke pakket.';
+$string['h5pchoices'] = 'Mogelijke antwoorden';
+$string['h5psolutions'] = 'Oplossingen';
+$string['h5pdistractors'] = 'Extra afleidingswoorden';
+$string['h5pwords'] = 'Woorden / toegestane alternatieven';
+$string['h5ptrue'] = 'Waar';
+$string['h5pfalse'] = 'Onwaar';
+$string['h5pelements'] = 'Te plaatsen elementen';
+$string['h5pzone'] = 'Zone {$a}';
+$string['h5pslide'] = 'Dia {$a}';
+$string['h5pquestion'] = 'Vraag {$a}';
+$string['h5pslidelink'] = 'Ga naar dia: {$a}';
+$string['h5pjumpcorrect'] = 'Correct antwoord: ga naar {$a}';
+$string['h5pjumpwrong'] = 'Onjuist antwoord: ga naar {$a}';
+$string['h5pjump'] = 'Ga naar {$a}';
+$string['h5prequirecompletion'] = 'Deze interactie moest oorspronkelijk worden voltooid om verder te gaan.';
+$string['h5ptip'] = 'Hint';
+$string['h5pchosenfeedback'] = 'Feedback bij selectie';
+$string['h5pnotchosenfeedback'] = 'Feedback indien niet geselecteerd';
+$string['h5pfeedbackoncorrect'] = 'Feedback bij een correct antwoord';
+$string['h5pfeedbackonincorrect'] = 'Feedback bij een onjuist antwoord';
+$string['h5pfeedbackonwrong'] = 'Feedback bij een onjuist antwoord';
+$string['h5pcredits'] = 'Naamsvermelding en licentie';
+$string['h5pback'] = 'Terug naar H5P-activiteit';
+$string['h5pcontentsettings'] = 'H5P-inhoudsinstellingen (opgeslagen waarden)';
+$string['h5pattempts'] = 'Opgeslagen pogingen';
+$string['h5pattemptnotice'] = 'Alleen opgeslagen Moodle-rapporten die voor de exporterende gebruiker toegankelijk zijn, worden ' .
+    'opgenomen. Eerdere antwoorden worden niet opnieuw berekend met de huidige inhoud.';
+$string['h5pnoreports'] = 'Geen toegankelijk opgeslagen rapport.';
+$string['h5pattempt'] = 'Poging {$a}';
+$string['h5prawresponse'] = 'Opgeslagen antwoord (oorspronkelijke xAPI-codering)';
+$string['h5pscore'] = 'Opgeslagen score';
+$string['h5pcompletion'] = 'Voltooid';
+$string['h5psuccess'] = 'Geslaagd';
+$string['h5pyes'] = 'Ja';
+$string['h5pno'] = 'Nee';
+$string['h5punknown'] = 'Niet opgeslagen';
+$string['h5pduration'] = 'Opgeslagen duur: {$a} seconden';
+$string['settingfield_h5ptracking'] = 'Pogingen bijhouden';
+$string['settingfield_h5pgrademethod'] = 'Beoordelingsmethode (Moodle-waarde)';
+$string['settingfield_h5previewmode'] = 'Beoordelingsmodus (Moodle-waarde)';
+$string['settingfield_h5pdisplayoptions'] = 'Weergaveopties (Moodle-bitmasker)';

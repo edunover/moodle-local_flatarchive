@@ -408,6 +408,12 @@ final class settings_snapshot {
                 'externalurl' => ['text', 'externalurl'],
                 'display' => ['display', 'settingfield_display'],
             ],
+            'h5pactivity' => [
+                'enabletracking' => ['bool', 'settingfield_h5ptracking'],
+                'grademethod' => ['number', 'settingfield_h5pgrademethod'],
+                'reviewmode' => ['number', 'settingfield_h5previewmode'],
+                'displayoptions' => ['number', 'settingfield_h5pdisplayoptions'],
+            ],
             'assign' => [
                 'allowsubmissionsfromdate' => ['date', 'allowsubmissionsfromdate'],
                 'duedate' => ['date', 'duedate'],

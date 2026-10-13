@@ -6,15 +6,15 @@
 
 ## Français
 
-Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums, Leçons, Tests, Bases de données, URL et Devoirs) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
+Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums, Leçons, Tests, Bases de données, URL, Devoirs et H5P natif) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101210) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101301) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
 Flatarchive permet aux enseignants d'exporter des ressources de cours vers une archive portable utilisable hors ligne :
 
-- Sélection des activités **Page**, **Livre**, **Zone texte et média**, **Fichier**, **Dossier**, **Glossaire**, **Wiki**, **Feedback** et **Consultation**, **Forum**, **Leçon**, **Test**, **Base de données**, **URL** et **Devoir** depuis l'arborescence du cours
+- Sélection des activités **Page**, **Livre**, **Zone texte et média**, **Fichier**, **Dossier**, **Glossaire**, **Wiki**, **Feedback** et **Consultation**, **Forum**, **Leçon**, **Test**, **Base de données**, **URL**, **Devoir** et **H5P natif** depuis l'arborescence du cours
 - Génération d'un **site HTML statique** — aucune dépendance Moodle après téléchargement
 - Réécriture des liens `@@PLUGINFILE@@` en chemins relatifs et copie des fichiers embarqués
 - **Badges de visibilité** (caché / caché de la page de cours / section cachée) sur chaque page et dans l'index
@@ -99,7 +99,7 @@ Les données du cours et les archives téléchargées ne se trouvent pas dans ce
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums, Lessons, Quizzes, Databases, URLs and Assignments) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101210) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101301) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -1041,3 +1041,58 @@ Le build 2026101209 (index seul à la racine) a été validé manuellement, RAS.
   absence de données privées sans droit de correction, anonymat et groupes.
 
 Validation automatique réussie : [run 38297358444](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38297358444), 17/17 jobs verts, Moodle 4.4 à 5.3, JavaScript, paquet et `moodle-extra`. Code validé : `bb5149c`. Validation manuelle du build 2026101210 à effectuer après installation.
+
+
+## H5P natif — build 2026101301
+
+`mod_h5pactivity` est exporté en HTML statique pour Course Presentation,
+Interactive Video, Question Set, Drag and Drop et Drag the Words. `mod_hvp`
+n’est pas pris en charge. Cette version est en cours de validation automatique.
+
+- Course Presentation : sommaire, page par diapositive, contenu en ordre de lecture,
+  commentaires/solutions et liens de navigation. La mise en page est linéarisée ;
+  les animations et superpositions du lecteur ne sont pas reproduites.
+- Interactive Video : vidéo locale avec lecteur HTML natif, interactions dans l’ordre
+  chronologique, horodatages, solutions, feedbacks et sauts conditionnels décrits.
+- Question Set : sommaire, page par question et corrigés. Toutes les questions du paquet
+  sont conservées ; le tirage aléatoire n’est pas exécuté. Ses réglages sont documentés.
+- Drag and Drop : fond et zones numérotées fixes, liste des éléments et associations
+  correctes, y compris plusieurs zones possibles pour un même élément.
+- Drag the Words : texte à trous, mots, texte corrigé, indices et feedbacks.
+- Convertisseurs imbriqués : textes, tableaux, liens, images, audio/vidéo, MultiChoice,
+  TrueFalse, Blanks, SingleChoiceSet, Summary et les cinq types ci-dessus.
+  Les autres bibliothèques et les versions majeures inconnues affichent un avertissement.
+- Le paquet `.h5p` d’origine est conservé octet pour octet. Il contient ce que Moodle
+  stocke pour l’activité ; sa présence ne garantit pas l’intégration de médias externes
+  ni de bibliothèques absentes du paquet original.
+- Médias locaux PNG/JPEG/GIF/WebP/AVIF, MP4/WebM/OGV, MP3/OGG/WAV/M4A et VTT copiés.
+  SVG, HTML et scripts ne sont pas déployés depuis le paquet. Toute référence non
+  résolue est indiquée ; les médias externes restent accessibles par lien explicite.
+- Pas de lecteur H5P, de formulaire, de réponse nouvelle ou de recalcul de note.
+  Les pages HTML restent techniquement modifiables avec un éditeur.
+- Crédits, licence, paramètres Moodle, réglages du contenu et retour à l’index.
+- Contenu et solutions réservés au droit `moodle/course:manageactivities`, en plus
+  de `mod/h5pactivity:view`. Rapports historiques réservés à `mod/h5pactivity:reviewattempts`,
+  avec suivi activé et validation de chaque rapport par le gestionnaire natif Moodle
+  (inscription et groupes). Les réponses connues sont décodées par Moodle ; les
+  formats inconnus restent identifiés comme données xAPI originales. Les états
+  intermédiaires du lecteur et les interactions jamais enregistrées ne sont pas inventés.
+
+Limites de lecture d’un paquet : 20 000 entrées, 2 Gio décompressés et 16 Mio par
+fichier JSON. Les chemins traversants, doublons de chemins et liens symboliques
+sont rejetés. Le traitement reste synchrone et dépend des limites PHP du serveur.
+
+English: native H5P activities export as passive, readable HTML with original H5P
+packages retained. Five top-level content types are supported, with shared static
+renderers for common embedded questions. Presentations are linearised; videos use
+native players and a timed interaction transcript. Unsupported content is explicitly
+marked. Recorded Moodle reports respect review permission, enrolment and groups.
+External media remain network-dependent. No H5P runtime or learner interaction is
+executed. `mod_hvp` is outside this release.
+
+Références des formats : [H5P content structure](https://h5p.org/documentation/developers/json-file-definitions),
+[Course Presentation](https://github.com/h5p/h5p-course-presentation),
+[Interactive Video](https://github.com/h5p/h5p-interactive-video),
+[Question Set](https://github.com/h5p/h5p-question-set),
+[Drag and Drop](https://github.com/h5p/h5p-drag-question),
+[Drag the Words](https://github.com/h5p/h5p-drag-text).

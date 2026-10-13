@@ -342,3 +342,54 @@ $string['assigngroupsubmission'] = 'Remise de groupe';
 $string['assignnotgraded'] = 'Non évalué';
 $string['assignunsupported'] = 'Contenu non exporté pour cette extension : {$a}';
 $string['assigngrade'] = 'Note du devoir';
+
+// Native H5P static export.
+$string['h5pinvalid'] = 'Le paquet H5P est absent, invalide ou dépasse les limites d’archivage.';
+$string['h5pstaticnotice'] = 'Copie de lecture statique : les exercices ne peuvent pas être complétés ici. Les solutions et feedbacks ' .
+    'sont conservés. Le paquet H5P original est joint séparément ; les éléments non pris en charge sont ' .
+    'signalés.';
+$string['h5psource'] = 'Télécharger le paquet H5P original';
+$string['h5punsupported'] = 'Élément non converti en HTML statique : {$a}. Consulter le paquet H5P original.';
+$string['h5pmediaunavailable'] = 'Média non embarqué : {$a}. Les médias externes nécessitent Internet ; les autres fichiers restent dans ' .
+    'le paquet original.';
+$string['h5pchoices'] = 'Réponses possibles';
+$string['h5psolutions'] = 'Solutions';
+$string['h5pdistractors'] = 'Mots distracteurs supplémentaires';
+$string['h5pwords'] = 'Mots / variantes acceptées';
+$string['h5ptrue'] = 'Vrai';
+$string['h5pfalse'] = 'Faux';
+$string['h5pelements'] = 'Éléments à placer';
+$string['h5pzone'] = 'Zone {$a}';
+$string['h5pslide'] = 'Diapositive {$a}';
+$string['h5pquestion'] = 'Question {$a}';
+$string['h5pslidelink'] = 'Aller à la diapositive : {$a}';
+$string['h5pjumpcorrect'] = 'Réponse correcte : aller à {$a}';
+$string['h5pjumpwrong'] = 'Réponse incorrecte : aller à {$a}';
+$string['h5pjump'] = 'Aller à {$a}';
+$string['h5prequirecompletion'] = 'Cette interaction imposait initialement son achèvement avant de poursuivre.';
+$string['h5ptip'] = 'Indice';
+$string['h5pchosenfeedback'] = 'Feedback si sélectionné';
+$string['h5pnotchosenfeedback'] = 'Feedback si non sélectionné';
+$string['h5pfeedbackoncorrect'] = 'Feedback pour une réponse correcte';
+$string['h5pfeedbackonincorrect'] = 'Feedback pour une réponse incorrecte';
+$string['h5pfeedbackonwrong'] = 'Feedback pour une réponse incorrecte';
+$string['h5pcredits'] = 'Crédits et licence';
+$string['h5pback'] = 'Retour à l’activité H5P';
+$string['h5pcontentsettings'] = 'Réglages du contenu H5P (valeurs enregistrées)';
+$string['h5pattempts'] = 'Tentatives enregistrées';
+$string['h5pattemptnotice'] = 'Seuls les rapports enregistrés dans Moodle et accessibles à la personne qui exporte sont inclus. Les ' .
+    'anciennes réponses ne sont pas recalculées avec le contenu actuel.';
+$string['h5pnoreports'] = 'Aucun rapport enregistré accessible.';
+$string['h5pattempt'] = 'Tentative {$a}';
+$string['h5prawresponse'] = 'Réponse enregistrée (encodage xAPI original)';
+$string['h5pscore'] = 'Score enregistré';
+$string['h5pcompletion'] = 'Achevé';
+$string['h5psuccess'] = 'Réussi';
+$string['h5pyes'] = 'Oui';
+$string['h5pno'] = 'Non';
+$string['h5punknown'] = 'Non enregistré';
+$string['h5pduration'] = 'Durée enregistrée : {$a} secondes';
+$string['settingfield_h5ptracking'] = 'Suivi des tentatives';
+$string['settingfield_h5pgrademethod'] = 'Méthode de notation (valeur Moodle)';
+$string['settingfield_h5previewmode'] = 'Mode de relecture (valeur Moodle)';
+$string['settingfield_h5pdisplayoptions'] = 'Options d’affichage (masque Moodle)';

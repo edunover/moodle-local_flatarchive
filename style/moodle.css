@@ -150,3 +150,11 @@ hr { margin: 1rem 0; border: 0; border-top: 1px solid #dee2e6; }
     white-space: nowrap;
 }
 .fa-settings-empty { color: #59636e; font-style: italic; }
+
+/* Static H5P media and numbered drop zones. */
+.flatarchive-h5p-image, .flatarchive-h5p-element video { max-width: 100%; height: auto; }
+.flatarchive-h5p-element { margin-block: 1rem; }
+.flatarchive-h5p-notice { padding: .6rem; margin-block: .6rem; border-left: 3px solid #697682; background: #f3f5f7; }
+.flatarchive-h5p-board { position: relative; width: 100%; max-width: 800px; border: 1px solid #697682; }
+.flatarchive-h5p-board > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.flatarchive-h5p-zone { position: absolute; border: 2px dashed #1d4e70; background: #ffffffcc; color: #14364e; font-weight: bold; }
