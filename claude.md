@@ -1,6 +1,6 @@
 # local_flatarchive — notes techniques
 
-Version : 0.2.0 (2026101301), MATURITY_ALPHA, Moodle 4.4 à 5.3.
+Version : 0.2.0 (2026101302), MATURITY_ALPHA, Moodle 4.4 à 5.3.
 
 ## Documentation et versionnage
 
@@ -825,3 +825,17 @@ Validation automatique réussie : [run 38297358444](https://github.com/edunover/
   Code `d16b995`, standards moodle-extra et paquet vérifiés.
   PHPUnit signale 27 dépréciations et une notice sur Moodle 5.3, sans échec.
   Validation manuelle avec les paquets H5P de la sandbox à effectuer.
+
+
+## Correctif des indices H5P Summary — build 2026101302
+
+Un paquet réel Course Presentation contient un indice Summary sous forme de texte,
+alors que le convertisseur attendait un groupe de champs. Cela interrompait la
+création de l’archive avec une TypeError dans `h5p_renderer::feedback()`.
+L’indice texte est maintenant normalisé avant le rendu ; les groupes, indices vides
+et absents restent pris en charge. Un test reproduit ces variantes dans une vraie
+chaîne d’export Course Presentation, avec conservation des solutions et nettoyage HTML.
+
+English: Summary hints stored as plain strings no longer interrupt Presentation
+exports. Both string and grouped hints are supported, including empty/missing values.
+Validation automatique en cours ; régénérer l’archive après installation du correctif.

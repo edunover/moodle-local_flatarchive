@@ -113,7 +113,12 @@ final class h5p_renderer {
                     $html .= $this->heading('h5pchoices');
                     $html .= \html_writer::alist(array_map([$this, 'rich'], $answers), [], 'ol');
                     $html .= $this->heading('h5psolutions') . $this->rich($answers[0] ?? '');
-                    $html .= $this->feedback($question['tip'] ?? []);
+                    // Older Summary packages store a plain string; newer schemas use a tip group.
+                    $tip = $question['tip'] ?? [];
+                    if (is_string($tip)) {
+                        $tip = ['tip' => $tip];
+                    }
+                    $html .= $this->feedback(is_array($tip) ? $tip : []);
                 }
                 break;
             case 'H5P.DragQuestion':

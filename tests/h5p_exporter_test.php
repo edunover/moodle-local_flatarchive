@@ -186,6 +186,34 @@ final class h5p_exporter_test extends \advanced_testcase {
     }
 
     /**
+     * Summary hints in real presentations can be strings, groups, empty or absent.
+     */
+    public function test_presentation_summary_hint_variants(): void {
+        $this->resetAfterTest();
+        $summaries = [];
+        foreach (['Legacy hint', ['tip' => 'Grouped hint'], '', ['tip' => ''], null] as $tip) {
+            $summaries[] = ['summary' => ['Correct statement', 'Incorrect statement'], 'tip' => $tip];
+        }
+        $summaries[] = ['summary' => ['Correct without hint', 'Incorrect without hint']];
+        $summaries[] = ['summary' => ['Safe statement', 'Other statement'],
+            'tip' => '<strong>Rich hint</strong><script>alert(1)</script>'];
+        [$course, $activity, $file, $directory] = $this->fixture('H5P.CoursePresentation', [
+            'presentation' => ['slides' => [['elements' => [['action' => [
+                'library' => 'H5P.Summary 1.10', 'params' => ['summaries' => $summaries],
+            ]]]]]],
+        ]);
+        $modinfo = get_fast_modinfo($course);
+        $result = h5p_exporter::render($modinfo->get_cm($activity->cmid), $modinfo, $directory);
+        $this->assertCount(2, $result['filenames']);
+        $html = file_get_contents($directory . '/' . $result['filenames'][0]);
+        foreach (['Legacy hint', 'Grouped hint', 'Rich hint', 'Correct statement', 'Correct without hint', 'Solutions'] as $text) {
+            $this->assertStringContainsString($text, $html);
+        }
+        $this->assertStringNotContainsString('<script', $html);
+        $this->assertStringContainsString($result['filename'], $html);
+    }
+
+    /**
      * Video retains local playback, time-ordered interactions and branching descriptions.
      */
     public function test_interactive_video_timeline(): void {

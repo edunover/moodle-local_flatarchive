@@ -1,7 +1,7 @@
 # Validation manuelle H5P natif
 
 Utiliser des activités **H5P natives** (`mod_h5pactivity`), pas `mod_hvp`.
-Le paquet d'installation à tester est `local_flatarchive-2026101301.zip`.
+Le paquet d'installation à tester est `local_flatarchive-2026101302.zip`.
 
 ## Contenus à préparer
 

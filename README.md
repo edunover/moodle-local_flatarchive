@@ -8,7 +8,7 @@
 
 Plugin local Moodle — Archive les ressources d'un cours (Pages, Livres, Zones texte et média, Fichiers, Dossiers, Glossaires, Wikis, Feedbacks, Consultations, Forums, Leçons, Tests, Bases de données, URL, Devoirs et H5P natif) en pages HTML statiques autonomes regroupées dans un ZIP téléchargeable.
 
-**Version :** 0.2.0 (2026101301) · MATURITY_ALPHA · Requiert Moodle 4.4+
+**Version :** 0.2.0 (2026101302) · MATURITY_ALPHA · Requiert Moodle 4.4+
 
 ### Fonctionnalités
 
@@ -100,7 +100,7 @@ Les données du cours et les archives téléchargées ne se trouvent pas dans ce
 
 Moodle local plugin — Archive course resources (Pages, Books, Text and media areas, Files, Folders, Glossaries, Wikis, Feedbacks, Choices, Forums, Lessons, Quizzes, Databases, URLs and Assignments) as self-contained static HTML pages bundled in a downloadable ZIP.
 
-**Version:** 0.2.0 (2026101301) · MATURITY_ALPHA · Requires Moodle 4.4+
+**Version:** 0.2.0 (2026101302) · MATURITY_ALPHA · Requires Moodle 4.4+
 
 ### What it does
 
@@ -1103,3 +1103,17 @@ Jeu de vérifications manuelles : [tests/fixtures/h5p/README.md](tests/fixtures/
 Validation du build 2026101301 : [GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38432938448),
 17/17 jobs réussis, Moodle 4.4 à 5.3, `moodle-extra`, JavaScript et paquet.
 Moodle 5.3 : 128 tests PHPUnit, 1 176 assertions (code `d16b995`).
+
+
+## Correctif des indices H5P Summary — build 2026101302
+
+Un paquet réel Course Presentation contient un indice Summary sous forme de texte,
+alors que le convertisseur attendait un groupe de champs. Cela interrompait la
+création de l’archive avec une TypeError dans `h5p_renderer::feedback()`.
+L’indice texte est maintenant normalisé avant le rendu ; les groupes, indices vides
+et absents restent pris en charge. Un test reproduit ces variantes dans une vraie
+chaîne d’export Course Presentation, avec conservation des solutions et nettoyage HTML.
+
+English: Summary hints stored as plain strings no longer interrupt Presentation
+exports. Both string and grouped hints are supported, including empty/missing values.
+Validation automatique en cours ; régénérer l’archive après installation du correctif.
