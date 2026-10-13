@@ -78,6 +78,7 @@ Les données du cours et les archives téléchargées ne se trouvent pas dans ce
 | `mod_forum` | ✅ Discussions, réponses imbriquées et pièces jointes |
 | `mod_lesson` | ✅ Pages et tentatives accessibles |
 | `mod_quiz` | ✅ Questionnaire et tentatives accessibles ; types de questions documentés ci-dessous |
+| `mod_h5pactivity` | ✅ Cinq types H5P en HTML statique, paquet original et rapports autorisés |
 | `mod_data` | ✅ Fiches, modèles de présentation et paramètres |
 | `mod_label` | ✅ Texte et médias intégrés dans l’index |
 
@@ -1047,7 +1048,7 @@ Validation automatique réussie : [run 38297358444](https://github.com/edunover/
 
 `mod_h5pactivity` est exporté en HTML statique pour Course Presentation,
 Interactive Video, Question Set, Drag and Drop et Drag the Words. `mod_hvp`
-n’est pas pris en charge. Cette version est en cours de validation automatique.
+n’est pas pris en charge. Validation automatique réussie ; validation visuelle sur les cours de test à effectuer.
 
 - Course Presentation : sommaire, page par diapositive, contenu en ordre de lecture,
   commentaires/solutions et liens de navigation. La mise en page est linéarisée ;
@@ -1096,3 +1097,9 @@ Références des formats : [H5P content structure](https://h5p.org/documentation
 [Question Set](https://github.com/h5p/h5p-question-set),
 [Drag and Drop](https://github.com/h5p/h5p-drag-question),
 [Drag the Words](https://github.com/h5p/h5p-drag-text).
+
+Jeu de vérifications manuelles : [tests/fixtures/h5p/README.md](tests/fixtures/h5p/README.md).
+
+Validation du build 2026101301 : [GitHub Actions](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38432938448),
+17/17 jobs réussis, Moodle 4.4 à 5.3, `moodle-extra`, JavaScript et paquet.
+Moodle 5.3 : 128 tests PHPUnit, 1 176 assertions (code `d16b995`).

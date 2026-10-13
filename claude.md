@@ -804,7 +804,7 @@ Le build 2026101209 (index seul à la racine) a été validé manuellement, RAS.
 Validation automatique réussie : [run 38297358444](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38297358444), 17/17 jobs verts, Moodle 4.4 à 5.3, JavaScript, paquet et `moodle-extra`. Code validé : `bb5149c`. Validation manuelle du build 2026101210 à effectuer après installation.
 
 
-## H5P natif — build 2026101301 (validation en cours)
+## H5P natif — build 2026101301
 
 - `h5p_package` lit les JSON et extrait uniquement les médias passifs d’un paquet
   `mod_h5pactivity/package/0`, sans déployer de bibliothèque H5P ni modifier Moodle.
@@ -820,4 +820,8 @@ Validation automatique réussie : [run 38297358444](https://github.com/edunover/
 - Tests : cinq types, navigation, médias et intégrité du paquet, HTML inerte,
   chemins traversants, rapports, groupes, suivi désactivé et droits d’auteur de contenu.
 - Le build précédent 2026101210 a été validé manuellement par l’utilisateur, RAS.
-- PHPUnit et contrôle Moodle 4.4–5.3 à lancer ; aucune validation annoncée avant résultat.
+- Validation : https://github.com/edunover/moodle-local-flatarchive/actions/runs/38432938448
+  17/17 jobs verts ; 128 tests PHPUnit / 1 176 assertions sur Moodle 5.3.
+  Code `d16b995`, standards moodle-extra et paquet vérifiés.
+  PHPUnit signale 27 dépréciations et une notice sur Moodle 5.3, sans échec.
+  Validation manuelle avec les paquets H5P de la sandbox à effectuer.
