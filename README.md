@@ -81,6 +81,7 @@ python3 scripts/package-plugin.py --output /tmp/local_flatarchive.zip
 
 PHPCS must have `moodle-extra` installed. PHPUnit needs a separate Moodle test installation and database: use the workflow in `.github/workflows/tests.yml` or `moodle-plugin-ci phpunit --fail-on-warning` in its configured environment. Never point PHPUnit at a production database. The package builder includes tracked runtime/documentation files only: stage new files before packaging.
 
+- [UML component and sequence diagrams (FR/EN)](docs/UML.md)
 - [Architecture and code responsibilities](docs/ARCHITECTURE.md)
 - [Runtime, development and CI dependencies](docs/DEPENDENCIES.md)
 - [Security model and reporting](SECURITY.md)

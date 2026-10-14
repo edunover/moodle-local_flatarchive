@@ -83,6 +83,7 @@ PHPCS nécessite l’installation de `moodle-extra`. PHPUnit exige une installat
 
 Documentation technique complémentaire en anglais :
 
+- [Diagrammes UML de composants et de séquence (FR/EN)](docs/UML.md)
 - [Architecture et responsabilités du code](docs/ARCHITECTURE.md)
 - [Dépendances d’exécution, de développement et d’intégration continue](docs/DEPENDENCIES.md)
 - [Modèle de sécurité et signalement](SECURITY.md)

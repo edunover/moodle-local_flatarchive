@@ -1,5 +1,7 @@
 # Architecture — build 2026101406
 
+See the [component and sequence diagrams (FR/EN)](UML.md) for a visual overview.
+
 ## Export lifecycle
 
 1. `lib.php` adds course navigation when the archive capability is present. `index.php` authenticates access and renders `templates/index.mustache`.
