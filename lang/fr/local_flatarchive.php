@@ -502,9 +502,9 @@ $string['coursesettingshelp'] = 'Décocher Settings exclut les paramètres du co
 $string['coursegrades'] = 'Notes';
 
 $string['stylepreset'] = 'Style de base';
-$string['stylepreset_help'] = 'Choisir un style remplace le contenu du champ CSS ci-dessous. Adapte-le puis enregistre les modifications. Aucun vide le champ ; la présentation de base de l’archive est conservée. Rouvrir cette page ne remplace pas ton CSS enregistré.';
+$string['stylepreset_help'] = 'Choisir un style remplace le contenu du champ CSS ci-dessous. Adaptez-le puis enregistrez les modifications. Aucun vide le champ ; la présentation de base de l’archive est conservée. Rouvrir cette page ne remplace pas votre CSS enregistré.';
 $string['customcss'] = 'CSS institutionnel';
-$string['customcss_help'] = 'Cette feuille de style est incluse dans les archives générées, après la présentation de base. Elle ne modifie pas le site Moodle. Utilise des styles locaux pour une archive consultable hors ligne.';
+$string['customcss_help'] = 'Cette feuille de style est incluse dans les archives générées, après la présentation de base. Elle ne modifie pas le site Moodle. Utilisez des styles locaux pour une archive consultable hors ligne.';
 $string['style_none'] = 'Aucun';
 $string['style_institutional'] = 'Bleu institutionnel';
 $string['style_modern'] = 'Vert moderne';
