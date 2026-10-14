@@ -32,7 +32,7 @@ $string['selectall'] = 'Select all';
 $string['deselectall'] = 'Deselect all';
 $string['archiveselection'] = 'Archive selection';
 $string['loading'] = 'Loading';
-$string['nothingselected'] = 'Select at least one resource.';
+$string['nothingselected'] = 'Select at least one activity or course option.';
 $string['status_idle'] = 'Ready';
 $string['status_running'] = 'In progress';
 $string['status_failed'] = 'Failed';
@@ -493,3 +493,7 @@ $string['archiveparticipantinactive'] = 'Inactive';
 $string['archiveparticipantstatus'] = 'Enrolment status';
 
 $string['activitynavigation'] = 'Activity settings and reports';
+
+$string['coursesettingshelp'] = 'Deselect Settings to omit course and activity settings. Reports controls course reports; activity reports remain with selected activities.';
+
+$string['coursegrades'] = 'Grades';

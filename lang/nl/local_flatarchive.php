@@ -32,7 +32,7 @@ $string['selectall'] = 'Alles selecteren';
 $string['deselectall'] = 'Alles deselecteren';
 $string['archiveselection'] = 'Selectie archiveren';
 $string['loading'] = 'Laden';
-$string['nothingselected'] = 'Selecteer minstens één bron.';
+$string['nothingselected'] = 'Selecteer minstens één activiteit of cursusoptie.';
 $string['status_idle'] = 'Klaar';
 $string['status_running'] = 'Bezig';
 $string['status_failed'] = 'Mislukt';
@@ -489,3 +489,7 @@ $string['archiveparticipantinactive'] = 'Inactief';
 $string['archiveparticipantstatus'] = 'Inschrijvingsstatus';
 
 $string['activitynavigation'] = 'Activiteitsinstellingen en rapporten';
+
+$string['coursesettingshelp'] = 'Schakel Settings uit om cursus- en activiteitsinstellingen weg te laten. Reports betreft cursusrapporten; activiteitsrapporten blijven bij geselecteerde activiteiten.';
+
+$string['coursegrades'] = 'Cijfers';

@@ -232,6 +232,20 @@ final class data_exporter_test extends \advanced_testcase {
     }
 
     /**
+     * Disabling course Settings also omits Database's independently generated settings.
+     */
+    public function test_settings_can_be_omitted(): void {
+        [$course, $data] = $this->fixture();
+        $info = get_fast_modinfo($course);
+        $directory = make_request_directory();
+        $result = data_exporter::render($info->get_cm($data->cmid), $info, $directory, false);
+        $filename = 'data-' . $data->cmid . '-settings.html';
+        $this->assertNotContains($filename, $result['filenames']);
+        $this->assertFileDoesNotExist($directory . '/' . $filename);
+        $this->assertStringNotContainsString($filename, file_get_contents($directory . '/' . $result['filename']));
+    }
+
+    /**
      * A linked settings snapshot documents readable configuration and inert template source.
      */
     public function test_settings_snapshot(): void {

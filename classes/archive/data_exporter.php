@@ -30,9 +30,10 @@ final class data_exporter {
      * @param \cm_info $cm Module
      * @param \course_modinfo $modinfo Course structure
      * @param string $directory Destination
+     * @param bool $includesettings Include activity settings snapshot
      * @return array Generated pages and course index item
      */
-    public static function render(\cm_info $cm, \course_modinfo $modinfo, string $directory): array {
+    public static function render(\cm_info $cm, \course_modinfo $modinfo, string $directory, bool $includesettings = true): array {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/mod/data/lib.php');
         require_once($CFG->dirroot . '/mod/data/locallib.php');
@@ -64,10 +65,12 @@ final class data_exporter {
             $cm->id
         );
         $list = format_text($intro, $data->introformat, ['context' => $context, 'filter' => false]);
-        $settingsfile = data_settings::write($cm, $modinfo, $data, $fields, $intro, $directory);
-        $filenames[] = $settingsfile;
-        $settingslink = \html_writer::link($settingsfile, get_string('archivesettings', 'local_flatarchive'));
-        $list = \html_writer::tag('p', $settingslink) . $list;
+        if ($includesettings) {
+            $settingsfile = data_settings::write($cm, $modinfo, $data, $fields, $intro, $directory);
+            $filenames[] = $settingsfile;
+            $settingslink = \html_writer::link($settingsfile, get_string('archivesettings', 'local_flatarchive'));
+            $list = \html_writer::tag('p', $settingslink) . $list;
+        }
         if ($data->requiredentriestoview > 0) {
             $list .= \html_writer::tag('p', get_string('datarequiredentries', 'local_flatarchive', $data->requiredentriestoview));
         }

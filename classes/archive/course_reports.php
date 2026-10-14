@@ -38,9 +38,15 @@ final class course_reports {
      * @param \course_modinfo $modinfo Course information
      * @param string $directory Workspace
      * @param int $snapshot Export timestamp
+     * @param array $options Selected course sections
      * @return array Files and rendered index entries
      */
-    public static function write(\course_modinfo $modinfo, string $directory, int $snapshot): array {
+    public static function write(
+        \course_modinfo $modinfo,
+        string $directory,
+        int $snapshot,
+        array $options = ['participants', 'grades', 'reports']
+    ): array {
         global $CFG;
         require_once($CFG->dirroot . '/local/flatarchive/locallib.php');
         require_once($CFG->dirroot . '/local/flatarchive/archive_templates/page_template.php');
@@ -53,6 +59,10 @@ final class course_reports {
         $entries = [];
         $navigation = [];
         foreach (self::TYPES as $type => [$key, $capabilities]) {
+            $option = in_array($type, ['participants', 'grades'], true) ? $type : 'reports';
+            if (!in_array($option, $options, true)) {
+                continue;
+            }
             $title = get_string($key, 'local_flatarchive');
             $reason = '';
             foreach ($capabilities as $capability) {

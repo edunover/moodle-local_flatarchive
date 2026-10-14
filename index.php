@@ -46,6 +46,13 @@ echo $OUTPUT->header();
 
 $templatecontext = [
     'courseid' => $course->id,
+    'courselabel' => get_string('course'),
+    'courseoptions' => array_map(
+        static fn($key, $label) => ['key' => $key, 'label' => get_string($label, 'local_flatarchive')],
+        ['settings', 'participants', 'grades', 'reports'],
+        ['archivesettings', 'archiveparticipants', 'coursegrades', 'archivereports']
+    ),
+    'coursesettingshelp' => get_string('coursesettingshelp', 'local_flatarchive'),
     'archiveurl' => (new moodle_url('/local/flatarchive/archive_process.php'))->out(false),
     'sesskey' => sesskey(),
     'selectall' => get_string('selectall', 'local_flatarchive'),

@@ -66,6 +66,26 @@ final class reports_test extends \advanced_testcase {
     }
 
     /**
+     * Unselected course sections create neither files nor navigation links.
+     */
+    public function test_course_options_control_generation(): void {
+        $course = $this->getDataGenerator()->create_course();
+        $modinfo = get_fast_modinfo($course);
+        foreach ([[], ['participants'], ['grades'], ['reports']] as $options) {
+            $dir = make_request_directory();
+            $result = reports::write($modinfo, [], $dir, $options);
+            foreach (['participants', 'grades', 'reports'] as $option) {
+                $filename = $option === 'reports' ? 'reports.html' : 'report-' . $option . '.html';
+                $this->assertSame(in_array($option, $options, true), isset($result['files'][$filename]));
+                $this->assertSame(in_array($option, $options, true), str_contains($result['link'], $filename));
+            }
+            if (!$options) {
+                $this->assertSame([], $result['files']);
+            }
+        }
+    }
+
+    /**
      * Course snapshots include stored grades/completions and do not alter their source records.
      */
     public function test_recorded_grades_and_completion_are_read_only(): void {

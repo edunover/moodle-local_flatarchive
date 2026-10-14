@@ -50,6 +50,10 @@ use local_flatarchive\archive\resource_exporter;
 use local_flatarchive\archive\temporary_archive;
 
 $courseid = required_param('id', PARAM_INT);
+$courseoptions = array_values(array_intersect(
+    ['settings', 'participants', 'grades', 'reports'],
+    optional_param_array('courseoptions', [], PARAM_ALPHA)
+));
 $cmids = array_values(array_unique(optional_param_array('cmid', [], PARAM_INT)));
 
 $course = get_course($courseid);
@@ -61,7 +65,7 @@ if (!data_submitted()) {
     throw new moodle_exception('invalidrequest');
 }
 
-if (empty($cmids)) {
+if (empty($cmids) && empty($courseoptions)) {
     throw new moodle_exception('noselection', 'local_flatarchive');
 }
 
@@ -112,7 +116,9 @@ try {
                 'workshop' => workshop_exporter::class,
             ];
             $exporter = $exporters[$cm->modname];
-            $export = $exporter::render($cm, $modinfo, $tempdir);
+            $export = $cm->modname === 'data'
+                ? data_exporter::render($cm, $modinfo, $tempdir, in_array('settings', $courseoptions, true))
+                : $exporter::render($cm, $modinfo, $tempdir);
             $activityexports[$cmid] = $export;
             $indexitems[$cmid] = $export['item'];
             foreach ($export['filenames'] as $filename) {
@@ -248,7 +254,9 @@ try {
         }
     }
 
-    $settings = \local_flatarchive\archive\settings_snapshot::add($indexitems, $modinfo, $tempdir);
+    $settings = in_array('settings', $courseoptions, true)
+        ? \local_flatarchive\archive\settings_snapshot::add($indexitems, $modinfo, $tempdir)
+        : ['items' => $indexitems, 'files' => [], 'courselink' => ''];
     $indexitems = $settings['items'];
     $zipfiles += $settings['files'];
 
@@ -267,7 +275,7 @@ try {
         }
     }
 
-    $reports = \local_flatarchive\archive\reports::write($modinfo, $activityexports, $tempdir);
+    $reports = \local_flatarchive\archive\reports::write($modinfo, $activityexports, $tempdir, $courseoptions);
     $zipfiles += $reports['files'];
 
     $index = \local_flatarchive\archive\index_icons::add($indexitems, $modinfo, $tempdir);

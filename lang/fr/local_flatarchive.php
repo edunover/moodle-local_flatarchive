@@ -32,7 +32,7 @@ $string['selectall'] = 'Tout sélectionner';
 $string['deselectall'] = 'Tout désélectionner';
 $string['archiveselection'] = 'Archiver la sélection';
 $string['loading'] = 'Chargement';
-$string['nothingselected'] = 'Sélectionnez au moins un élément.';
+$string['nothingselected'] = 'Sélectionne au moins une activité ou une option du cours.';
 $string['status_idle'] = 'Prêt';
 $string['status_running'] = 'En cours';
 $string['status_failed'] = 'Échec';
@@ -496,3 +496,7 @@ $string['archiveparticipantinactive'] = 'Inactive';
 $string['archiveparticipantstatus'] = 'État de l’inscription';
 
 $string['activitynavigation'] = 'Paramètres et rapports de l’activité';
+
+$string['coursesettingshelp'] = 'Décocher Settings exclut les paramètres du cours et des activités. Reports concerne les rapports du cours ; les rapports des activités restent liés aux activités sélectionnées.';
+
+$string['coursegrades'] = 'Notes';

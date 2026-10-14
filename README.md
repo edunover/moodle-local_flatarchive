@@ -87,3 +87,5 @@ Flat Archive produit une copie HTML consultable hors Moodle. Le ZIP contient uni
 Code du plugin : GNU GPL v3 ou ultérieure, Edunover. Les contenus de cours et pièces jointes conservent leurs propres droits. Les icônes sont copiées depuis les modules Moodle installés. Voir les licences individuelles des outils de développement dans le fichier de verrouillage npm et leurs distributions.
 
 The successful generation POST redirects to `download.php`, a read-only confirmation page. Language changes and refreshes preserve the same session-owned ZIP and original expiry. Only the interface language changes; archive contents retain their export language. Expired or cleaned-up archives show the unavailable message.
+
+The selection page has a Course section with Settings, Participants, Grades and Reports selected by default. These options independently control course pages. Disabling Settings also disables activity settings, including Database settings. Activity reports remain attached to selected activities when course Reports is disabled. Course-only exports are supported; Select all/Deselect all applies to both course options and selectable activities.

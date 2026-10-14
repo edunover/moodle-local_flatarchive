@@ -16,6 +16,7 @@ define(['core/ajax', 'core/notification', 'core/str'], function(Ajax, Notificati
         deselectAll: '[data-action="deselectall"]',
         archive: '[data-action="start-archive"]',
         inputs: 'input[name="cmid[]"]',
+        courseInputs: 'input[name="courseoptions[]"]',
     };
 
     const init = async function(params) {
@@ -40,7 +41,7 @@ define(['core/ajax', 'core/notification', 'core/str'], function(Ajax, Notificati
                 event.preventDefault();
                 return;
             }
-            if (!tree.querySelector(`${selectors.inputs}:checked:not(:disabled)`)) {
+            if (!form.querySelector(`${selectors.inputs}:checked:not(:disabled), ${selectors.courseInputs}:checked:not(:disabled)`)) {
                 event.preventDefault();
                 Notification.alert(strings.flatarchive, strings.nothingselected);
                 return;
@@ -52,7 +53,7 @@ define(['core/ajax', 'core/notification', 'core/str'], function(Ajax, Notificati
 
         [selectors.selectAll, selectors.deselectAll].forEach((selector, index) => {
             root.querySelector(selector).addEventListener('click', () => {
-                tree.querySelectorAll(`${selectors.inputs}:not(:disabled)`).forEach(input => { input.checked = index === 0; });
+                form.querySelectorAll(`${selectors.inputs}:not(:disabled), ${selectors.courseInputs}:not(:disabled)`).forEach(input => { input.checked = index === 0; });
             });
         });
 
@@ -125,7 +126,7 @@ define(['core/ajax', 'core/notification', 'core/str'], function(Ajax, Notificati
                     tree.appendChild(label);
                 });
             });
-            ready = Boolean(tree.querySelector(`${selectors.inputs}:not(:disabled)`));
+            ready = Boolean(form.querySelector(`${selectors.inputs}:not(:disabled), ${selectors.courseInputs}:not(:disabled)`));
             status.textContent = ready ? strings.status_idle : strings.noresources;
             setDisabled(!ready);
         } catch (error) {

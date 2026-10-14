@@ -23,6 +23,19 @@
       </div>
     </div>
 
+    <fieldset class="card mb-3">
+      <legend class="h5 px-3 pt-3">{{courselabel}}</legend>
+      <div class="card-body">
+        {{#courseoptions}}
+        <label class="fa-item">
+          <input type="checkbox" name="courseoptions[]" value="{{key}}" checked>
+          <span>{{label}}</span>
+        </label>
+        {{/courseoptions}}
+        <p class="small text-muted">{{coursesettingshelp}}</p>
+      </div>
+    </fieldset>
+
     <div class="card">
       <div class="card-body">
         <div class="small text-muted mb-2 flatarchive-loading" data-region="loading">{{loading}}...</div>

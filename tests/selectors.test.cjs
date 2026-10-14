@@ -19,8 +19,11 @@ const sections = [{name: 'Section', visible: true, modules: [
 ].map(item => ({...item, supported: true, selectable: true, iconurl: `https://moodle.example/theme/image.php/boost/${item.type}/1/icon`,
     modfullname: `Type ${item.type}`}))}];
 
-async function setup(file, response = {sections}, error = null) {
-    const dom = new JSDOM(template, {url: 'https://moodle.example/', runScripts: 'outside-only'});
+async function setup(file, response = {sections}, error = null, courseOptions = false) {
+    const rendered = template.replace(/{{#courseoptions}}([\s\S]*?){{\/courseoptions}}/, (_, row) => courseOptions
+        ? ['settings', 'participants', 'grades', 'reports'].map(key => row.replaceAll('{{key}}', key).replaceAll('{{label}}', key)).join('')
+        : '');
+    const dom = new JSDOM(rendered, {url: 'https://moodle.example/', runScripts: 'outside-only'});
     const alerts = [], errors = [], requests = [];
     let module;
     dom.window.define = (...args) => {
@@ -42,6 +45,20 @@ async function setup(file, response = {sections}, error = null) {
 }
 
 for (const file of ['amd/src/selectors.js', 'amd/build/selectors.min.js']) {
+    test(`${file}: course-only export and course selection controls`, async t => {
+        const ctx = await setup(file, {sections: []}, null, true);
+        t.after(() => ctx.dom.window.close());
+        const {document, dom} = ctx;
+        assert.equal(document.querySelectorAll('input[name="courseoptions[]"]:checked').length, 4);
+        assert.equal(document.querySelector('[data-action="start-archive"]').disabled, false);
+        document.querySelector('[data-action="deselectall"]').click();
+        assert.equal(ctx.submit().defaultPrevented, true);
+        document.querySelector('input[value="participants"]').checked = true;
+        assert.equal(ctx.submit().defaultPrevented, false);
+        const data = new dom.window.FormData(document.querySelector('form'));
+        assert.deepEqual(Array.from(data.getAll('courseoptions[]')), ['participants']);
+        assert.deepEqual(Array.from(data.getAll('cmid[]')), []);
+    });
     test(`${file}: selection, safe titles and POST contract`, async t => {
         const ctx = await setup(file);
         t.after(() => ctx.dom.window.close());

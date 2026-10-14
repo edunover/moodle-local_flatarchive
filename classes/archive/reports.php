@@ -44,16 +44,22 @@ final class reports {
      * @param \course_modinfo $modinfo Current course
      * @param array $exports Successful exporter results indexed by course module ID
      * @param string $directory Workspace
+     * @param array $options Selected course sections (activity reports remain with selected activities)
      * @return array Generated ZIP files and course index link
      */
-    public static function write(\course_modinfo $modinfo, array $exports, string $directory): array {
+    public static function write(
+        \course_modinfo $modinfo,
+        array $exports,
+        string $directory,
+        array $options = ['participants', 'grades', 'reports']
+    ): array {
         global $CFG;
         require_once($CFG->dirroot . '/local/flatarchive/locallib.php');
         require_once($CFG->dirroot . '/local/flatarchive/archive_templates/page_template.php');
         $course = $modinfo->get_course();
         require_capability('local/flatarchive:archive', \context_course::instance($course->id));
         $snapshot = time();
-        $result = course_reports::write($modinfo, $directory, $snapshot);
+        $result = course_reports::write($modinfo, $directory, $snapshot, $options);
         $body = \html_writer::tag('p', s(get_string('reportsscope', 'local_flatarchive')));
         $body .= \html_writer::tag('p', s(get_string('reportssnapshot', 'local_flatarchive', userdate($snapshot))));
         $body .= \html_writer::tag('h2', get_string('reportscourse', 'local_flatarchive'));
@@ -76,6 +82,9 @@ final class reports {
                 }
                 $result['files'] += self::activity($cm, $modinfo, $filename, $directory);
             }
+        }
+        if (!in_array('reports', $options, true)) {
+            return ['files' => $result['files'], 'link' => $result['navigation']];
         }
         $filename = 'reports.html';
         $html = \local_flatarchive_render_page_template(
