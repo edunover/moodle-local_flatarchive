@@ -480,3 +480,10 @@ $string['reportsnologs'] = 'Geen ondersteunde SQL-loglezer is ingeschakeld. Vero
 $string['reportsparticipationscope'] = 'Tellingen gebruiken bewaarde web-/webservicegebeurtenissen op deelnemersniveau tot het moment van de opname, uit de SQL-lezer die Moodle selecteert. Raadplegingen tellen leesacties; bijdragen tellen aanmaak-, wijzigings- en verwijderacties. Gebeurtenissen binnen dezelfde seconde tellen eenmaal per categorie. Verwijderde, oude en externe logs worden niet hersteld. Nul bewijst geen afwezigheid van deelname. IP-adressen en ruwe logs worden niet geëxporteerd.';
 $string['reportsviews'] = 'Raadplegingen';
 $string['reportsposts'] = 'Bijdragen';
+
+$string['archiveparticipants'] = 'Deelnemers';
+$string['archivegradebook'] = 'Cijferboek';
+$string['archiveparticipantsscope'] = 'Ingeschreven deelnemers, inclusief inactieve inschrijvingen, binnen de geselecteerde groep. Cursusrollen en overgeërfde rollen gebruiken de namen die in deze cursus zijn ingesteld.';
+$string['archiveparticipantactive'] = 'Actief';
+$string['archiveparticipantinactive'] = 'Inactief';
+$string['archiveparticipantstatus'] = 'Inschrijvingsstatus';

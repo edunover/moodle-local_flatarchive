@@ -92,7 +92,7 @@ final class reports_test extends \advanced_testcase {
         }
         $dir = make_request_directory();
         $result = course_reports::write(get_fast_modinfo($course), $dir, time());
-        $this->assertCount(4, $result['files']);
+        $this->assertCount(5, $result['files']);
         $grades = file_get_contents($dir . '/report-grades.html');
         $this->assertStringContainsString('ReportStudent Alpha', $grades);
         $this->assertStringContainsString('82.50', $grades);
@@ -118,10 +118,13 @@ final class reports_test extends \advanced_testcase {
         $g->enrol_user($student->id, $course->id, 'student');
         $role = $DB->get_field('role', 'id', ['shortname' => 'student'], MUST_EXIST);
         assign_capability('local/flatarchive:archive', CAP_ALLOW, $role, \context_course::instance($course->id)->id);
+        assign_capability('moodle/course:viewparticipants', CAP_PROHIBIT, $role, \context_course::instance($course->id)->id);
         $this->setUser($student);
         $dir = make_request_directory();
         $result = reports::write(get_fast_modinfo($course), [], $dir);
         $this->assertSame(['reports.html'], array_keys($result['files']));
+        $this->assertStringNotContainsString('report-participants.html', $result['link']);
+        $this->assertStringNotContainsString('report-grades.html', $result['link']);
         $html = file_get_contents($dir . '/reports.html');
         $this->assertStringContainsString(get_string('reportsdenied', 'local_flatarchive'), $html);
         $this->assertStringNotContainsString('href="report-grades.html"', $html);
@@ -182,6 +185,9 @@ final class reports_test extends \advanced_testcase {
         $html = file_get_contents($dir . '/report-grades.html');
         $this->assertStringContainsString('Allowed Student', $html);
         $this->assertStringNotContainsString('Private Student', $html);
+        $participants = file_get_contents($dir . '/report-participants.html');
+        $this->assertStringContainsString('Allowed Student', $participants);
+        $this->assertStringNotContainsString('Private Student', $participants);
     }
 
     /**
@@ -239,6 +245,38 @@ final class reports_test extends \advanced_testcase {
     }
 
     /**
+     * Participants include teachers, multiple aliased roles and suspended enrolments, but not outsiders.
+     */
+    public function test_participant_roles_and_status(): void {
+        global $DB;
+        $g = $this->getDataGenerator();
+        $course = $g->create_course();
+        $context = \context_course::instance($course->id);
+        $student = $g->create_user(['firstname' => 'Roster', 'lastname' => 'Student']);
+        $teacher = $g->create_user(['firstname' => 'Roster', 'lastname' => 'Teacher']);
+        $inactive = $g->create_user(['firstname' => 'Suspended', 'lastname' => 'Participant']);
+        $g->create_user(['firstname' => 'Outside', 'lastname' => 'Person']);
+        $g->enrol_user($student->id, $course->id, 'student');
+        $g->enrol_user($teacher->id, $course->id, 'editingteacher');
+        $g->enrol_user($inactive->id, $course->id, 'student');
+        $DB->set_field('user_enrolments', 'status', ENROL_USER_SUSPENDED, ['userid' => $inactive->id]);
+        $role = $DB->get_record('role', ['shortname' => 'student'], '*', MUST_EXIST);
+        $DB->insert_record('role_names', ['roleid' => $role->id, 'contextid' => $context->id, 'name' => 'Learner & reader']);
+        role_assign($role->id, $teacher->id, $context->id);
+        $dir = make_request_directory();
+        course_reports::write(get_fast_modinfo($course), $dir, time());
+        $html = file_get_contents($dir . '/report-participants.html');
+        $this->assertStringContainsString('Roster Student', $html);
+        $this->assertStringContainsString('Roster Teacher', $html);
+        $this->assertStringContainsString('Suspended Participant', $html);
+        $this->assertStringNotContainsString('Outside Person', $html);
+        $this->assertStringContainsString('Learner &amp; reader', $html);
+        $this->assertStringContainsString(get_string('defaultcourseteacher'), $html);
+        $this->assertStringContainsString(get_string('archiveparticipantinactive', 'local_flatarchive'), $html);
+        $this->assertStringContainsString(get_string('archiveparticipantactive', 'local_flatarchive'), $html);
+    }
+
+    /**
      * Report navigation remains local after ZIP layout conversion; unselected activities are absent.
      */
     public function test_index_links_after_layout(): void {
@@ -266,12 +304,17 @@ final class reports_test extends \advanced_testcase {
         $this->assertStringContainsString('href="resources/reports.html"', $root);
         $dom = new \DOMDocument();
         @$dom->loadHTML($root);
-        $this->assertSame(2, (new \DOMXPath($dom))->query('//nav[@class="fa-course-tools"]/a')->length);
+        $links = (new \DOMXPath($dom))->query('//nav[@class="fa-course-tools"]/a');
+        $this->assertSame(4, $links->length);
+        foreach (['course-settings.html', 'report-participants.html', 'report-grades.html', 'reports.html'] as $i => $file) {
+            $this->assertSame('resources/' . $file, $links->item($i)->getAttribute('href'));
+        }
         $index = file_get_contents($mapped['resources/reports.html']);
         $this->assertStringContainsString($export['filename'] . '#fa-activity-reports', $index);
         $this->assertStringNotContainsString('Unselected Choice', $index);
         $this->assertStringContainsString('id="fa-activity-reports"', file_get_contents($dir . '/' . $export['filename']));
-        $this->assertStringContainsString('href="reports.html"', file_get_contents($dir . '/report-grades.html'));
+        $this->assertStringNotContainsString('href="report-grades.html"', $index);
+        $this->assertStringContainsString('href="../index.html"', file_get_contents($dir . '/report-participants.html'));
         $this->assertStringContainsString('href="../index.html"', file_get_contents($dir . '/report-grades.html'));
     }
 }

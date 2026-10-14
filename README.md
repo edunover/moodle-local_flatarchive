@@ -2,7 +2,7 @@
 
 `local_flatarchive` creates a portable, static HTML snapshot of selected course content. Extract the ZIP and open `index.html`; all other pages and assets are under `resources/`. It is a reading archive, **not a Moodle backup or restore format**.
 
-Development release: **0.2.0 / build 2026101401**, maturity **alpha**. Minimum Moodle: **4.4**. The CI configuration covers Moodle 4.4–5.3 across their configured PHP versions; a configured matrix is not evidence that every run passed. See the [test runs](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
+Development release: **0.2.0 / build 2026101402**, maturity **alpha**. Minimum Moodle: **4.4**. The CI configuration covers Moodle 4.4–5.3 across their configured PHP versions; a configured matrix is not evidence that every run passed. See the [test runs](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
 
 ## Installation and use
 
@@ -42,14 +42,14 @@ Exports respect current Moodle capabilities, visibility and the exporter-specifi
 
 ## Reports
 
-The course index has adjacent **Settings** and **Reports** links. Reports opens a local index with two groups:
+The course index navigation is **Settings · Participants · Gradebook · Reports**. Participants and Gradebook appear only when permitted. Participants lists enrolled users (including inactive enrolments), course-effective roles with course aliases, and enrolment status, within the selected group scope; it requires `moodle/course:viewparticipants`. Gradebook opens stored grades directly. Reports opens a local index with two groups:
 
-- **Course reports:** stored gradebook values, course completion with criteria, activity completion, and participation counts. These cover the whole accessible course, independently of the selected content. Each page records its generation date and group scope and links back to Reports and the course index.
+- **Course reports:** course completion with criteria, activity completion, and participation counts. These cover the whole accessible course, independently of the selected content. Each page records its generation date and group scope and links back to Reports and the course index.
 - **Exported activity reports:** links directly to the report section of selected Quiz, Lesson, Feedback, Choice, Assignment, H5P and Workshop activities. Existing response, attempt and assessment pages retain their native permission rules; they are not duplicated.
 
 Each course report requires its native report capability; grades additionally require `moodle/grade:viewall`. Inaccessible reports are labelled rather than linked. Participants are actively enrolled users: configured gradebook roles for grades/participation and native completion-tracked users for completion. Separate-group restrictions and the current Moodle course group apply. Hidden grade values are omitted without `moodle/grade:viewhidden`; course/category totals are then also omitted to avoid indirect disclosure. Stored grades are not recalculated.
 
-Participation uses Moodle's preferred enabled SQL log reader, retained participant-level web/web-service events up to the snapshot timestamp, and distinct event seconds per read/contribution category. Anonymous events require the native permission. It does not include IP addresses, raw event payloads, purged logs, legacy logs or external log stores. Missing log support is stated explicitly. This release does not export every installed custom report, live logs, statistics or analytics: the four course reports above are the supported initial set.
+Participation uses Moodle's preferred enabled SQL log reader, retained participant-level web/web-service events up to the snapshot timestamp, and distinct event seconds per read/contribution category. Anonymous events require the native permission. It does not include IP addresses, raw event payloads, purged logs, legacy logs or external log stores. Missing log support is stated explicitly. This release does not export every installed custom report, live logs, statistics or analytics: the gradebook and the three course reports above are supported.
 
 ## Static content and security boundaries
 

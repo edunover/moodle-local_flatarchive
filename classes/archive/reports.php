@@ -90,7 +90,7 @@ final class reports {
         );
         \local_flatarchive_write_file($directory . '/' . $filename, $html);
         $result['files'][$filename] = $directory . '/' . $filename;
-        return ['files' => $result['files'], 'link' => \html_writer::link(
+        return ['files' => $result['files'], 'link' => $result['navigation'] . \html_writer::link(
             $filename,
             get_string('archivereports', 'local_flatarchive'),
             ['class' => 'fa-reports-link']

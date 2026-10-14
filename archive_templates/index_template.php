@@ -29,7 +29,7 @@
  * @param int $courseid
  * @param array $sections Sections ordonnées avec nom, ID et liens relatifs rendus.
  * @param string $settingslink Optional local settings link
- * @param string $reportslink Optional local report index link
+ * @param string $reportslink Optional participant, gradebook and report index links
  * @return string HTML complet
  */
 function local_flatarchive_render_index_template(
@@ -55,7 +55,7 @@ function local_flatarchive_render_index_template(
 
     $navigation = $settingslink;
     if ($reportslink !== '') {
-        // The settings helper returns a paragraph; place both links in a single navigation block.
+        // The settings helper returns a paragraph; place course links in a single navigation block.
         $settings = preg_replace('~^<p>|</p>$~', '', trim($settingslink));
         $navigation = html_writer::tag('nav', $settings . $reportslink, [
             'class' => 'fa-course-tools',

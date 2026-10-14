@@ -26,6 +26,7 @@ namespace local_flatarchive\archive;
 final class course_reports {
     /** @var array Report labels and required capabilities. */
     private const TYPES = [
+        'participants' => ['archiveparticipants', ['moodle/course:viewparticipants']],
         'grades' => ['reportsgrades', ['gradereport/grader:view', 'moodle/grade:viewall']],
         'completion' => ['reportscoursecompletion', ['report/completion:view']],
         'progress' => ['reportsprogress', ['report/progress:view']],
@@ -50,6 +51,7 @@ final class course_reports {
         $group = self::group($course);
         $files = [];
         $entries = [];
+        $navigation = [];
         foreach (self::TYPES as $type => [$key, $capabilities]) {
             $title = get_string($key, 'local_flatarchive');
             $reason = '';
@@ -62,7 +64,9 @@ final class course_reports {
                 $reason = 'reportsgroupdenied';
             }
             if ($reason) {
-                $entries[] = s($title . ' — ' . get_string($reason, 'local_flatarchive'));
+                if (!in_array($type, ['participants', 'grades'], true)) {
+                    $entries[] = s($title . ' — ' . get_string($reason, 'local_flatarchive'));
+                }
                 continue;
             }
             $body = self::$type($modinfo, $group, $snapshot);
@@ -71,16 +75,25 @@ final class course_reports {
             if ($group) {
                 $scope = get_string('reportsgroup', 'local_flatarchive', groups_get_group_name($group));
             }
-            $intro = \html_writer::tag('p', \html_writer::link('reports.html', get_string('backtoreports', 'local_flatarchive')));
+            $intro = in_array($type, ['participants', 'grades'], true) ? '' :
+                \html_writer::tag('p', \html_writer::link('reports.html', get_string('backtoreports', 'local_flatarchive')));
             $intro .= \html_writer::tag('p', s(get_string('reportssnapshot', 'local_flatarchive', userdate($snapshot))));
             $intro .= \html_writer::tag('p', s($scope));
-            $intro .= \html_writer::tag('p', get_string('reportsparticipantscope', 'local_flatarchive'));
+            $intro .= \html_writer::tag('p', get_string(
+                $type === 'participants' ? 'archiveparticipantsscope' : 'reportsparticipantscope',
+                'local_flatarchive'
+            ));
             $html = \local_flatarchive_render_page_template($course, null, $title, $intro . $body);
             \local_flatarchive_write_file($directory . '/' . $filename, $html);
             $files[$filename] = $directory . '/' . $filename;
-            $entries[] = \html_writer::link($filename, s($title));
+            if (in_array($type, ['participants', 'grades'], true)) {
+                $key = $type === 'grades' ? 'archivegradebook' : 'archiveparticipants';
+                $navigation[] = \html_writer::link($filename, get_string($key, 'local_flatarchive'));
+            } else {
+                $entries[] = \html_writer::link($filename, s($title));
+            }
         }
-        return ['files' => $files, 'entries' => $entries];
+        return ['files' => $files, 'entries' => $entries, 'navigation' => implode('', $navigation)];
     }
 
     /**
@@ -100,6 +113,38 @@ final class course_reports {
             }
         }
         return $group;
+    }
+
+    /**
+     * List enrolled participants with their course-effective roles and enrolment status.
+     * @param \course_modinfo $modinfo Course
+     * @param int $group Selected group
+     * @param int $snapshot Export timestamp
+     * @return string Escaped participant table
+     */
+    private static function participants(\course_modinfo $modinfo, int $group, int $snapshot): string {
+        $context = \context_course::instance($modinfo->get_course_id());
+        $fields = 'u.id, u.deleted, ' . implode(', ', \core_user\fields::get_name_fields());
+        $users = get_enrolled_users($context, '', $group, $fields, 'u.lastname, u.firstname, u.id');
+        $rows = [];
+        foreach ($users as $user) {
+            if ($user->deleted) {
+                continue;
+            }
+            $roles = [];
+            foreach (get_user_roles($context, $user->id, true) as $assignment) {
+                // The assignment ID is not the role ID expected by role_get_name().
+                $role = (object)['id' => $assignment->roleid, 'name' => $assignment->name,
+                    'shortname' => $assignment->shortname];
+                $roles[$role->id] = html_entity_decode(strip_tags(role_get_name($role, $context)), ENT_QUOTES, 'UTF-8');
+            }
+            $active = is_enrolled($context, $user, '', true);
+            $rows[] = [fullname($user, has_capability('moodle/site:viewfullnames', $context)),
+                $roles ? implode(', ', $roles) : '—',
+                get_string($active ? 'archiveparticipantactive' : 'archiveparticipantinactive', 'local_flatarchive')];
+        }
+        return self::table([get_string('fullname'), get_string('roles'),
+            get_string('archiveparticipantstatus', 'local_flatarchive')], $rows);
     }
 
     /**

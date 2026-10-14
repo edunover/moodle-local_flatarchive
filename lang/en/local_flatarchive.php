@@ -484,3 +484,10 @@ $string['reportsnologs'] = 'No supported SQL log reader is enabled. Legacy and e
 $string['reportsparticipationscope'] = 'Counts use retained participant-level web/web-service events up to the snapshot time, from the SQL reader selected by Moodle. Views count read events; contributions count create/update/delete events. Events in the same second count once per category. Purged, legacy and external logs are not recovered. Zero means no matching retained event, not proof of no participation. IP addresses and raw logs are not exported.';
 $string['reportsviews'] = 'Views';
 $string['reportsposts'] = 'Contributions';
+
+$string['archiveparticipants'] = 'Participants';
+$string['archivegradebook'] = 'Gradebook';
+$string['archiveparticipantsscope'] = 'Enrolled participants, including inactive enrolments, within the selected group scope. Course and inherited roles use the names configured in this course.';
+$string['archiveparticipantactive'] = 'Active';
+$string['archiveparticipantinactive'] = 'Inactive';
+$string['archiveparticipantstatus'] = 'Enrolment status';

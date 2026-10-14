@@ -1,4 +1,4 @@
-# Architecture — build 2026101401
+# Architecture — build 2026101402
 
 ## Export lifecycle
 
@@ -21,7 +21,7 @@
 | `paths` | `stem()` gives generated Page/Book names a unique identity suffix; `assets()` isolates file areas; `relative()` rejects traversal/absolute/control-character paths. |
 | `locallib.php` | Visibility badges, version label, installed module icons, Moodle file-area copying/link rewriting, checked writes, ordered section grouping. |
 | `archive_templates/{index,page,book_toc}_template.php` | Document shells. Titles are escaped; body HTML must already have been formatted by the caller. Final security policy is added during archive layout finalisation. |
-| `reports`, `course_reports` | Local report index and four read-only course snapshots. Capabilities are checked before each report reads data; group and participant filters apply. Existing activity reports are linked using their registered main filename and fixed anchor. |
+| `reports`, `course_reports` | Local report index, participant roster and four read-only course snapshots. Participants and Gradebook link directly from the course navigation, before Reports. Capabilities are checked before each report reads data; group and participant filters apply. Existing activity reports are linked using their registered main filename and fixed anchor. |
 | `layout` | ZIP destination mapping and relative HTML/CSS/srcset URL rewriting. Only known archive entries are remapped. |
 | `html_safety` | Final browser CSP, removal of active elements/handlers/forms, disabled controls, external iframe-to-link conversion and referrer protection. It supplements Moodle cleaning; it is not an independent full HTML sanitiser. |
 | `settings_snapshot`, `data_settings` | Whitelisted course/module/database-field settings, descriptions, tags, local links. Values representing passwords are replaced with presence indicators. |

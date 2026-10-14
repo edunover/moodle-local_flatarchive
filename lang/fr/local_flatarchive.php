@@ -487,3 +487,10 @@ $string['reportsnologs'] = 'Aucun lecteur de journaux SQL pris en charge n’est
 $string['reportsparticipationscope'] = 'Comptages des événements participants web/services web conservés jusqu’à cet instantané, issus du lecteur SQL choisi par Moodle. Consultations : lectures ; contributions : créations, modifications et suppressions. Les événements d’une même seconde comptent une fois par catégorie. Les journaux purgés, anciens ou externes ne sont pas récupérés. Zéro signifie aucun événement conservé correspondant, pas une preuve d’absence de participation. Les adresses IP et journaux bruts ne sont pas exportés.';
 $string['reportsviews'] = 'Consultations';
 $string['reportsposts'] = 'Contributions';
+
+$string['archiveparticipants'] = 'Participants';
+$string['archivegradebook'] = 'Carnet de notes';
+$string['archiveparticipantsscope'] = 'Participants inscrits, y compris les inscriptions inactives, dans le périmètre du groupe sélectionné. Les rôles du cours et hérités utilisent les noms configurés dans ce cours.';
+$string['archiveparticipantactive'] = 'Active';
+$string['archiveparticipantinactive'] = 'Inactive';
+$string['archiveparticipantstatus'] = 'État de l’inscription';
