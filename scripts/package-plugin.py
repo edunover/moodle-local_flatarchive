@@ -14,7 +14,7 @@ def main():
     args = parser.parse_args()
     root = Path(__file__).resolve().parent.parent
     runtime_dirs = {"amd", "archive_templates", "classes", "db", "lang", "style", "templates", "docs"}
-    runtime_files = {"README.md", "SECURITY.md", "index.php", "lib.php", "locallib.php", "archive_process.php",
+    runtime_files = {"README.md", "README.fr.md", "SECURITY.md", "index.php", "lib.php", "locallib.php", "archive_process.php",
                      "settings.php", "serve_temp.php", "download.php", "styles.css", "version.php"}
     tracked = subprocess.check_output(["git", "ls-files", "-z"], cwd=root).decode().split("\0")
     files = sorted(name for name in tracked if name and

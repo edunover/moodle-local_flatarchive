@@ -1,8 +1,10 @@
 # Flat Archive for Moodle
 
+**English** | [Français](README.fr.md)
+
 `local_flatarchive` creates a portable, static HTML snapshot of selected course content. Extract the ZIP and open `index.html`; all other pages and assets are under `resources/`. It is a reading archive, **not a Moodle backup or restore format**.
 
-Development release: **0.2.0 / build 2026101406**, maturity **alpha**. Minimum Moodle: **4.4**. The CI configuration covers Moodle 4.4–5.3 across their configured PHP versions; a configured matrix is not evidence that every run passed. See the [test runs](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
+Current code version: **0.2.0 / build 2026101407**, maturity **alpha**. Minimum Moodle: **4.4**. The CI configuration covers Moodle 4.4–5.3 across their configured PHP versions; a configured matrix is not evidence that every run passed. See the [test runs](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
 
 ## Installation and use
 
@@ -11,6 +13,10 @@ Development release: **0.2.0 / build 2026101406**, maturity **alpha**. Minimum M
 3. Select accessible supported activities and generate the archive. Unsupported activities remain visible but cannot be selected.
 4. Download the ZIP. Repeated downloads are available for one hour in the same authenticated session. Temporary disk files are subsequently reclaimed by Moodle's temporary-file cleanup; expiry does not guarantee immediate physical erasure.
 5. Extract the entire ZIP and open `index.html`. Keep `resources/` alongside it.
+
+The successful generation POST redirects to `download.php`, a read-only confirmation page. Language changes and refreshes preserve the same session-owned ZIP and original expiry. Only the interface language changes; archive contents retain their export language. Expired or cleaned-up archives show the unavailable message.
+
+The selection page has a Course section with Settings, Participants, Grades and Reports selected by default. These options independently control course pages. Disabling Settings also disables activity settings, including Database settings. Activity reports remain attached to selected activities when course Reports is disabled. Course-only exports are supported; Select all/Deselect all applies to both course options and selectable activities.
 
 There is **no Composer installation, mPDF, Node.js, CDN or JavaScript player required to read the generated pages**. Node.js and Composer are used only by development/test tooling. The plugin's Moodle selection interface uses Moodle's AMD JavaScript loader.
 
@@ -36,6 +42,8 @@ There is **no Composer installation, mPDF, Node.js, CDN or JavaScript player req
 | H5P (`h5pactivity`) | Static Course Presentation, Interactive Video, Question Set, Drag and Drop, Drag the Words; supported nested elements, solutions and available recorded reports. Original `.h5p` retained. No interactive player. `mod_hvp` is not supported. |
 | Workshop (`workshop`) | Instructions, native assessment forms, examples and permitted submissions/assessments/grades. Supports accumulative, comments, number-of-errors and rubric strategies. Stored scores are not recalculated. |
 
+IMS content packages and SCORM are outside the supported scope.
+
 Course/activity settings are **documentary snapshots of explicitly selected fields**, not complete configuration dumps. Descriptions (including empty fields), visibility, activity tags and supported settings are included. Password values, secrets, user overrides and arbitrary third-party configuration are excluded. Course/content tags are retained where supported. Every generated content page has a route back to the course index.
 
 Exports respect current Moodle capabilities, visibility and the exporter-specific reporting rules. They can contain student names, submissions and grades. An exported ZIP has no Moodle access control or revocation mechanism: store and share it accordingly.
@@ -48,7 +56,7 @@ The course index navigation is **Settings · Participants · Gradebook · Report
 
 **Activity reports** belong to their activity, not to the course Reports index. For Quiz, Lesson, Feedback, Choice, Assignment, H5P and Workshop, **Settings · Reports** appears on one navigation row. Reports opens a dedicated local page named after the activity and its report type, containing the existing authorised results or the explicit empty-state message. Content is moved rather than duplicated; question solutions are not recorded student attempts. Report details retain their existing back-to-activity links.
 
-Each course report requires its native report capability; grades additionally require `moodle/grade:viewall`. Inaccessible reports are labelled rather than linked. Participants are actively enrolled users: configured gradebook roles for grades/participation and native completion-tracked users for completion. Separate-group restrictions and the current Moodle course group apply. Hidden grade values are omitted without `moodle/grade:viewhidden`; course/category totals are then also omitted to avoid indirect disclosure. Stored grades are not recalculated.
+Each course report requires its native report capability; grades additionally require `moodle/grade:viewall`. Inaccessible reports are labelled rather than linked. The report population uses actively enrolled users: configured gradebook roles for grades/participation and native completion-tracked users for completion. This differs from the Participants directory, which also includes inactive enrolments. Separate-group restrictions and the current Moodle course group apply. Hidden grade values are omitted without `moodle/grade:viewhidden`; course/category totals are then also omitted to avoid indirect disclosure. Stored grades are not recalculated.
 
 Participation uses Moodle's preferred enabled SQL log reader, retained participant-level web/web-service events up to the snapshot timestamp, and distinct event seconds per read/contribution category. Anonymous events require the native permission. It does not include IP addresses, raw event payloads, purged logs, legacy logs or external log stores. Missing log support is stated explicitly. This release does not export every installed custom report, live logs, statistics or analytics: the gradebook and the three course reports above are supported.
 
@@ -58,7 +66,7 @@ Generated HTML is cleaned using Moodle APIs and finalised with a restrictive Con
 
 Original attachments, including HTML/SVG/Office documents and source H5P packages, are preserved rather than disinfected. They are outside the generated-page policy. This plugin is not an antivirus, a content sandbox or a guarantee against every attack. Read [SECURITY.md](SECURITY.md) before deployment.
 
-The planned multilingual archive navigation for `{mlang}` and FilterCodes `{multilang xx}` remains deferred. No claim is made that all third-party question types, field plugins or embedded applications can be rendered faithfully.
+Multilingual content markers such as `{mlang}` and FilterCodes `{multilang xx}` are preserved as source content; no additional cross-language navigation is generated. No claim is made that all third-party question types, field plugins or embedded applications can be rendered faithfully.
 
 ## Development and verification
 
@@ -78,18 +86,10 @@ PHPCS must have `moodle-extra` installed. PHPUnit needs a separate Moodle test i
 - [Security model and reporting](SECURITY.md)
 - [2026-10-13 review and verification record](docs/AUDIT-2026-10-13.md)
 
-## Français
-
-Flat Archive produit une copie HTML consultable hors Moodle. Le ZIP contient uniquement `index.html` et le dossier `resources/` à sa racine. Ce n'est pas une sauvegarde restaurable. Les activités deviennent des documents de consultation ; aucune réponse ni note n'est recalculée. Les droits Moodle contrôlent l'export, mais ne protègent plus le ZIP une fois téléchargé. Les pièces jointes originales ne sont pas désinfectées. La documentation technique et les limites de sécurité ci-dessus font partie de la livraison.
-
-## Licence
-
-Code du plugin : GNU GPL v3 ou ultérieure, Edunover. Les contenus de cours et pièces jointes conservent leurs propres droits. Les icônes sont copiées depuis les modules Moodle installés. Voir les licences individuelles des outils de développement dans le fichier de verrouillage npm et leurs distributions.
-
-The successful generation POST redirects to `download.php`, a read-only confirmation page. Language changes and refreshes preserve the same session-owned ZIP and original expiry. Only the interface language changes; archive contents retain their export language. Expired or cleaned-up archives show the unavailable message.
-
-The selection page has a Course section with Settings, Participants, Grades and Reports selected by default. These options independently control course pages. Disabling Settings also disables activity settings, including Database settings. Activity reports remain attached to selected activities when course Reports is disabled. Course-only exports are supported; Select all/Deselect all applies to both course options and selectable activities.
-
 ## Institution design
 
 Plugin settings offer three editable CSS starters (Institutional blue, Modern green, Classic typography) and None. The saved CSS is bundled as a local stylesheet for generated archive pages. All body elements receive `flatarchive-*` hooks. See [appearance configuration and selector reference](docs/APPEARANCE.md).
+
+## License
+
+Plugin code: GNU GPL v3 or later, Edunover. Course content and attachments retain their own rights. Icons are copied from installed Moodle modules. See the individual development-tool licenses in the npm lockfile and their distributions.
