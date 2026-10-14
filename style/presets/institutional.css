@@ -1,0 +1,16 @@
+/* Editable institution style. Applied only to generated archive pages. */
+.flatarchive-archive { background: #f1f5f9; color: #172b4d; font-family: Arial, sans-serif; }
+.flatarchive-main { max-width: 1180px; margin-inline: auto; padding: 1.5rem; }
+.flatarchive-title { color: #173f70; border-bottom: 3px solid #173f70; padding-bottom: .75rem; }
+.flatarchive-a { color: #174d8c; }
+.flatarchive-a:focus-visible { outline: 3px solid #173f70; outline-offset: 3px; }
+.flatarchive-nav.flatarchive-course-tools { gap: .75rem; padding-block: .75rem; border-bottom: 1px solid #cbd5e1; }
+.flatarchive-course-tools > .flatarchive-a { padding: .4rem .7rem; border: 1px solid currentColor; border-radius: .25rem; }
+.flatarchive-course-section { background: #fff; border: 1px solid #cbd5e1; border-radius: .25rem; padding: 1.25rem; }
+.flatarchive-card { border-radius: .25rem; }
+.flatarchive-table { border-collapse: collapse; }
+.flatarchive-th { background: #e8eff7; }
+.flatarchive-footer { padding: 1rem; color: #475569; }
+.flatarchive-img, .flatarchive-video { max-width: 100%; }
+@media (max-width: 600px) { .flatarchive-main { padding: .75rem; } }
+@media print { .flatarchive-archive { background: #fff; } .flatarchive-main { max-width: none; padding: 0; } }

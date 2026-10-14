@@ -94,6 +94,7 @@ try {
     $activityexports = [];
     $zipfiles = [];
     $zipfiles['shared/moodle.css'] = $sharedfolder . '/moodle.css';
+    $zipfiles += \local_flatarchive\archive\appearance::write($tempdir);
 
     foreach ($cmids as $cmid) {
         $cm = $cms[$cmid];

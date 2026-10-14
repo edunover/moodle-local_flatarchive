@@ -497,3 +497,12 @@ $string['activitynavigation'] = 'Activity settings and reports';
 $string['coursesettingshelp'] = 'Deselect Settings to omit course and activity settings. Reports controls course reports; activity reports remain with selected activities.';
 
 $string['coursegrades'] = 'Grades';
+
+$string['stylepreset'] = 'Starter style';
+$string['stylepreset_help'] = 'Choosing a style replaces the CSS field below. Edit it as needed, then save changes. None clears the field; the basic archive layout is retained. Reopening this page never overwrites your saved CSS.';
+$string['customcss'] = 'Institution CSS';
+$string['customcss_help'] = 'This stylesheet is included in generated archives, after the basic layout. It does not change the Moodle site. Use local styles for an archive that works offline.';
+$string['style_none'] = 'None';
+$string['style_institutional'] = 'Institutional blue';
+$string['style_modern'] = 'Modern green';
+$string['style_classic'] = 'Classic typography';

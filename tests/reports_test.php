@@ -325,7 +325,7 @@ final class reports_test extends \advanced_testcase {
         $this->assertStringContainsString('href="resources/reports.html"', $root);
         $dom = new \DOMDocument();
         @$dom->loadHTML($root);
-        $links = (new \DOMXPath($dom))->query('//nav[@class="fa-course-tools"]/a');
+        $links = (new \DOMXPath($dom))->query("//nav[contains(concat(' ', normalize-space(@class), ' '), ' fa-course-tools ')]/a");
         $this->assertSame(4, $links->length);
         foreach (['course-settings.html', 'report-participants.html', 'report-grades.html', 'reports.html'] as $i => $file) {
             $this->assertSame('resources/' . $file, $links->item($i)->getAttribute('href'));
@@ -343,11 +343,11 @@ final class reports_test extends \advanced_testcase {
         $this->assertStringContainsString('href="' . $export['filename'] . '"', $report);
         $dom = new \DOMDocument();
         @$dom->loadHTML($activity);
-        $links = (new \DOMXPath($dom))->query('//nav[@class="fa-course-tools"]/a');
+        $links = (new \DOMXPath($dom))->query("//nav[contains(concat(' ', normalize-space(@class), ' '), ' fa-course-tools ')]/a");
         $this->assertSame(2, $links->length);
         $this->assertSame('choice-' . $choice->cmid . '-settings.html', $links->item(0)->getAttribute('href'));
         $this->assertSame($reportfile, $links->item(1)->getAttribute('href'));
-        $this->assertSame(1, substr_count($activity, 'class="fa-activity-reports-link"'));
+        $this->assertSame(1, substr_count($activity, 'fa-activity-reports-link'));
         $detail = local_flatarchive_render_page_template($course, $modinfo->get_cm($choice->cmid), 'Detail', '<p>Result</p>');
         $this->assertStringNotContainsString('href="#fa-activity-reports"', $detail);
         $this->assertStringNotContainsString('href="report-grades.html"', $index);

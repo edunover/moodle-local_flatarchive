@@ -2,7 +2,7 @@
 
 `local_flatarchive` creates a portable, static HTML snapshot of selected course content. Extract the ZIP and open `index.html`; all other pages and assets are under `resources/`. It is a reading archive, **not a Moodle backup or restore format**.
 
-Development release: **0.2.0 / build 2026101404**, maturity **alpha**. Minimum Moodle: **4.4**. The CI configuration covers Moodle 4.4–5.3 across their configured PHP versions; a configured matrix is not evidence that every run passed. See the [test runs](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
+Development release: **0.2.0 / build 2026101405**, maturity **alpha**. Minimum Moodle: **4.4**. The CI configuration covers Moodle 4.4–5.3 across their configured PHP versions; a configured matrix is not evidence that every run passed. See the [test runs](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
 
 ## Installation and use
 
@@ -89,3 +89,7 @@ Code du plugin : GNU GPL v3 ou ultérieure, Edunover. Les contenus de cours et p
 The successful generation POST redirects to `download.php`, a read-only confirmation page. Language changes and refreshes preserve the same session-owned ZIP and original expiry. Only the interface language changes; archive contents retain their export language. Expired or cleaned-up archives show the unavailable message.
 
 The selection page has a Course section with Settings, Participants, Grades and Reports selected by default. These options independently control course pages. Disabling Settings also disables activity settings, including Database settings. Activity reports remain attached to selected activities when course Reports is disabled. Course-only exports are supported; Select all/Deselect all applies to both course options and selectable activities.
+
+## Institution design
+
+Plugin settings offer three editable CSS starters (Institutional blue, Modern green, Classic typography) and None. The saved CSS is bundled as a local stylesheet for generated archive pages. All body elements receive `flatarchive-*` hooks. See [appearance configuration and selector reference](docs/APPEARANCE.md).

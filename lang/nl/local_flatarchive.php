@@ -493,3 +493,12 @@ $string['activitynavigation'] = 'Activiteitsinstellingen en rapporten';
 $string['coursesettingshelp'] = 'Schakel Settings uit om cursus- en activiteitsinstellingen weg te laten. Reports betreft cursusrapporten; activiteitsrapporten blijven bij geselecteerde activiteiten.';
 
 $string['coursegrades'] = 'Cijfers';
+
+$string['stylepreset'] = 'Basisstijl';
+$string['stylepreset_help'] = 'Een stijl kiezen vervangt het CSS-veld hieronder. Pas het aan en sla de wijzigingen op. Geen maakt het veld leeg; de basisopmaak blijft behouden. Het heropenen van deze pagina overschrijft nooit opgeslagen CSS.';
+$string['customcss'] = 'Institutionele CSS';
+$string['customcss_help'] = 'Deze stylesheet wordt na de basisopmaak opgenomen in gegenereerde archieven. De Moodle-site verandert niet. Gebruik lokale stijlen voor offline archieven.';
+$string['style_none'] = 'Geen';
+$string['style_institutional'] = 'Institutioneel blauw';
+$string['style_modern'] = 'Modern groen';
+$string['style_classic'] = 'Klassieke typografie';

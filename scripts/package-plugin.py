@@ -15,7 +15,7 @@ def main():
     root = Path(__file__).resolve().parent.parent
     runtime_dirs = {"amd", "archive_templates", "classes", "db", "lang", "style", "templates", "docs"}
     runtime_files = {"README.md", "SECURITY.md", "index.php", "lib.php", "locallib.php", "archive_process.php",
-                     "serve_temp.php", "download.php", "styles.css", "version.php"}
+                     "settings.php", "serve_temp.php", "download.php", "styles.css", "version.php"}
     tracked = subprocess.check_output(["git", "ls-files", "-z"], cwd=root).decode().split("\0")
     files = sorted(name for name in tracked if name and
                    (Path(name).parts[0] in runtime_dirs or name in runtime_files))
@@ -31,7 +31,7 @@ def main():
         if archive.testzip() is not None:
             raise RuntimeError("ZIP integrity check failed")
         names = set(archive.namelist())
-        required = {"version.php", "archive_process.php", "serve_temp.php", "download.php", "db/upgrade.php",
+        required = {"version.php", "archive_process.php", "settings.php", "serve_temp.php", "download.php", "db/upgrade.php",
                     "classes/external/get_tree.php", "amd/build/selectors.min.js"}
         if not {"flatarchive/" + name for name in required}.issubset(names):
             raise RuntimeError("Required plugin files missing")

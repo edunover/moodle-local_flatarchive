@@ -90,6 +90,7 @@ final class layout {
                 }
             }
             html_safety::harden($dom);
+            appearance::decorate($dom, isset($destinations['shared/institution.css']));
             return $dom->saveHTML();
         } finally {
             libxml_clear_errors();
