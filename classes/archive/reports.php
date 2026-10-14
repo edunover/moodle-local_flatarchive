@@ -58,8 +58,7 @@ final class reports {
         $body .= \html_writer::tag('p', s(get_string('reportssnapshot', 'local_flatarchive', userdate($snapshot))));
         $body .= \html_writer::tag('h2', get_string('reportscourse', 'local_flatarchive'));
         $body .= \html_writer::alist($result['entries']);
-        $body .= \html_writer::tag('h2', get_string('reportsactivities', 'local_flatarchive'));
-        $entries = [];
+
         foreach ($modinfo->get_sections() as $ids) {
             foreach ($ids as $id) {
                 $cm = $modinfo->get_cm($id);
@@ -75,12 +74,9 @@ final class reports {
                 ) {
                     continue;
                 }
-                $label = $cm->name . ' — ' . get_string(self::ACTIVITIES[$cm->modname], 'local_flatarchive');
-                $entries[] = \html_writer::link($filename . '#fa-activity-reports', s($label));
+                $result['files'] += self::activity($cm, $modinfo, $filename, $directory);
             }
         }
-        $body .= $entries ? \html_writer::alist($entries) :
-            \html_writer::tag('p', get_string('reportsnoactivities', 'local_flatarchive'));
         $filename = 'reports.html';
         $html = \local_flatarchive_render_page_template(
             $course,
@@ -95,5 +91,67 @@ final class reports {
             get_string('archivereports', 'local_flatarchive'),
             ['class' => 'fa-reports-link']
         )];
+    }
+
+    /**
+     * Move an exporter's existing report section to a dedicated local activity report page.
+     * @param \cm_info $cm Activity
+     * @param \course_modinfo $modinfo Course
+     * @param string $main Registered main activity document
+     * @param string $directory Workspace
+     * @return array Generated files
+     */
+    private static function activity(\cm_info $cm, \course_modinfo $modinfo, string $main, string $directory): array {
+        $dom = new \DOMDocument();
+        $previous = libxml_use_internal_errors(true);
+        try {
+            $dom->loadHTML('<?xml encoding="UTF-8">' . file_get_contents($directory . '/' . $main), LIBXML_NONET);
+            $xpath = new \DOMXPath($dom);
+            $marker = $xpath->query('//div[@class="card-body"]/div[@id="fa-activity-reports"]')->item(0);
+            if (!$marker) {
+                return [];
+            }
+            $report = '';
+            for ($node = $marker; $node !== null; $node = $next) {
+                $next = $node->nextSibling;
+                $report .= $dom->saveHTML($node);
+                $node->parentNode->removeChild($node);
+            }
+            $filename = $cm->modname . '-' . $cm->id . '-reports.html';
+            $title = $cm->name . ' — ' . get_string(self::ACTIVITIES[$cm->modname], 'local_flatarchive');
+            $back = \html_writer::tag('p', \html_writer::link($main, get_string('settingsbackactivity', 'local_flatarchive')));
+            $html = \local_flatarchive_render_page_template($modinfo->get_course(), null, $title, $back . $report);
+            \local_flatarchive_write_file($directory . '/' . $filename, $html);
+
+            // Settings is injected before this step. Reuse its paragraph as a single navigation row.
+            $heading = $xpath->query('//main//h1')->item(0);
+            $settings = $xpath->query('//main//p[a[contains(@href, "-settings.html")]]')->item(0);
+            $nav = $dom->createElement('nav');
+            $nav->setAttribute('class', 'fa-course-tools');
+            $nav->setAttribute('aria-label', get_string('activitynavigation', 'local_flatarchive'));
+            if ($settings) {
+                while ($settings->firstChild) {
+                    $nav->appendChild($settings->firstChild);
+                }
+                $settings->parentNode->replaceChild($nav, $settings);
+            } else {
+                $heading->parentNode->insertBefore($nav, $heading->nextSibling);
+            }
+            $link = $dom->createElement('a');
+            $link->setAttribute('href', $filename);
+            $link->setAttribute('class', 'fa-activity-reports-link');
+            $link->appendChild($dom->createTextNode(get_string('archivereports', 'local_flatarchive')));
+            $nav->appendChild($link);
+            foreach (iterator_to_array($dom->childNodes) as $node) {
+                if ($node->nodeType === XML_PI_NODE) {
+                    $dom->removeChild($node);
+                }
+            }
+            \local_flatarchive_write_file($directory . '/' . $main, $dom->saveHTML());
+            return [$filename => $directory . '/' . $filename];
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+        }
     }
 }

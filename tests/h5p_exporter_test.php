@@ -151,12 +151,21 @@ final class h5p_exporter_test extends \advanced_testcase {
         $files['index.html'] = $directory . '/index.html';
         $source = 'files/' . $activity->cmid . '/h5p/0/source.h5p';
         $files[$source] = $directory . '/' . $source;
+        $reports = \local_flatarchive\archive\reports::write($modinfo, [$activity->cmid => $result], $directory);
+        $files += $reports['files'];
         $organised = layout::organise($files);
         $this->assertStringContainsString('href="../index.html"', file_get_contents($organised['resources/' . $part]));
         $this->assertSame($file->get_content(), file_get_contents($organised['resources/' . $source]));
         $main = file_get_contents($organised['resources/' . $result['filename']]);
         $this->assertStringContainsString('poolSize', $main);
         $this->assertStringContainsString('75', $main);
+        $reportfile = 'h5pactivity-' . $activity->cmid . '-reports.html';
+        $this->assertStringContainsString('href="' . $reportfile . '"', $main);
+        $this->assertStringNotContainsString(get_string('h5pnoreports', 'local_flatarchive'), $main);
+        $this->assertStringContainsString(
+            get_string('h5pnoreports', 'local_flatarchive'),
+            file_get_contents($organised['resources/' . $reportfile])
+        );
     }
 
     /**
@@ -316,6 +325,18 @@ final class h5p_exporter_test extends \advanced_testcase {
         $html = file_get_contents($directory . '/' . $report);
         $this->assertStringContainsString('Testlearner', $html);
         $this->assertStringContainsString('Blueberry', $html);
+        $reports = \local_flatarchive\archive\reports::write($modinfo, [$cm->id => $result], $directory);
+        $index = 'h5pactivity-' . $cm->id . '-reports.html';
+        $this->assertArrayHasKey($index, $reports['files']);
+        $this->assertStringContainsString('href="' . $report . '"', file_get_contents($reports['files'][$index]));
+        $this->assertStringNotContainsString(
+            get_string('h5pnoreports', 'local_flatarchive'),
+            file_get_contents($reports['files'][$index])
+        );
+        $this->assertStringNotContainsString(
+            'href="' . $report . '"',
+            file_get_contents($directory . '/' . $result['filename'])
+        );
         $roleid = $DB->get_field('role', 'id', ['shortname' => 'editingteacher']);
         assign_capability('mod/h5pactivity:reviewattempts', CAP_PROHIBIT, $roleid, \context_module::instance($cm->id)->id);
         accesslib_clear_all_caches_for_unit_testing();

@@ -463,7 +463,7 @@ $string['backtoreports'] = 'Retour aux rapports';
 $string['reportscoursenavigation'] = 'Paramètres et rapports du cours';
 $string['reportscourse'] = 'Rapports du cours';
 $string['reportsactivities'] = 'Rapports des activités exportées';
-$string['reportsscope'] = 'Les rapports du cours couvrent tout le cours accessible, indépendamment des contenus sélectionnés. Les rapports des activités renvoient uniquement aux activités effectivement exportées. Il s’agit d’un instantané statique.';
+$string['reportsscope'] = 'Les rapports du cours couvrent tout le cours accessible, indépendamment des contenus sélectionnés. Les rapports des activités sont accessibles depuis chaque activité exportée. Il s’agit d’un instantané statique.';
 $string['reportssnapshot'] = 'Instantané généré le : {$a}';
 $string['reportsnoactivities'] = 'Aucune activité sélectionnée ne contient de rubrique de rapport exportable.';
 $string['reportsgrades'] = 'Carnet de notes — notes enregistrées';
@@ -494,3 +494,5 @@ $string['archiveparticipantsscope'] = 'Participants inscrits, y compris les insc
 $string['archiveparticipantactive'] = 'Active';
 $string['archiveparticipantinactive'] = 'Inactive';
 $string['archiveparticipantstatus'] = 'État de l’inscription';
+
+$string['activitynavigation'] = 'Paramètres et rapports de l’activité';

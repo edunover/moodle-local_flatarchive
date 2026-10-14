@@ -1,4 +1,4 @@
-# Architecture — build 2026101402
+# Architecture — build 2026101403
 
 ## Export lifecycle
 
@@ -8,7 +8,7 @@
 4. `temporary_archive::create()` allocates an independent random-token workspace in Moodle's temporary directory. Each exporter reads Moodle data through its database/file/native module APIs. There is no archive job database or background worker.
 5. The endpoint delegates to activity exporters (Page and Book are rendered directly). Exporters return rendered index items and generated filenames. Moodle file-area content is copied to isolated `files/<cmid>/<area>/<itemid>/` paths.
 6. `settings_snapshot::add()` writes permitted configuration pages and links; `index_icons::add()` copies installed Moodle icons. `local_flatarchive_group_index_links()` orders the course index by actual sections.
-7. `reports::write()` adds a local report index, links to report anchors in successful activity exports, and delegates capability-gated course snapshots to `course_reports`. Then `layout::organise()` remaps every entry except `index.html` below `resources/`, rewrites known local URLs and invokes `html_safety::harden()` on generated HTML. Original file attachments are deliberately excluded from this transformation.
+7. `reports::write()` adds a local report index, moves report sections of successful activity exports to dedicated activity report pages, and delegates capability-gated course snapshots to `course_reports`. Then `layout::organise()` remaps every entry except `index.html` below `resources/`, rewrites known local URLs and invokes `html_safety::harden()` on generated HTML. Original file attachments are deliberately excluded from this transformation.
 8. Moodle's ZIP packer builds `archive.zip`. Only a successful build is registered in the user's session. An exception deletes the failed workspace.
 9. `serve_temp.php` rechecks login, session key, archive ownership/expiry and course capability before streaming the ZIP with private/no-store and nosniff headers.
 
@@ -21,7 +21,7 @@
 | `paths` | `stem()` gives generated Page/Book names a unique identity suffix; `assets()` isolates file areas; `relative()` rejects traversal/absolute/control-character paths. |
 | `locallib.php` | Visibility badges, version label, installed module icons, Moodle file-area copying/link rewriting, checked writes, ordered section grouping. |
 | `archive_templates/{index,page,book_toc}_template.php` | Document shells. Titles are escaped; body HTML must already have been formatted by the caller. Final security policy is added during archive layout finalisation. |
-| `reports`, `course_reports` | Local report index, participant roster and four read-only course snapshots. Participants and Gradebook link directly from the course navigation, before Reports. Capabilities are checked before each report reads data; group and participant filters apply. Existing activity reports are linked using their registered main filename and fixed anchor. |
+| `reports`, `course_reports` | Local report index, participant roster and four read-only course snapshots. Participants and Gradebook link directly from the course navigation, before Reports. Capabilities are checked before each report reads data; group and participant filters apply. The fixed report marker identifies the section to move from the registered main document. Activity navigation links Settings and Reports side by side; the course report index excludes activity reports. |
 | `layout` | ZIP destination mapping and relative HTML/CSS/srcset URL rewriting. Only known archive entries are remapped. |
 | `html_safety` | Final browser CSP, removal of active elements/handlers/forms, disabled controls, external iframe-to-link conversion and referrer protection. It supplements Moodle cleaning; it is not an independent full HTML sanitiser. |
 | `settings_snapshot`, `data_settings` | Whitelisted course/module/database-field settings, descriptions, tags, local links. Values representing passwords are replaced with presence indicators. |

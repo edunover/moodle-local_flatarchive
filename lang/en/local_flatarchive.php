@@ -460,7 +460,7 @@ $string['backtoreports'] = 'Back to reports';
 $string['reportscoursenavigation'] = 'Course settings and reports';
 $string['reportscourse'] = 'Course reports';
 $string['reportsactivities'] = 'Reports in exported activities';
-$string['reportsscope'] = 'Course reports cover the whole accessible course, independently of the selected activity contents. Activity reports link only to successfully exported activities. This is a static snapshot, not a live report.';
+$string['reportsscope'] = 'Course reports cover the whole accessible course, independently of the selected activity contents. Activity reports are available from each exported activity. This is a static snapshot, not a live report.';
 $string['reportssnapshot'] = 'Snapshot generated on: {$a}';
 $string['reportsnoactivities'] = 'No selected activity contains an exportable report section.';
 $string['reportsgrades'] = 'Gradebook — stored grades';
@@ -491,3 +491,5 @@ $string['archiveparticipantsscope'] = 'Enrolled participants, including inactive
 $string['archiveparticipantactive'] = 'Active';
 $string['archiveparticipantinactive'] = 'Inactive';
 $string['archiveparticipantstatus'] = 'Enrolment status';
+
+$string['activitynavigation'] = 'Activity settings and reports';

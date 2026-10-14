@@ -287,6 +287,7 @@ final class reports_test extends \advanced_testcase {
         $modinfo = get_fast_modinfo($course);
         $dir = make_request_directory();
         $export = choice_exporter::render($modinfo->get_cm($choice->cmid), $modinfo, $dir);
+        $settings = \local_flatarchive\archive\settings_snapshot::add([$choice->cmid => $export['item']], $modinfo, $dir);
         $result = reports::write($modinfo, [$choice->cmid => $export], $dir);
         $html = local_flatarchive_render_index_template(
             $course,
@@ -297,7 +298,7 @@ final class reports_test extends \advanced_testcase {
         );
         file_put_contents($dir . '/index.html', $html);
         file_put_contents($dir . '/course-settings.html', '<a href="index.html">Course</a>');
-        $files = $result['files'] + ['index.html' => $dir . '/index.html',
+        $files = $result['files'] + $settings['files'] + ['index.html' => $dir . '/index.html',
             'course-settings.html' => $dir . '/course-settings.html', $export['filename'] => $dir . '/' . $export['filename']];
         $mapped = layout::organise($files);
         $root = file_get_contents($mapped['index.html']);
@@ -310,11 +311,22 @@ final class reports_test extends \advanced_testcase {
             $this->assertSame('resources/' . $file, $links->item($i)->getAttribute('href'));
         }
         $index = file_get_contents($mapped['resources/reports.html']);
-        $this->assertStringContainsString($export['filename'] . '#fa-activity-reports', $index);
+        $this->assertStringNotContainsString('Selected &amp; Choice', $index);
+        $this->assertStringNotContainsString(get_string('reportsactivities', 'local_flatarchive'), $index);
         $this->assertStringNotContainsString('Unselected Choice', $index);
         $activity = file_get_contents($dir . '/' . $export['filename']);
-        $this->assertStringContainsString('id="fa-activity-reports"', $activity);
-        $this->assertStringContainsString('href="#fa-activity-reports"', $activity);
+        $reportfile = 'choice-' . $choice->cmid . '-reports.html';
+        $this->assertStringNotContainsString('id="fa-activity-reports"', $activity);
+        $this->assertStringContainsString('href="' . $reportfile . '"', $activity);
+        $report = file_get_contents($mapped['resources/' . $reportfile]);
+        $this->assertStringContainsString('id="fa-activity-reports"', $report);
+        $this->assertStringContainsString('href="' . $export['filename'] . '"', $report);
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($activity);
+        $links = (new \DOMXPath($dom))->query('//nav[@class="fa-course-tools"]/a');
+        $this->assertSame(2, $links->length);
+        $this->assertSame('choice-' . $choice->cmid . '-settings.html', $links->item(0)->getAttribute('href'));
+        $this->assertSame($reportfile, $links->item(1)->getAttribute('href'));
         $this->assertSame(1, substr_count($activity, 'class="fa-activity-reports-link"'));
         $detail = local_flatarchive_render_page_template($course, $modinfo->get_cm($choice->cmid), 'Detail', '<p>Result</p>');
         $this->assertStringNotContainsString('href="#fa-activity-reports"', $detail);

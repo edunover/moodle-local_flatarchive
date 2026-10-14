@@ -456,7 +456,7 @@ $string['backtoreports'] = 'Terug naar rapporten';
 $string['reportscoursenavigation'] = 'Cursusinstellingen en rapporten';
 $string['reportscourse'] = 'Cursusrapporten';
 $string['reportsactivities'] = 'Rapporten van geëxporteerde activiteiten';
-$string['reportsscope'] = 'Cursusrapporten omvatten de volledige toegankelijke cursus, onafhankelijk van de geselecteerde inhoud. Activiteitenrapporten verwijzen uitsluitend naar geëxporteerde activiteiten. Dit is een statische momentopname.';
+$string['reportsscope'] = 'Cursusrapporten omvatten de volledige toegankelijke cursus, onafhankelijk van de geselecteerde inhoud. Activiteitsrapporten zijn beschikbaar vanuit elke geëxporteerde activiteit. Dit is een statische momentopname.';
 $string['reportssnapshot'] = 'Momentopname gemaakt op: {$a}';
 $string['reportsnoactivities'] = 'Geen geselecteerde activiteit bevat een exporteerbaar rapportonderdeel.';
 $string['reportsgrades'] = 'Cijferboek — opgeslagen cijfers';
@@ -487,3 +487,5 @@ $string['archiveparticipantsscope'] = 'Ingeschreven deelnemers, inclusief inacti
 $string['archiveparticipantactive'] = 'Actief';
 $string['archiveparticipantinactive'] = 'Inactief';
 $string['archiveparticipantstatus'] = 'Inschrijvingsstatus';
+
+$string['activitynavigation'] = 'Activiteitsinstellingen en rapporten';

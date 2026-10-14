@@ -2,7 +2,7 @@
 
 `local_flatarchive` creates a portable, static HTML snapshot of selected course content. Extract the ZIP and open `index.html`; all other pages and assets are under `resources/`. It is a reading archive, **not a Moodle backup or restore format**.
 
-Development release: **0.2.0 / build 2026101402**, maturity **alpha**. Minimum Moodle: **4.4**. The CI configuration covers Moodle 4.4–5.3 across their configured PHP versions; a configured matrix is not evidence that every run passed. See the [test runs](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
+Development release: **0.2.0 / build 2026101403**, maturity **alpha**. Minimum Moodle: **4.4**. The CI configuration covers Moodle 4.4–5.3 across their configured PHP versions; a configured matrix is not evidence that every run passed. See the [test runs](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
 
 ## Installation and use
 
@@ -42,10 +42,11 @@ Exports respect current Moodle capabilities, visibility and the exporter-specifi
 
 ## Reports
 
-The course index navigation is **Settings · Participants · Gradebook · Reports**. Participants and Gradebook appear only when permitted. Participants lists enrolled users (including inactive enrolments), course-effective roles with course aliases, and enrolment status, within the selected group scope; it requires `moodle/course:viewparticipants`. Gradebook opens stored grades directly. Reports opens a local index with two groups:
+The course index navigation is **Settings · Participants · Gradebook · Reports**. Participants and Gradebook appear only when permitted. Participants lists enrolled users (including inactive enrolments), course-effective roles with course aliases, and enrolment status, within the selected group scope; it requires `moodle/course:viewparticipants`. Gradebook opens stored grades directly. Reports opens a local index containing only course reports:
 
 - **Course reports:** course completion with criteria, activity completion, and participation counts. These cover the whole accessible course, independently of the selected content. Each page records its generation date and group scope and links back to Reports and the course index.
-- **Exported activity reports:** links directly to the report section of selected Quiz, Lesson, Feedback, Choice, Assignment, H5P and Workshop activities. The main page of each of these activities also has a Reports link under its title, targeting its existing report section. Existing response, attempt and assessment pages retain their native permission rules; they are not duplicated.
+
+**Activity reports** belong to their activity, not to the course Reports index. For Quiz, Lesson, Feedback, Choice, Assignment, H5P and Workshop, **Settings · Reports** appears on one navigation row. Reports opens a dedicated local page named after the activity and its report type, containing the existing authorised results or the explicit empty-state message. Content is moved rather than duplicated; question solutions are not recorded student attempts. Report details retain their existing back-to-activity links.
 
 Each course report requires its native report capability; grades additionally require `moodle/grade:viewall`. Inaccessible reports are labelled rather than linked. Participants are actively enrolled users: configured gradebook roles for grades/participation and native completion-tracked users for completion. Separate-group restrictions and the current Moodle course group apply. Hidden grade values are omitted without `moodle/grade:viewhidden`; course/category totals are then also omitted to avoid indirect disclosure. Stored grades are not recalculated.
 
