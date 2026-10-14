@@ -42,6 +42,17 @@ function local_flatarchive_render_page_template(
     string $visibilitybadges = ''
 ): string {
     $content = ($cm ? \local_flatarchive\archive\tags::render('core', 'course_modules', (int)$cm->id) : '') . $content;
+    $reportlink = '';
+    if (
+        $cm && isset(\local_flatarchive\archive\reports::ACTIVITIES[$cm->modname]) &&
+            strpos($content, \local_flatarchive\archive\reports::anchor()) !== false
+    ) {
+        $reportlink = html_writer::tag('p', html_writer::link(
+            '#fa-activity-reports',
+            get_string('archivereports', 'local_flatarchive'),
+            ['class' => 'fa-activity-reports-link']
+        ));
+    }
     $coursetitle = s($course->fullname);
     $footer = get_string('footer_copyright', 'local_flatarchive', local_flatarchive_get_release());
     $backlabel = get_string('backtocourseindex', 'local_flatarchive');
@@ -67,6 +78,7 @@ function local_flatarchive_render_page_template(
             <p><a class="fa-back-index" href="' . $relativeshared . 'index.html">' . $backlabel . '</a></p>
             <div>
                 <h1>' . s($title) . '</h1>
+                ' . $reportlink . '
                 ' . ($visibilitybadges ? '<div class="fa-vis-block">' . $visibilitybadges . '</div>' : '') . '
                 <hr>
                 <div class="card">

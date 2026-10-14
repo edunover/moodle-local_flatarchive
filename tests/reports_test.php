@@ -312,7 +312,12 @@ final class reports_test extends \advanced_testcase {
         $index = file_get_contents($mapped['resources/reports.html']);
         $this->assertStringContainsString($export['filename'] . '#fa-activity-reports', $index);
         $this->assertStringNotContainsString('Unselected Choice', $index);
-        $this->assertStringContainsString('id="fa-activity-reports"', file_get_contents($dir . '/' . $export['filename']));
+        $activity = file_get_contents($dir . '/' . $export['filename']);
+        $this->assertStringContainsString('id="fa-activity-reports"', $activity);
+        $this->assertStringContainsString('href="#fa-activity-reports"', $activity);
+        $this->assertSame(1, substr_count($activity, 'class="fa-activity-reports-link"'));
+        $detail = local_flatarchive_render_page_template($course, $modinfo->get_cm($choice->cmid), 'Detail', '<p>Result</p>');
+        $this->assertStringNotContainsString('href="#fa-activity-reports"', $detail);
         $this->assertStringNotContainsString('href="report-grades.html"', $index);
         $this->assertStringContainsString('href="../index.html"', file_get_contents($dir . '/report-participants.html'));
         $this->assertStringContainsString('href="../index.html"', file_get_contents($dir . '/report-grades.html'));
