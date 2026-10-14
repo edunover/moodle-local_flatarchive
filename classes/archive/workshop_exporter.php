@@ -53,7 +53,7 @@ final class workshop_exporter {
             $body .= self::text($instance->$field, $instance->{$field . 'format'}, $field, 0, $cm, $directory);
         }
         $body .= self::heading('wsform') . self::form($instance, $cm, $directory);
-        $body .= self::heading('wssubmissions');
+        $body .= reports::anchor() . self::heading('wssubmissions');
         $links = [];
         $aggregates = '';
         if (has_capability('mod/workshop:viewallsubmissions', $cm->context)) {

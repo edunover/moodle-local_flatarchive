@@ -87,6 +87,7 @@ try {
     }
 
     $indexitems = [];
+    $activityexports = [];
     $zipfiles = [];
     $zipfiles['shared/moodle.css'] = $sharedfolder . '/moodle.css';
 
@@ -112,6 +113,7 @@ try {
             ];
             $exporter = $exporters[$cm->modname];
             $export = $exporter::render($cm, $modinfo, $tempdir);
+            $activityexports[$cmid] = $export;
             $indexitems[$cmid] = $export['item'];
             foreach ($export['filenames'] as $filename) {
                 $zipfiles[$filename] = $tempdir . '/' . $filename;
@@ -265,6 +267,9 @@ try {
         }
     }
 
+    $reports = \local_flatarchive\archive\reports::write($modinfo, $activityexports, $tempdir);
+    $zipfiles += $reports['files'];
+
     $index = \local_flatarchive\archive\index_icons::add($indexitems, $modinfo, $tempdir);
     $indexitems = $index['items'];
     $zipfiles += $index['files'];
@@ -273,7 +278,8 @@ try {
         $course,
         $courseid,
         $sections,
-        $settings['courselink']
+        $settings['courselink'],
+        $reports['link']
     );
     local_flatarchive_write_file($tempdir . '/index.html', $indexhtml);
     $zipfiles['index.html'] = $tempdir . '/index.html';

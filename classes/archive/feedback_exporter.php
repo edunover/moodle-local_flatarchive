@@ -84,7 +84,7 @@ final class feedback_exporter {
                 $cm->id
             );
         }
-        $content .= \html_writer::tag('h2', get_string('feedbackresponses', 'local_flatarchive'));
+        $content .= reports::anchor() . \html_writer::tag('h2', get_string('feedbackresponses', 'local_flatarchive'));
         if (!has_capability('mod/feedback:viewreports', $context)) {
             $content .= \html_writer::tag('p', get_string('feedbackresponsesrestricted', 'local_flatarchive'));
         } else {

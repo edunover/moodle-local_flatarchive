@@ -76,7 +76,7 @@ final class quiz_exporter {
             $files[] = $file;
             $body .= \html_writer::tag('p', \html_writer::link($file, get_string('quizquestionnaire', 'local_flatarchive')));
         }
-        $body .= \html_writer::tag('h2', get_string('quizattempts', 'local_flatarchive'));
+        $body .= reports::anchor() . \html_writer::tag('h2', get_string('quizattempts', 'local_flatarchive'));
         $reporter = has_capability('mod/quiz:viewreports', $context);
         $group = groups_get_activity_groupmode($cm) ? groups_get_activity_group($cm) : 0;
         $users = $reporter ? get_enrolled_users($context, '', $group, 'u.*', 'u.id', 0, 0, true) : [$USER];

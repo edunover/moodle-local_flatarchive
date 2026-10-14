@@ -172,7 +172,7 @@ final class h5p_exporter {
     ): string {
         global $DB, $PAGE;
         $manager = \mod_h5pactivity\local\manager::create_from_coursemodule($cm);
-        $html = \html_writer::tag('h2', get_string('h5pattempts', 'local_flatarchive'));
+        $html = reports::anchor() . \html_writer::tag('h2', get_string('h5pattempts', 'local_flatarchive'));
         $html .= \html_writer::tag('p', get_string('h5pattemptnotice', 'local_flatarchive'));
         if (!$manager->can_view_all_attempts()) {
             return $html . \html_writer::tag('p', get_string('h5pnoreports', 'local_flatarchive'));

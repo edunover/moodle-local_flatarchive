@@ -76,7 +76,7 @@ final class choice_exporter {
             $labels[] = $label;
         }
         $content .= \html_writer::alist($labels);
-        $content .= \html_writer::tag('h2', get_string('choiceresults', 'local_flatarchive'));
+        $content .= reports::anchor() . \html_writer::tag('h2', get_string('choiceresults', 'local_flatarchive'));
         // Private report exports require both report access and the native download capability.
         $report = has_capability('mod/choice:readresponses', $context)
             && has_capability('mod/choice:downloadresponses', $context);

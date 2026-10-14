@@ -158,3 +158,9 @@ hr { margin: 1rem 0; border: 0; border-top: 1px solid #dee2e6; }
 .flatarchive-h5p-board { position: relative; width: 100%; max-width: 800px; border: 1px solid #697682; }
 .flatarchive-h5p-board > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 .flatarchive-h5p-zone { position: absolute; border: 2px dashed #1d4e70; background: #ffffffcc; color: #14364e; font-weight: bold; }
+
+/* Course-wide report navigation and wide read-only tables. */
+.fa-course-tools { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; }
+.fa-report-table { overflow-x: auto; margin: 1rem 0; }
+.fa-report-table th { text-align: left; }
+.fa-report-table th, .fa-report-table td { vertical-align: top; }

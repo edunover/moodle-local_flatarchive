@@ -6,6 +6,7 @@
 |---|---|---|
 | Moodle core | Login, capabilities, sessions, contexts, external API, database queries, File API, formatting/cleaning, language strings, ZIP packer, temporary storage and cleanup | Minimum `2024042200` (4.4); supplied and maintained by the Moodle site. |
 | Native Moodle modules | Their data schemas, access/report APIs, renderers and icons | Must match the installed Moodle release. The 17 supported module types are listed in README and `selection`. |
+| Native course report/grade/completion APIs | Grade-item formatting, completion criteria, group scope, participation SQL log reader selection | Core `report_progress`, `report_completion`, `report_participation`, `gradereport_grader`; no new third-party dependency. |
 | Moodle question engine | Quiz question/attempt rendering and file permissions | Supplied by Moodle; arbitrary third-party question types are not guaranteed. |
 | Moodle HTMLPurifier integration | Safe Database template rendering and formatted content | Moodle-owned dependency; not independently bundled here. |
 | PHP | Plugin execution | CI: 8.1–8.4, paired with compatible Moodle branches. Use the requirements of the installed Moodle version. |

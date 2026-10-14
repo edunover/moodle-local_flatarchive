@@ -99,7 +99,7 @@ final class assign_exporter {
                 $links .= \html_writer::tag('li', \html_writer::link($reportfile, s($title)));
             }
         }
-        $body .= \html_writer::tag('h2', get_string('assignrecords', 'local_flatarchive'));
+        $body .= reports::anchor() . \html_writer::tag('h2', get_string('assignrecords', 'local_flatarchive'));
         $body .= $links ? \html_writer::tag('ul', $links) :
             \html_writer::tag('p', get_string('assignnorecords', 'local_flatarchive'));
         $plugingroups = [$assignment->get_submission_plugins(), $assignment->get_feedback_plugins()];

@@ -29,13 +29,15 @@
  * @param int $courseid
  * @param array $sections Sections ordonnées avec nom, ID et liens relatifs rendus.
  * @param string $settingslink Optional local settings link
+ * @param string $reportslink Optional local report index link
  * @return string HTML complet
  */
 function local_flatarchive_render_index_template(
     stdClass $course,
     int $courseid,
     array $sections,
-    string $settingslink = ''
+    string $settingslink = '',
+    string $reportslink = ''
 ): string {
     $sectionshtml = '';
     foreach ($sections as $section) {
@@ -49,8 +51,17 @@ function local_flatarchive_render_index_template(
     }
     $coursetitle = s($course->fullname);
     $footer = get_string('footer_copyright', 'local_flatarchive', local_flatarchive_get_release());
-    $backlabel = get_string('backtocourseindex', 'local_flatarchive');
     $sitename = s($course->shortname ?: get_string('pluginname', 'local_flatarchive'));
+
+    $navigation = $settingslink;
+    if ($reportslink !== '') {
+        // The settings helper returns a paragraph; place both links in a single navigation block.
+        $settings = preg_replace('~^<p>|</p>$~', '', trim($settingslink));
+        $navigation = html_writer::tag('nav', $settings . $reportslink, [
+            'class' => 'fa-course-tools',
+            'aria-label' => get_string('reportscoursenavigation', 'local_flatarchive'),
+        ]);
+    }
 
     return '<!DOCTYPE html>
 <html lang="' . current_language() . '">
@@ -70,7 +81,7 @@ function local_flatarchive_render_index_template(
         <main class="container-fluid mt-2 flex-grow-1 flex-shrink-1">
             <div>
                 <h1>' . $coursetitle . '</h1>
-                ' . $settingslink . '
+                ' . $navigation . '
                 ' . \local_flatarchive\archive\tags::render('core', 'course', $courseid) . '
                 <hr>
                 ' . $sectionshtml . '

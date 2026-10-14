@@ -10,6 +10,10 @@ This development plugin creates **readable copies of potentially sensitive cours
 - Individual reports are filtered by the exporter's native capabilities, groups, anonymity and review rules. Changes to those checks require regression tests.
 - Download tokens contain 192 random bits, are session/user-bound and expire after one hour. Download rechecks course access and archive permission. No client path is used. ZIP symlinks and noncanonical workspace paths are rejected.
 
+## Course report snapshots
+
+Gradebook, completion and participation snapshots have independent native capability checks. They include active enrolled participants in the permitted current course group and can cover activities not selected for content export. Without hidden-grade permission, hidden values and aggregate totals are omitted. Participation excludes raw log payloads and IP addresses; anonymous events require the native permission. All report data becomes part of the downloaded ZIP and has the same confidentiality/retention boundaries as exported activity reports.
+
 ## Generated HTML
 
 Moodle text formatting/cleaning and escaped labels provide the primary content boundary. The final generated document pass adds CSP before page content: scripts, objects, frames, network connections from script, base URL overrides and form submissions are prohibited. It removes scripts, handlers, refresh metadata and active forms; external iframes become ordinary links. The policy requires a browser that honours CSP in HTML metadata. Source HTML remains editable by anyone holding the ZIP; “static” is not tamper-proof or cryptographically signed.
