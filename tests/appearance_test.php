@@ -77,6 +77,7 @@ final class appearance_test extends \advanced_testcase {
         $this->setAdminUser();
         require_once($CFG->libdir . '/adminlib.php');
         $PAGE->set_context(\context_system::instance());
+        $PAGE->set_url(new \moodle_url('/admin/settings.php', ['section' => 'local_flatarchive']));
         $setting = new \local_flatarchive\admin\css_setting(
             'local_flatarchive/customcss',
             'CSS',
