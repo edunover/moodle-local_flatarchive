@@ -1,6 +1,8 @@
 # Institution appearance
 
-Configure **Site administration → Plugins → Local plugins → Flat archive**. Only site administrators with configuration access can edit these settings.
+Configure **Site administration → Plugins → Local plugins → Flat archive**. The selection page also provides a **Plugin settings** link to administrators. Direct URL: `/admin/settings.php?section=local_flatarchive`. Moodle 4.5 does not expose local plugin settings through the generic plugin-list Settings column.
+
+Only site administrators with configuration access can edit these settings.
 
 Choose **None**, **Institutional blue**, **Modern green** or **Classic typography**. Changing the selection replaces the CSS field immediately. Edit that starting point, then save changes. Reopening the settings page preserves saved custom CSS; a preset is not reapplied automatically. None clears the override field, retaining the basic archive layout. Without JavaScript, paste CSS into the field manually.
 
@@ -41,3 +43,5 @@ All existing `fa-*` hooks also receive a `flatarchive-*` alias at export. Legacy
 ```
 
 Keep sufficient contrast, visible keyboard focus, readable font sizes and mobile layouts. Avoid hiding archived content. Existing inline formatting and module-specific styles may need more specific selectors; these are preserved to avoid damaging original content (especially positioned H5P elements).
+
+Upgrade 2026101406 repairs an empty CSS field when a non-empty starter style was selected in the affected installation screen. Existing custom CSS is never replaced. Preset data now travels with the CSS control itself, including on the new-settings installation form.

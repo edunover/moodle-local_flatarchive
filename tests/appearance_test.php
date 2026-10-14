@@ -69,6 +69,53 @@ final class appearance_test extends \advanced_testcase {
     }
 
     /**
+     * The real Moodle CSS control carries its presets even when rendered without other settings.
+     */
+    public function test_installation_control_contains_preset_data(): void {
+        global $CFG, $PAGE;
+        $this->resetAfterTest();
+        $this->setAdminUser();
+        require_once($CFG->libdir . '/adminlib.php');
+        $PAGE->set_context(\context_system::instance());
+        $setting = new \local_flatarchive\admin\css_setting(
+            'local_flatarchive/customcss',
+            'CSS',
+            'Editable CSS',
+            '',
+            PARAM_RAW,
+            80,
+            24
+        );
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($setting->output_html('Saved CSS'));
+        $xpath = new \DOMXPath($dom);
+        $field = $xpath->query('//textarea[@id="id_s_local_flatarchive_customcss"]')->item(0);
+        $this->assertNotNull($field);
+        $this->assertSame('Saved CSS', $field->textContent);
+        $data = $xpath->query('//*[@id="flatarchive-presets"]')->item(0);
+        $this->assertNotNull($data);
+        $this->assertSame(appearance::presets(), json_decode($data->getAttribute('data-presets'), true));
+    }
+
+    /**
+     * Upgrade repairs only the empty field from the affected preset-selection screen.
+     */
+    public function test_recover_selected_preset_preserves_custom_css(): void {
+        $this->resetAfterTest();
+        set_config('stylepreset', 'institutional', 'local_flatarchive');
+        set_config('customcss', '', 'local_flatarchive');
+        appearance::recover_preset();
+        $this->assertSame(appearance::presets()['institutional'], get_config('local_flatarchive', 'customcss'));
+        set_config('customcss', '/* My institution */', 'local_flatarchive');
+        appearance::recover_preset();
+        $this->assertSame('/* My institution */', get_config('local_flatarchive', 'customcss'));
+        set_config('stylepreset', 'none', 'local_flatarchive');
+        set_config('customcss', '', 'local_flatarchive');
+        appearance::recover_preset();
+        $this->assertSame('', get_config('local_flatarchive', 'customcss'));
+    }
+
+    /**
      * None means no override; all three starter styles are local and editable.
      */
     public function test_presets_and_empty_override(): void {

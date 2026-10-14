@@ -506,3 +506,5 @@ $string['style_none'] = 'None';
 $string['style_institutional'] = 'Institutional blue';
 $string['style_modern'] = 'Modern green';
 $string['style_classic'] = 'Classic typography';
+
+$string['pluginsettings'] = 'Plugin settings';

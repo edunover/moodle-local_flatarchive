@@ -509,3 +509,5 @@ $string['style_none'] = 'Aucun';
 $string['style_institutional'] = 'Bleu institutionnel';
 $string['style_modern'] = 'Vert moderne';
 $string['style_classic'] = 'Typographie classique';
+
+$string['pluginsettings'] = 'Paramètres du plugin';

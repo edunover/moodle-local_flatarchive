@@ -37,6 +37,19 @@ final class appearance {
     }
 
     /**
+     * Recover a preset chosen in the affected installation screen without overwriting custom CSS.
+     * Called once during the upgrade from the affected release.
+     */
+    public static function recover_preset(): void {
+        $preset = get_config('local_flatarchive', 'stylepreset');
+        $css = get_config('local_flatarchive', 'customcss');
+        $presets = self::presets();
+        if (($css === false || $css === '') && isset($presets[$preset]) && $preset !== 'none') {
+            set_config('customcss', $presets[$preset], 'local_flatarchive');
+        }
+    }
+
+    /**
      * Write the saved CSS as a separate passive asset, after the baseline stylesheet.
      * @param string $directory Export workspace
      * @return array Archive files

@@ -46,6 +46,9 @@ echo $OUTPUT->header();
 
 $templatecontext = [
     'courseid' => $course->id,
+    'pluginsettingsurl' => has_capability('moodle/site:config', context_system::instance())
+        ? (new moodle_url('/admin/settings.php', ['section' => 'local_flatarchive']))->out(false) : '',
+    'pluginsettingslabel' => get_string('pluginsettings', 'local_flatarchive'),
     'courselabel' => get_string('course'),
     'courseoptions' => array_map(
         static fn($key, $label) => ['key' => $key, 'label' => get_string($label, 'local_flatarchive')],

@@ -38,7 +38,7 @@ if ($hassiteconfig) {
             'none',
             $choices
         ));
-        $settings->add(new admin_setting_configtextarea(
+        $settings->add(new \local_flatarchive\admin\css_setting(
             'local_flatarchive/customcss',
             get_string('customcss', 'local_flatarchive'),
             get_string('customcss_help', 'local_flatarchive'),
@@ -47,11 +47,5 @@ if ($hassiteconfig) {
             80,
             24
         ));
-        $presetdata = html_writer::div('', '', [
-            'id' => 'flatarchive-presets', 'hidden' => 'hidden',
-            'data-presets' => json_encode(\local_flatarchive\archive\appearance::presets()),
-        ]);
-        $settings->add(new admin_setting_heading('local_flatarchive/presetdata', '', $presetdata));
-        $PAGE->requires->js_call_amd('local_flatarchive/appearance', 'init');
     }
 }

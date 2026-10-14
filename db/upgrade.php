@@ -40,5 +40,10 @@ function xmldb_local_flatarchive_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026101208, 'local', 'flatarchive');
     }
 
+    if ($oldversion < 2026101406) {
+        \local_flatarchive\archive\appearance::recover_preset();
+        upgrade_plugin_savepoint(true, 2026101406, 'local', 'flatarchive');
+    }
+
     return true;
 }

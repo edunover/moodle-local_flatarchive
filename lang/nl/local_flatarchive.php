@@ -502,3 +502,5 @@ $string['style_none'] = 'Geen';
 $string['style_institutional'] = 'Institutioneel blauw';
 $string['style_modern'] = 'Modern groen';
 $string['style_classic'] = 'Klassieke typografie';
+
+$string['pluginsettings'] = 'Plugininstellingen';

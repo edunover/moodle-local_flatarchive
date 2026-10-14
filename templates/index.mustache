@@ -3,6 +3,9 @@
     <input type="hidden" name="id" value="{{courseid}}">
     <input type="hidden" name="sesskey" value="{{sesskey}}">
     <p class="text-muted">{{archive_description}}</p>
+    {{#pluginsettingsurl}}
+    <p><a href="{{pluginsettingsurl}}">{{pluginsettingslabel}}</a></p>
+    {{/pluginsettingsurl}}
     <div class="d-flex flex-wrap gap-2 mb-3">
       <button type="button" class="btn btn-outline-secondary" data-action="selectall" disabled>{{selectall}}</button>
       <button type="button" class="btn btn-outline-secondary" data-action="deselectall" disabled>{{deselectall}}</button>
