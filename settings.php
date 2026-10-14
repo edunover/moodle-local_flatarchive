@@ -47,6 +47,11 @@ if ($hassiteconfig) {
             80,
             24
         ));
-        $PAGE->requires->js_call_amd('local_flatarchive/appearance', 'init', [\local_flatarchive\archive\appearance::presets()]);
+        $presetdata = html_writer::div('', '', [
+            'id' => 'flatarchive-presets', 'hidden' => 'hidden',
+            'data-presets' => json_encode(\local_flatarchive\archive\appearance::presets()),
+        ]);
+        $settings->add(new admin_setting_heading('local_flatarchive/presetdata', '', $presetdata));
+        $PAGE->requires->js_call_amd('local_flatarchive/appearance', 'init');
     }
 }

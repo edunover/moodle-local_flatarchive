@@ -5,12 +5,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 define([], function() {
-    const init = function(presets) {
+    const init = function() {
         const select = document.getElementById('id_s_local_flatarchive_stylepreset');
         const field = document.getElementById('id_s_local_flatarchive_customcss');
-        if (!select || !field || select.dataset.faInitialized) {
+        const data = document.getElementById('flatarchive-presets');
+        if (!select || !field || !data || select.dataset.faInitialized) {
             return;
         }
+        const presets = JSON.parse(data.dataset.presets);
         select.dataset.faInitialized = 'true';
         select.addEventListener('change', () => {
             if (Object.prototype.hasOwnProperty.call(presets, select.value)) {

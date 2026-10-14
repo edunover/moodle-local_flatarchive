@@ -11,8 +11,12 @@ for (const file of ['amd/src/appearance.js', 'amd/build/appearance.min.js']) {
         dom.window.define = (...args) => { module = args.at(-1)(); };
         dom.window.eval(fs.readFileSync(path.resolve(__dirname, '..', file), 'utf8'));
         const presets = {none: '', modern: 'body {color: green;}'};
-        module.init(presets);
-        module.init(presets);
+        const data = dom.window.document.createElement('div');
+        data.id = 'flatarchive-presets';
+        data.dataset.presets = JSON.stringify(presets);
+        dom.window.document.body.appendChild(data);
+        module.init();
+        module.init();
         const select = dom.window.document.querySelector('select');
         const field = dom.window.document.querySelector('textarea');
         assert.equal(field.value, 'Saved custom CSS');
@@ -23,7 +27,7 @@ for (const file of ['amd/src/appearance.js', 'amd/build/appearance.min.js']) {
         assert.equal(field.value, presets.modern);
         assert.equal(changes, 1);
         field.value += '\n/* Institution changes */';
-        module.init(presets);
+        module.init();
         assert.match(field.value, /Institution changes/);
         select.value = 'none';
         select.dispatchEvent(new dom.window.Event('change'));
