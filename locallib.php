@@ -56,7 +56,7 @@ function local_flatarchive_visibility_badges(cm_info $cm, course_modinfo $modinf
 
 /**
  * Retourne la chaîne de release du plugin (ex: '0.1.0') lue depuis version.php.
- * Fallback sur le numéro de version numérique si absent.
+ * Includes the declared maturity; falls back to the build if the release is absent.
  *
  * @return string
  */
@@ -70,6 +70,14 @@ function local_flatarchive_get_release(): string {
     $release = $plugin->release ?? '';
     $build   = $plugin->version ?? get_config('local_flatarchive', 'version');
     $result = $release ? $release . ' (' . $build . ')' : (string) $build;
+    $maturities = [
+        MATURITY_ALPHA => 'maturityalpha',
+        MATURITY_BETA => 'maturitybeta',
+        MATURITY_RC => 'maturityrc',
+        MATURITY_STABLE => 'maturitystable',
+    ];
+    $maturity = $maturities[$plugin->maturity ?? 0] ?? 'maturityunknown';
+    $result .= ' – ' . get_string('archivematurity', 'local_flatarchive', get_string($maturity, 'local_flatarchive'));
     return $result;
 }
 

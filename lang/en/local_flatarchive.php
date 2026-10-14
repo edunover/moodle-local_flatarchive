@@ -508,3 +508,11 @@ $string['style_modern'] = 'Modern green';
 $string['style_classic'] = 'Classic typography';
 
 $string['pluginsettings'] = 'Plugin settings';
+
+// Plugin maturity displayed in archive footers.
+$string['archivematurity'] = 'Maturity: {$a}';
+$string['maturityalpha'] = 'Alpha';
+$string['maturitybeta'] = 'Beta';
+$string['maturityrc'] = 'Release candidate';
+$string['maturitystable'] = 'Stable';
+$string['maturityunknown'] = 'Not specified';
