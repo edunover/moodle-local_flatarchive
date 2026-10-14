@@ -2,7 +2,7 @@
 
 `local_flatarchive` creates a portable, static HTML snapshot of selected course content. Extract the ZIP and open `index.html`; all other pages and assets are under `resources/`. It is a reading archive, **not a Moodle backup or restore format**.
 
-Development release: **0.2.0 / build 2026101403**, maturity **alpha**. Minimum Moodle: **4.4**. The CI configuration covers Moodle 4.4–5.3 across their configured PHP versions; a configured matrix is not evidence that every run passed. See the [test runs](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
+Development release: **0.2.0 / build 2026101404**, maturity **alpha**. Minimum Moodle: **4.4**. The CI configuration covers Moodle 4.4–5.3 across their configured PHP versions; a configured matrix is not evidence that every run passed. See the [test runs](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
 
 ## Installation and use
 
@@ -85,3 +85,5 @@ Flat Archive produit une copie HTML consultable hors Moodle. Le ZIP contient uni
 ## Licence
 
 Code du plugin : GNU GPL v3 ou ultérieure, Edunover. Les contenus de cours et pièces jointes conservent leurs propres droits. Les icônes sont copiées depuis les modules Moodle installés. Voir les licences individuelles des outils de développement dans le fichier de verrouillage npm et leurs distributions.
+
+The successful generation POST redirects to `download.php`, a read-only confirmation page. Language changes and refreshes preserve the same session-owned ZIP and original expiry. Only the interface language changes; archive contents retain their export language. Expired or cleaned-up archives show the unavailable message.

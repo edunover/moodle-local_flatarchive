@@ -300,31 +300,5 @@ try {
     throw $error;
 }
 
-$downloadurl = new moodle_url('/local/flatarchive/serve_temp.php', [
-    'token' => $workspace['token'],
-    'sesskey' => sesskey(),
-]);
-
-// Read the completed ZIP size, not the total size of its uncompressed contents.
-clearstatcache(true, $zippath);
-$archivesize = filesize($zippath);
-$successmessage = $archivesize === false
-    ? get_string('archive_success', 'local_flatarchive')
-    : get_string('archive_success_size', 'local_flatarchive', display_size($archivesize));
-
-echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('archivegenerated', 'local_flatarchive'));
-echo html_writer::tag('p', get_string('downloadavailability', 'local_flatarchive'));
-echo html_writer::div($successmessage, 'alert alert-success');
-echo html_writer::tag(
-    'p',
-    html_writer::link($downloadurl, get_string('archive_success_download', 'local_flatarchive'), ['class' => 'btn btn-primary'])
-);
-echo html_writer::tag(
-    'p',
-    html_writer::link(
-        new moodle_url('/local/flatarchive/index.php', ['id' => $courseid]),
-        get_string('backtoflatarchive', 'local_flatarchive')
-    )
-);
-echo $OUTPUT->footer();
+// Redirect after POST so language changes and refreshes never submit another export.
+redirect(\local_flatarchive\archive\download_page::url($workspace['token']));

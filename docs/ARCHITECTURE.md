@@ -1,4 +1,4 @@
-# Architecture — build 2026101403
+# Architecture — build 2026101404
 
 ## Export lifecycle
 
@@ -57,3 +57,5 @@ One hour is the download authorisation lifetime, not a physical deletion deadlin
 For a new module: define its permission policy, implement a bounded renderer using native access APIs, format/clean text with the correct context, isolate file areas, register supported settings, add translations and regression fixtures, and run the complete matrix. Never execute attachment code, trust a submitted path, copy arbitrary configuration records, or assume UI disabling is authorisation.
 
 The executable prototype (PDF pipeline, custom AJAX polling, job processing and bundled dependencies) is not part of the current runtime. Useful shared HTML helpers are retained and tested. Historical Git commits are not rewritten.
+
+After registration, `archive_process.php` redirects to `download.php?token=…` (POST/Redirect/GET). `download_page` rechecks session ownership, expiry and archive capability on each visit. The canonical page URL retains the token for Moodle language navigation; viewing it needs no generation POST or CSRF token. Downloading still uses `serve_temp.php` with its existing sesskey check.
