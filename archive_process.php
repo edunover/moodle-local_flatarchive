@@ -257,7 +257,7 @@ try {
 
     $settings = in_array('settings', $courseoptions, true)
         ? \local_flatarchive\archive\settings_snapshot::add($indexitems, $modinfo, $tempdir)
-        : ['items' => $indexitems, 'files' => [], 'courselink' => ''];
+        : ['items' => $indexitems, 'files' => [], 'courselink' => '', 'sectionlinks' => []];
     $indexitems = $settings['items'];
     $zipfiles += $settings['files'];
 
@@ -282,7 +282,7 @@ try {
     $index = \local_flatarchive\archive\index_icons::add($indexitems, $modinfo, $tempdir);
     $indexitems = $index['items'];
     $zipfiles += $index['files'];
-    $sections = local_flatarchive_group_index_links($course, $modinfo, $indexitems);
+    $sections = local_flatarchive_group_index_links($course, $modinfo, $indexitems, $settings['sectionlinks']);
     $indexhtml = local_flatarchive_render_index_template(
         $course,
         $courseid,

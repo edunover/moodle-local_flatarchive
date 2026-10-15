@@ -4,7 +4,7 @@
 
 `local_flatarchive` creates a portable, static HTML snapshot of selected course content. Extract the ZIP and open `index.html`; all other pages and assets are under `resources/`. It is a reading archive, **not a Moodle backup or restore format**.
 
-Current code version: **0.2.0 / build 2026101407**, maturity **alpha**. Minimum Moodle: **4.4**. The CI configuration covers Moodle 4.4–5.3 across their configured PHP versions; a configured matrix is not evidence that every run passed. See the [test runs](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
+Current code version: **0.2.0 / build 2026101500**, maturity **alpha**. Minimum Moodle: **4.4**. The CI configuration covers Moodle 4.4–5.3 across their configured PHP versions; a configured matrix is not evidence that every run passed. See the [test runs](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
 
 ## Installation and use
 
@@ -47,6 +47,8 @@ IMS content packages and SCORM are outside the supported scope.
 Course/activity settings are **documentary snapshots of explicitly selected fields**, not complete configuration dumps. Descriptions (including empty fields), visibility, activity tags and supported settings are included. Password values, secrets, user overrides and arbitrary third-party configuration are excluded. Course/content tags are retained where supported. Every generated content page has a route back to the course index.
 
 Exports respect current Moodle capabilities, visibility and the exporter-specific reporting rules. They can contain student names, submissions and grades. An exported ZIP has no Moodle access control or revocation mechanism: store and share it accordingly.
+
+Section settings are also exported when Settings is selected and the user can update the course. Every accessible section, including empty sections, has a Settings link below its heading. The snapshot includes its description and local media, name, number, default-name choice, visibility and readable access restrictions. Third-party course-format options are excluded.
 
 ## Reports
 

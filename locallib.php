@@ -187,9 +187,15 @@ function local_flatarchive_write_file(string $path, string $content): void {
  * @param stdClass $course Course record.
  * @param course_modinfo $modinfo Course structure.
  * @param array $links Trusted rendered list items indexed by course module ID.
- * @return array Non-empty sections with their selected resource links.
+ * @param array $sectionlinks Trusted settings links indexed by section ID.
+ * @return array Sections containing selected resources or an authorised settings link.
  */
-function local_flatarchive_group_index_links(stdClass $course, course_modinfo $modinfo, array $links): array {
+function local_flatarchive_group_index_links(
+    stdClass $course,
+    course_modinfo $modinfo,
+    array $links,
+    array $sectionlinks = []
+): array {
     $result = [];
     $sectionmodules = $modinfo->get_sections();
     foreach ($modinfo->get_section_info_all() as $section) {
@@ -202,12 +208,13 @@ function local_flatarchive_group_index_links(stdClass $course, course_modinfo $m
                 $selected[] = str_replace($sectionbadge, '', $links[$cmid]);
             }
         }
-        if ($selected) {
+        if ($selected || isset($sectionlinks[$section->id])) {
             $result[] = [
                 'id' => $section->id,
                 'name' => get_section_name($course, $section),
                 'visible' => (bool)$section->visible,
                 'links' => $selected,
+                'settingslink' => $sectionlinks[$section->id] ?? '',
             ];
         }
     }

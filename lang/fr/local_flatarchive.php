@@ -519,3 +519,9 @@ $string['maturitybeta'] = 'Bêta';
 $string['maturityrc'] = 'Version candidate';
 $string['maturitystable'] = 'Stable';
 $string['maturityunknown'] = 'Non précisée';
+
+// Section settings snapshots.
+$string['settingssectionnumber'] = 'Numéro de section';
+$string['settingssectiondefaultname'] = 'Utiliser le nom de section par défaut';
+$string['settingssectionscope'] = 'Paramètres standards de la section uniquement. Les réglages supplémentaires des formats de cours tiers ne sont pas inclus.';
+$string['settingsbacksection'] = 'Retour à la section';

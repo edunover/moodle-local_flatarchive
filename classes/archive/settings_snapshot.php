@@ -71,13 +71,24 @@ final class settings_snapshot {
             }
         }
         $courselink = '';
+        $sectionlinks = [];
         $course = $modinfo->get_course();
         if (has_capability('moodle/course:update', \context_course::instance($course->id))) {
             $filename = self::course($course, $directory);
             $files[$filename] = $directory . '/' . $filename;
             $courselink = \html_writer::tag('p', \html_writer::link($filename, self::label('archivesettings')));
+            foreach ($modinfo->get_section_info_all() as $section) {
+                if (!$section->uservisible) {
+                    continue;
+                }
+                $filename = self::section($section, $modinfo, $directory);
+                $files[$filename] = $directory . '/' . $filename;
+                $sectionlinks[$section->id] = \html_writer::link($filename, self::label('archivesettings'), [
+                    'class' => 'fa-settings-link fa-section-settings-link',
+                ]);
+            }
         }
-        return ['items' => $items, 'files' => $files, 'courselink' => $courselink];
+        return ['items' => $items, 'files' => $files, 'courselink' => $courselink, 'sectionlinks' => $sectionlinks];
     }
 
     /**
@@ -229,6 +240,56 @@ final class settings_snapshot {
             $course,
             null,
             $course->fullname . ' — ' . self::label('archivesettings'),
+            $body
+        ));
+        return $filename;
+    }
+
+    /**
+     * Write standard section settings without serialising third-party format options.
+     *
+     * @param \section_info $section Section from the current course
+     * @param \course_modinfo $modinfo Course information
+     * @param string $directory Archive root
+     * @return string Generated filename
+     */
+    public static function section(\section_info $section, \course_modinfo $modinfo, string $directory): string {
+        $course = $modinfo->get_course();
+        $context = \context_course::instance($course->id);
+        require_capability('moodle/course:update', $context);
+        if ((int)$section->course !== (int)$course->id || !$section->uservisible) {
+            throw new \moodle_exception('invalidrequest');
+        }
+        $name = get_section_name($course, $section);
+        $rows = [
+            get_string('name') => $name,
+            self::label('settingssectionnumber') => (string)$section->section,
+            self::label('settingssectiondefaultname') => self::value($section->name === null || $section->name === '', 'bool', ''),
+            self::label('settingsvisibility') => self::label($section->visible ? 'settingsvisible' : 'settingshidden'),
+        ];
+        $availability = new \core_availability\info_section($section);
+        $rows[self::label('settingsaccess')] = trim(strip_tags($availability->get_full_information())) ?: get_string('none');
+        $description = \local_flatarchive_copy_pluginfiles_and_rewrite(
+            $section->summary ?? '',
+            $context,
+            'course',
+            'section',
+            (int)$section->id,
+            $directory,
+            (int)$course->id
+        );
+        $body = self::description($description, (int)$section->summaryformat, $context);
+        $body .= self::intro() . self::table($rows);
+        $body .= \html_writer::tag('p', self::label('settingssectionscope'));
+        $body .= \html_writer::tag('p', \html_writer::link(
+            'index.html#section-' . $section->id,
+            self::label('settingsbacksection')
+        ));
+        $filename = 'section-' . $section->id . '-settings.html';
+        \local_flatarchive_write_file($directory . '/' . $filename, \local_flatarchive_render_page_template(
+            $course,
+            null,
+            $name . ' — ' . self::label('archivesettings'),
             $body
         ));
         return $filename;

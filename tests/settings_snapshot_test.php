@@ -85,7 +85,7 @@ final class settings_snapshot_test extends \advanced_testcase {
         ], 'image fixture');
         $modinfo = get_fast_modinfo($course);
         $result = settings_snapshot::add($items, $modinfo, $directory);
-        $this->assertCount(17, $result['files']);
+        $this->assertCount(17 + count($result['sectionlinks']), $result['files']);
         foreach ($modules as $type => $module) {
             $filename = $type . '-' . $module->cmid . '-settings.html';
             $this->assertArrayHasKey($filename, $result['files']);
@@ -149,6 +149,81 @@ final class settings_snapshot_test extends \advanced_testcase {
     }
 
     /**
+     * Section descriptions, files, restrictions and empty sections survive offline relocation.
+     */
+    public function test_section_settings_and_index(): void {
+        global $CFG, $DB;
+        require_once($CFG->dirroot . '/local/flatarchive/locallib.php');
+        require_once($CFG->dirroot . '/local/flatarchive/archive_templates/index_template.php');
+        $this->resetAfterTest();
+        $this->setAdminUser();
+        set_config('enableavailability', 1);
+        $course = $this->getDataGenerator()->create_course(['numsections' => 2]);
+        $modinfo = get_fast_modinfo($course);
+        $sectionid = $modinfo->get_section_info(1)->id;
+        $DB->update_record('course_sections', (object)[
+            'id' => $sectionid, 'name' => 'Section <one>', 'visible' => 0,
+            'summary' => '<p>Section description</p><img src="@@PLUGINFILE@@/diagram.png" alt="Diagram">',
+            'summaryformat' => FORMAT_HTML,
+            'availability' => json_encode(['op' => '&', 'c' => [
+                ['type' => 'date', 'd' => '>=', 't' => 1893456000],
+            ], 'showc' => [true]]),
+        ]);
+        $context = \context_course::instance($course->id);
+        get_file_storage()->create_file_from_string([
+            'contextid' => $context->id, 'component' => 'course', 'filearea' => 'section',
+            'itemid' => $sectionid, 'filepath' => '/', 'filename' => 'diagram.png',
+        ], 'section image fixture');
+        rebuild_course_cache($course->id, true);
+        $modinfo = get_fast_modinfo($course);
+        $directory = make_temp_directory('flatarchive-section-' . bin2hex(random_bytes(8)));
+        $result = settings_snapshot::add([], $modinfo, $directory);
+        $this->assertCount(3, $result['sectionlinks']);
+        $filename = 'section-' . $sectionid . '-settings.html';
+        $html = file_get_contents($result['files'][$filename]);
+        $this->assertStringContainsString('Section &lt;one&gt;', $html);
+        $this->assertStringContainsString('Section description', $html);
+        $this->assertStringContainsString('2030', $html);
+        $this->assertStringContainsString(get_string('settingshidden', 'local_flatarchive'), $html);
+        $this->assertStringNotContainsString('@@PLUGINFILE@@', $html);
+        $this->assertStringNotContainsString('[[', $html);
+        $image = 'files/course-' . $course->id . '/section/' . $sectionid . '/diagram.png';
+        $this->assertFileExists($directory . '/' . $image);
+        $this->assertStringContainsString($image, $html);
+        $emptyid = $modinfo->get_section_info(2)->id;
+        $emptyhtml = file_get_contents($result['files']['section-' . $emptyid . '-settings.html']);
+        $this->assertStringContainsString(get_string('settingsemptyfield', 'local_flatarchive'), $emptyhtml);
+        $sections = local_flatarchive_group_index_links($course, $modinfo, [], $result['sectionlinks']);
+        $this->assertCount(3, $sections);
+        $this->assertSame([], local_flatarchive_group_index_links($course, $modinfo, []));
+        $index = local_flatarchive_render_index_template($course, $course->id, $sections);
+        $this->assertStringContainsString('fa-section-settings-link', $index);
+        local_flatarchive_write_file($directory . '/index.html', $index);
+        $files = $result['files'] + ['index.html' => $directory . '/index.html', $image => $directory . '/' . $image];
+        $files = \local_flatarchive\archive\layout::organise($files);
+        $this->assertStringContainsString('href="resources/' . $filename . '"', file_get_contents($files['index.html']));
+        $html = file_get_contents($files['resources/' . $filename]);
+        $this->assertStringContainsString('href="../index.html#section-' . $sectionid . '"', $html);
+        $this->assertStringContainsString('flatarchive-section-settings-link', file_get_contents($files['index.html']));
+    }
+
+    /**
+     * Direct section export also requires course editing permission.
+     */
+    public function test_section_requires_management_permission(): void {
+        $this->resetAfterTest();
+        $this->setAdminUser();
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $user = $generator->create_user();
+        $generator->enrol_user($user->id, $course->id, 'student');
+        $this->setUser($user);
+        $modinfo = get_fast_modinfo($course);
+        $this->expectException(\required_capability_exception::class);
+        settings_snapshot::section($modinfo->get_section_info(0), $modinfo, make_temp_directory('flatarchive-section-denied'));
+    }
+
+    /**
      * Settings must not leak into an archive generated without management permissions.
      */
     public function test_settings_require_management_permissions(): void {
@@ -166,6 +241,7 @@ final class settings_snapshot_test extends \advanced_testcase {
         $this->assertSame($items, $result['items']);
         $this->assertSame([], $result['files']);
         $this->assertSame('', $result['courselink']);
+        $this->assertSame([], $result['sectionlinks']);
         $this->expectException(\required_capability_exception::class);
         settings_snapshot::activity(
             get_fast_modinfo($course)->get_cm($page->cmid),

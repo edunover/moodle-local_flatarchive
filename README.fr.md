@@ -4,7 +4,7 @@
 
 `local_flatarchive` crée un instantané HTML statique et portable des contenus sélectionnés dans un cours. Extrayez le ZIP et ouvrez `index.html` ; les autres pages et fichiers se trouvent dans `resources/`. Il s’agit d’une archive de consultation, **pas d’un format de sauvegarde ou de restauration Moodle**.
 
-Version actuelle du code : **0.2.0 / build 2026101407**, maturité **alpha**. Moodle minimum : **4.4**. La configuration d’intégration continue couvre Moodle 4.4 à 5.3 avec les versions PHP définies dans la matrice ; cette configuration ne prouve pas que chaque exécution a réussi. Consultez les [exécutions des tests](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
+Version actuelle du code : **0.2.0 / build 2026101500**, maturité **alpha**. Moodle minimum : **4.4**. La configuration d’intégration continue couvre Moodle 4.4 à 5.3 avec les versions PHP définies dans la matrice ; cette configuration ne prouve pas que chaque exécution a réussi. Consultez les [exécutions des tests](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
 
 ## Installation et utilisation
 
@@ -47,6 +47,8 @@ Les paquets de contenu IMS et SCORM ne font pas partie du périmètre pris en ch
 Les paramètres du cours et des activités constituent des **instantanés documentaires de champs explicitement sélectionnés**, pas des copies exhaustives de configuration. Ils comprennent les descriptions, même vides, la visibilité, les tags d’activité et les paramètres pris en charge. Mots de passe, secrets, dérogations utilisateur et configurations arbitraires de plugins tiers sont exclus. Les tags du cours et des contenus sont conservés lorsqu’ils sont pris en charge. Chaque page de contenu générée permet de revenir à l’index du cours.
 
 Les exports respectent les capacités Moodle actuelles, la visibilité et les règles de rapport propres aux exporteurs. Ils peuvent contenir des noms d’étudiants, des travaux et des notes. Une fois exporté, le ZIP ne bénéficie plus du contrôle d’accès ni d’un mécanisme de révocation Moodle : adaptez son stockage et son partage.
+
+Les paramètres des sections sont également exportés lorsque Paramètres est coché et que l’utilisateur peut modifier le cours. Chaque section accessible, même vide, possède un lien Paramètres sous son titre. La page comprend sa description et ses médias locaux, son nom, son numéro, le choix du nom par défaut, sa visibilité et ses restrictions d’accès lisibles. Les options propres aux formats de cours tiers sont exclues.
 
 ## Rapports
 

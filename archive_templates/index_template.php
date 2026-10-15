@@ -47,7 +47,8 @@ function local_flatarchive_render_index_template(
                 get_string('visibility_section_hidden', 'local_flatarchive') . '</span>' : '';
         $sectionshtml .= '<section class="fa-course-section" aria-labelledby="' . $headingid . '">'
             . '<h2 id="' . $headingid . '">' . s($section['name']) . $badge . '</h2>'
-            . '<ul>' . implode("\n", $section['links']) . '</ul></section>';
+            . (!empty($section['settingslink']) ? '<p>' . $section['settingslink'] . '</p>' : '')
+            . (!empty($section['links']) ? '<ul>' . implode("\n", $section['links']) . '</ul>' : '') . '</section>';
     }
     $coursetitle = s($course->fullname);
     $footer = get_string('footer_copyright', 'local_flatarchive', local_flatarchive_get_release());
