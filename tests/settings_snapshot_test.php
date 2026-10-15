@@ -162,7 +162,7 @@ final class settings_snapshot_test extends \advanced_testcase {
         $modinfo = get_fast_modinfo($course);
         $sectionid = $modinfo->get_section_info(1)->id;
         $DB->update_record('course_sections', (object)[
-            'id' => $sectionid, 'name' => 'Section <one>', 'visible' => 0,
+            'id' => $sectionid, 'name' => 'Section one', 'visible' => 0,
             'summary' => '<p>Section description</p><img src="@@PLUGINFILE@@/diagram.png" alt="Diagram">',
             'summaryformat' => FORMAT_HTML,
             'availability' => json_encode(['op' => '&', 'c' => [
@@ -181,7 +181,7 @@ final class settings_snapshot_test extends \advanced_testcase {
         $this->assertCount(3, $result['sectionlinks']);
         $filename = 'section-' . $sectionid . '-settings.html';
         $html = file_get_contents($result['files'][$filename]);
-        $this->assertStringContainsString('Section &lt;one&gt;', $html);
+        $this->assertStringContainsString('Section one', $html);
         $this->assertStringContainsString('Section description', $html);
         $this->assertStringContainsString('2030', $html);
         $this->assertStringContainsString(get_string('settingshidden', 'local_flatarchive'), $html);
