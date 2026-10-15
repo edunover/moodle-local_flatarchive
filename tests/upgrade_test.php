@@ -53,7 +53,7 @@ final class upgrade_test extends \advanced_testcase {
             $this->assertSame('Keep this content', $DB->get_field('page', 'content', ['id' => $page->id]));
             $this->assertSame('existing archive', file_get_contents($archive));
             $this->assertEquals(2026101406, get_config('local_flatarchive', 'version'));
-            $this->assertTrue(xmldb_local_flatarchive_upgrade(2026101208));
+            $this->assertTrue(xmldb_local_flatarchive_upgrade(2026101406));
         } finally {
             if ($dbman->table_exists($table)) {
                 $dbman->drop_table($table);
