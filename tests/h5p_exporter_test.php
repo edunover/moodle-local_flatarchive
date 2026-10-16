@@ -382,4 +382,24 @@ final class h5p_exporter_test extends \advanced_testcase {
         $this->expectException(\required_capability_exception::class);
         h5p_exporter::render($modinfo->get_cm($activity->cmid), $modinfo, $directory);
     }
+
+    /**
+     * Optional extension dispatch reaches nested libraries without changing the native default renderer.
+     */
+    public function test_optional_nested_renderer(): void {
+        $this->resetAfterTest();
+        $assets = $this->createMock(\local_flatarchive\archive\h5p_assets::class);
+        $calls = [];
+        $renderer = new h5p_renderer($assets, static function (array $child, int $depth) use (&$calls): string {
+            $calls[] = [$child['library'], $depth];
+            return '<p>EXTENSION_CHILD</p>';
+        });
+        $html = $renderer->render('H5P.QuestionSet 1.0', ['questions' => [
+            ['library' => 'H5P.NewNestedType 1.0', 'params' => []],
+        ]]);
+        $this->assertStringContainsString('EXTENSION_CHILD', $html);
+        $this->assertSame([['H5P.NewNestedType 1.0', 1]], $calls);
+        $native = new h5p_renderer($assets);
+        $this->assertStringContainsString('NATIVE_TEXT', $native->render('H5P.Text 1.0', ['text' => 'NATIVE_TEXT']));
+    }
 }

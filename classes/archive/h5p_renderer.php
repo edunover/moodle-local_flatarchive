@@ -26,14 +26,18 @@ namespace local_flatarchive\archive;
 final class h5p_renderer {
     /** @var h5p_assets Package assets. */
     private h5p_assets $package;
+    /** @var callable|null Optional extension renderer for nested libraries. */
+    private $childrenderer;
 
     /**
      * Create a renderer for one package.
      *
      * @param h5p_assets $package Validated data.
+     * @param callable|null $childrenderer Optional nested-library renderer.
      */
-    public function __construct(h5p_assets $package) {
+    public function __construct(h5p_assets $package, ?callable $childrenderer = null) {
         $this->package = $package;
+        $this->childrenderer = $childrenderer;
     }
 
     /**
@@ -154,6 +158,9 @@ final class h5p_renderer {
      * @return string HTML.
      */
     public function child(array $child, int $depth = 0): string {
+        if ($this->childrenderer !== null) {
+            return ($this->childrenderer)($child, $depth + 1);
+        }
         $title = $child['metadata']['title'] ?? '';
         $html = $title !== '' ? \html_writer::tag('h3', s($title)) : '';
         $html .= $this->render($child['library'] ?? 'Unknown', $child['params'] ?? [], $depth + 1);
