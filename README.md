@@ -1,5 +1,9 @@
 # local_flatarchive
 
+> **Bêta — essais uniquement.** Logiciel fourni en l’état, sans garantie, dans les limites du droit applicable. Utilisez une instance de test et des données fictives ou anonymisées ; effectuez une sauvegarde avant installation et vérifiez les archives produites. Les limitations de responsabilité ne suppriment pas les droits impératifs. [Texte complet](https://github.com/edunover/moodle-local_flatarchive/blob/main/docs/BETA_WARNING.md#français).
+
+> **Beta — testing only.** Provided as is, without warranty to the extent permitted by applicable law. Use a test instance and synthetic or anonymised data; back up before installation and verify generated archives. Liability limitations do not exclude mandatory legal rights. [Full notice](https://github.com/edunover/moodle-local_flatarchive/blob/main/docs/BETA_WARNING.md#english).
+
 > **État du développement — 10 octobre 2026 :** build **2026101001**, ajout de l’export Wiki : pages, navigation, fichiers et commentaires accessibles. Code disponible sur [codex/restore-html-export](https://github.com/edunover/moodle-local-flatarchive/tree/codex/restore-html-export), non intégré à `main`. [Tests réussis](https://github.com/edunover/moodle-local-flatarchive/actions/runs/38057074490). Le glossaire 2026100903 est validé sur la sandbox ; le Wiki attend sa validation manuelle.
 >
 > **Development status — October 10, 2026:** build **2026101001** adds readable Wiki pages, offline navigation, files and comments. Code remains on `codex/restore-html-export`. Automated checks pass; manual Wiki validation is pending.
