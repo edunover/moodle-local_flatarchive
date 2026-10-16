@@ -24,15 +24,15 @@ namespace local_flatarchive\archive;
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class h5p_renderer {
-    /** @var h5p_package Package assets. */
-    private h5p_package $package;
+    /** @var h5p_assets Package assets. */
+    private h5p_assets $package;
 
     /**
      * Create a renderer for one package.
      *
-     * @param h5p_package $package Validated data.
+     * @param h5p_assets $package Validated data.
      */
-    public function __construct(h5p_package $package) {
+    public function __construct(h5p_assets $package) {
         $this->package = $package;
     }
 

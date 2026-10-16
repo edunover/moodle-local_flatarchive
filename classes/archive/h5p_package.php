@@ -23,7 +23,7 @@ namespace local_flatarchive\archive;
  * @copyright 2026 Edunover
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class h5p_package {
+final class h5p_package implements h5p_assets {
     /** @var array Package metadata. */
     public array $metadata;
     /** @var array Content parameters. */
