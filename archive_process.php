@@ -99,6 +99,16 @@ try {
     foreach ($cmids as $cmid) {
         $cm = $cms[$cmid];
 
+        if (!\local_flatarchive\archive\selection::native($cm->modname)) {
+            $export = \local_flatarchive\extension\registry::installed()->render($cm, $modinfo, $tempdir, $courseoptions);
+            $indexitems[$cmid] = $export['item'];
+            foreach ($export['filenames'] as $filename) {
+                $zipfiles[$filename] = $tempdir . '/' . $filename;
+            }
+            $DB->get_field_sql('SELECT 1');
+            continue;
+        }
+
         $documenttypes = ['glossary', 'wiki', 'feedback', 'choice', 'forum', 'lesson', 'quiz',
             'data', 'url', 'assign', 'h5pactivity', 'workshop'];
         if (in_array($cm->modname, $documenttypes, true)) {

@@ -119,7 +119,7 @@ define(['core/ajax', 'core/notification', 'core/str'], function(Ajax, Notificati
                         const reason = document.createElement('span');
                         reason.id = `fa-disabled-${item.cmid}`;
                         reason.className = 'badge badge-secondary fa-export-status';
-                        reason.textContent = item.supported ? strings.exportnotpermitted : strings.unsupportedactivity;
+                        reason.textContent = item.reason || (item.supported ? strings.exportnotpermitted : strings.unsupportedactivity);
                         checkbox.setAttribute('aria-describedby', reason.id);
                         label.appendChild(reason);
                     }

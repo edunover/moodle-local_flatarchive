@@ -100,3 +100,7 @@ Plugin settings offer three editable CSS starters (Institutional blue, Modern gr
 ## License
 
 Plugin code: GNU GPL v3 or later, Edunover. Course content and attachments retain their own rights. Icons are copied from installed Moodle modules. See the individual development-tool licenses in the npm lockfile and their distributions.
+
+## Experimental extension API (development branch)
+
+[Extension API 1 — FR / EN](docs/EXTENSIONS.md)

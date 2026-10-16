@@ -525,3 +525,6 @@ $string['settingssectionnumber'] = 'Numéro de section';
 $string['settingssectiondefaultname'] = 'Utiliser le nom de section par défaut';
 $string['settingssectionscope'] = 'Paramètres standards de la section uniquement. Les réglages supplémentaires des formats de cours tiers ne sont pas inclus.';
 $string['settingsbacksection'] = 'Retour à la section';
+
+$string['extensionbranch'] = 'Extension indisponible pour cette branche Moodle. Installez l’édition correspondante.';
+$string['extensionconflict'] = 'Plusieurs extensions prennent en charge cette activité. Résolvez le conflit avant l’export.';

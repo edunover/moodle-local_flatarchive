@@ -102,3 +102,7 @@ Les paramètres du plugin proposent trois styles CSS de départ modifiables : Bl
 ## Licence
 
 Code du plugin : GNU GPL v3 ou ultérieure, Edunover. Les contenus de cours et pièces jointes conservent leurs propres droits. Les icônes sont copiées depuis les modules Moodle installés. Consultez les licences individuelles des outils de développement dans le fichier de verrouillage npm et leurs distributions.
+
+## API expérimentale des extensions (branche de développement)
+
+[Extension API 1 — FR / EN](docs/EXTENSIONS.md)

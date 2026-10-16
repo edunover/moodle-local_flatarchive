@@ -518,3 +518,6 @@ $string['settingssectionnumber'] = 'Sectienummer';
 $string['settingssectiondefaultname'] = 'Standaardsectienaam gebruiken';
 $string['settingssectionscope'] = 'Alleen standaardsectie-instellingen. Extra instellingen van cursusformaten van derden zijn niet opgenomen.';
 $string['settingsbacksection'] = 'Terug naar sectie';
+
+$string['extensionbranch'] = 'Extensie niet beschikbaar voor deze Moodle-tak. Installeer de bijbehorende editie.';
+$string['extensionconflict'] = 'Meerdere extensies ondersteunen deze activiteit. Los het conflict op voordat u exporteert.';

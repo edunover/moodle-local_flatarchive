@@ -522,3 +522,6 @@ $string['settingssectionnumber'] = 'Section number';
 $string['settingssectiondefaultname'] = 'Use default section name';
 $string['settingssectionscope'] = 'Standard section settings only. Additional settings provided by third-party course formats are not included.';
 $string['settingsbacksection'] = 'Back to section';
+
+$string['extensionbranch'] = 'Extension unavailable for this Moodle branch. Obtain the corresponding edition.';
+$string['extensionconflict'] = 'Multiple extensions claim this activity. Resolve the conflict before exporting.';

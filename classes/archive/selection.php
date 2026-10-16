@@ -51,6 +51,15 @@ final class selection {
      * @return bool
      */
     public static function supported(string $type): bool {
+        return self::native($type) || \local_flatarchive\extension\registry::installed()->available($type);
+    }
+
+    /**
+     * Whether the free core owns this activity type.
+     * @param string $type Module type
+     * @return bool
+     */
+    public static function native(string $type): bool {
         return array_key_exists($type, self::CAPABILITIES);
     }
 
@@ -60,7 +69,10 @@ final class selection {
      * @return bool
      */
     public static function permitted(\cm_info $cm): bool {
-        if (!self::supported($cm->modname) || !$cm->uservisible) {
+        if (!self::native($cm->modname)) {
+            return \local_flatarchive\extension\registry::installed()->permitted($cm);
+        }
+        if (!$cm->uservisible) {
             return false;
         }
         foreach (self::CAPABILITIES[$cm->modname] as $capability) {

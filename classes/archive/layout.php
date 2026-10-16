@@ -38,7 +38,10 @@ final class layout {
         $result = [];
         foreach ($files as $name => $path) {
             // HTML attachments are user files, not generated archive navigation.
-            if (str_ends_with($name, '.html') && !str_starts_with($name, 'files/') && !str_starts_with($name, 'shared/')) {
+            if (
+                str_ends_with($name, '.html') && !str_starts_with($name, 'files/') && !str_starts_with($name, 'shared/')
+                    && !preg_match('~^extensions/[0-9]+/files/~', $name)
+            ) {
                 $html = self::rewrite(file_get_contents($path), $name, $destinations);
                 \local_flatarchive_write_file($path, $html);
             }
