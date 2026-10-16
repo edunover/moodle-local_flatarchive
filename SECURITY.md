@@ -4,6 +4,8 @@
 
 ## Français
 
+> **Bêta — essais uniquement.** Logiciel fourni en l’état, sans garantie, dans les limites du droit applicable. Utilisez une instance de test et des données fictives ou anonymisées ; effectuez une sauvegarde avant installation et vérifiez les archives produites. Les limitations de responsabilité ne suppriment pas les droits impératifs. [Avertissement complet](docs/BETA_WARNING.md#français).
+
 Ce plugin en développement crée des **copies consultables de données de cours potentiellement sensibles**. Une revue du code et des tests réussis réduisent les risques connus ; ils ne garantissent pas une protection contre toutes les attaques et ne constituent pas un test d’intrusion indépendant.
 
 ### Autorisations et requêtes
@@ -46,6 +48,8 @@ Signalez toute vulnérabilité suspectée en privé à [christophe@edunover.eu](
 Références : [politique de sécurité Moodle](https://moodledev.io/general/development/policies/security), [CSRF](https://moodledev.io/general/development/policies/security/crosssite-request-forgery), [accès non autorisé](https://moodledev.io/general/development/policies/security/unauthorised-access), [CSP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy).
 
 ## English
+
+> **Beta — testing only.** Provided as is, without warranty to the extent permitted by applicable law. Use a test instance and synthetic or anonymised data; back up before installation and verify generated archives. Liability limitations do not exclude mandatory legal rights. [Full warning](docs/BETA_WARNING.md#english).
 
 This development plugin creates **readable copies of potentially sensitive course data**. A review and passing tests reduce known risks; they do not establish immunity from attacks or constitute an independent penetration test.
 

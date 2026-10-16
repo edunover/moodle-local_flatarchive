@@ -1,5 +1,7 @@
 # Guide de test — Flat Archive 0.3.0-beta.1
 
+> **Bêta — essais uniquement.** Logiciel fourni en l’état, sans garantie, dans les limites du droit applicable. Utilisez une instance de test et des données fictives ou anonymisées ; effectuez une sauvegarde avant installation et vérifiez les archives produites. Les limitations de responsabilité ne suppriment pas les droits impératifs. [FR/EN](BETA_WARNING.md).
+
 [English](BETA_TESTING.en.md) · [README](../README.fr.md)
 
 Build **2026101600**, maturité **Bêta**. Cette première campagne vise un petit groupe de testeurs aux cours, versions Moodle et rôles variés. La préversion est publique ; l’invitation organise les retours, elle ne limite pas techniquement l’accès au téléchargement.

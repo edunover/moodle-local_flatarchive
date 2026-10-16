@@ -1,5 +1,7 @@
 # Test guide — Flat Archive 0.3.0-beta.1
 
+> **Beta — testing only.** Provided as is, without warranty to the extent permitted by applicable law. Use a test instance and synthetic or anonymised data; back up before installation and verify generated archives. Liability limitations do not exclude mandatory legal rights. [FR/EN](BETA_WARNING.md).
+
 [Français](BETA_TESTING.fr.md) · [README](../README.md)
 
 Build **2026101600**, maturity **Beta**. This first campaign targets a small group with varied courses, Moodle versions and roles. The prerelease is public; invitations organise feedback rather than technically restricting downloads.

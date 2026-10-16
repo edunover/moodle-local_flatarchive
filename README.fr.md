@@ -1,5 +1,7 @@
 # Flat Archive pour Moodle
 
+> **Bêta — essais uniquement.** Logiciel fourni en l’état, sans garantie, dans les limites du droit applicable. Utilisez une instance de test et des données fictives ou anonymisées ; effectuez une sauvegarde avant installation et vérifiez les archives produites. Les limitations de responsabilité ne suppriment pas les droits impératifs. [FR/EN](docs/BETA_WARNING.md).
+
 [English](README.md) | **Français**
 
 `local_flatarchive` crée un instantané HTML statique et portable des contenus sélectionnés dans un cours. Extrayez le ZIP et ouvrez `index.html` ; les autres pages et fichiers se trouvent dans `resources/`. Il s’agit d’une archive de consultation, **pas d’un format de sauvegarde ou de restauration Moodle**.
