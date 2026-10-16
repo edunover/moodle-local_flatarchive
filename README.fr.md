@@ -4,7 +4,9 @@
 
 `local_flatarchive` crée un instantané HTML statique et portable des contenus sélectionnés dans un cours. Extrayez le ZIP et ouvrez `index.html` ; les autres pages et fichiers se trouvent dans `resources/`. Il s’agit d’une archive de consultation, **pas d’un format de sauvegarde ou de restauration Moodle**.
 
-Version actuelle du code : **0.2.0 / build 2026101500**, maturité **alpha**. Moodle minimum : **4.4**. La configuration d’intégration continue couvre Moodle 4.4 à 5.3 avec les versions PHP définies dans la matrice ; cette configuration ne prouve pas que chaque exécution a réussi. Consultez les [exécutions des tests](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
+Version actuelle du code : **0.3.0-beta.1 / build 2026101600**, maturité **bêta**. Moodle minimum : **4.4**. La configuration d’intégration continue couvre Moodle 4.4 à 5.3 avec les versions PHP définies dans la matrice ; cette configuration ne prouve pas que chaque exécution a réussi. Consultez les [exécutions des tests](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
+
+**Testeurs de la bêta :** utilisez une instance Moodle de test et suivez le [guide de test](docs/BETA_TESTING.fr.md). Téléchargez le ZIP installable depuis la [préversion](https://github.com/edunover/moodle-local_flatarchive/releases/tag/v0.3.0-beta.1), plutôt que l’archive automatique du code source de GitHub.
 
 ## Installation et utilisation
 

@@ -1,0 +1,60 @@
+name: Beta feedback / Retour bêta
+description: Report a beta test result using synthetic data / Signaler un résultat avec des données fictives.
+title: "[Beta] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        No student data, real archives, tokens or session keys. For vulnerabilities, follow SECURITY.md privately.
+        Aucune donnée étudiante, archive réelle, jeton ou clé de session. Pour une vulnérabilité, suivez SECURITY.md en privé.
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Plugin release/build, Moodle, PHP, browser / Plugin et build, Moodle, PHP, navigateur.
+    validations:
+      required: true
+  - type: input
+    id: context
+    attributes:
+      label: Environment / Environnement
+      description: Theme, course format, relevant plugins, role and permissions; no personal identifiers.
+    validations:
+      required: true
+  - type: dropdown
+    id: result
+    attributes:
+      label: Result / Résultat
+      options:
+        - Pass / Réussi
+        - Fail / Échec
+        - Partial / Partiel
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Tested cases and steps / Cas testés et étapes
+      description: Include tested activity types; use dummy data / Précisez les activités testées et utilisez des données fictives.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result / Résultat attendu
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Observed result / Résultat obtenu
+      description: Include sanitised errors, duration and ZIP size if relevant / Erreurs nettoyées, durée et taille ZIP si utile.
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Before submitting / Avant envoi
+      options:
+        - label: I removed personal data and secrets / J’ai retiré les données personnelles et les secrets.
+          required: true
