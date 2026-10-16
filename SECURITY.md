@@ -41,7 +41,7 @@ La conversion H5P n’exécute pas le JavaScript du paquet. Elle rejette les che
 
 ### Signaler une vulnérabilité
 
-Signalez toute vulnérabilité suspectée en privé au propriétaire du dépôt, par un canal privé de signalement de sécurité GitHub disponible ou par un contact privé convenu séparément. Ne publiez pas dans une issue publique de données étudiantes, de jetons, de clés de session ou de détails permettant d’exploiter une vulnérabilité non corrigée. Indiquez les versions du build, de Moodle et de PHP, une reproduction minimale avec des données fictives, les droits d’accès attendus et le comportement observé.
+Signalez toute vulnérabilité suspectée en privé à [christophe@edunover.eu](mailto:christophe@edunover.eu). Ne publiez pas dans une issue publique de données étudiantes, de jetons, de clés de session ou de détails permettant d’exploiter une vulnérabilité non corrigée. Indiquez les versions du build, de Moodle et de PHP, une reproduction minimale avec des données fictives, les droits d’accès attendus et le comportement observé.
 
 Références : [politique de sécurité Moodle](https://moodledev.io/general/development/policies/security), [CSRF](https://moodledev.io/general/development/policies/security/crosssite-request-forgery), [accès non autorisé](https://moodledev.io/general/development/policies/security/unauthorised-access), [CSP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy).
 
@@ -84,6 +84,6 @@ H5P conversion does not execute package JavaScript. It rejects unsafe/duplicate 
 
 ### Reporting
 
-Report a suspected vulnerability privately to the repository owner through an available private GitHub security reporting channel or a separately agreed private contact. Do not put student records, tokens, session keys or exploit details for an unpatched vulnerability in a public issue. Include build/Moodle/PHP versions, minimal synthetic reproduction, expected access rights and observed behaviour.
+Report a suspected vulnerability privately to [christophe@edunover.eu](mailto:christophe@edunover.eu). Do not put student records, tokens, session keys or exploit details for an unpatched vulnerability in a public issue. Include build/Moodle/PHP versions, minimal synthetic reproduction, expected access rights and observed behaviour.
 
 Reference guidance: [Moodle security policy](https://moodledev.io/general/development/policies/security), [CSRF](https://moodledev.io/general/development/policies/security/crosssite-request-forgery), [unauthorised access](https://moodledev.io/general/development/policies/security/unauthorised-access), [CSP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy).
