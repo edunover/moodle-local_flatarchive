@@ -46,7 +46,7 @@ Pour chaque cas, consignez : **Réussi / Échec / Non testé**, le résultat obt
 
 ## Transmettre un retour
 
-Ouvrez une [issue GitHub](https://github.com/edunover/moodle-local_flatarchive/issues/new). Utilisez le formulaire de retour bêta s’il est proposé. Les formulaires GitHub dépendent de la branche par défaut ; tant que la branche de préparation n’y est pas intégrée, copiez le modèle ci-dessous dans une issue ordinaire.
+Ouvrez le [formulaire de retour bêta](https://github.com/edunover/moodle-local_flatarchive/issues/new?template=beta_feedback.yml) et remplissez les champs. Un compte GitHub est nécessaire. Le formulaire est aussi accessible depuis Issues → New issue → Beta feedback / Retour bêta. Le modèle ci-dessous reste disponible pour préparer votre retour.
 
 ```text
 Version/build du plugin :

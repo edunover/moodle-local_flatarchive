@@ -46,7 +46,7 @@ Record **Pass / Fail / Not tested**, the observed result and reproduction steps 
 
 ## Submit feedback
 
-Open a [GitHub issue](https://github.com/edunover/moodle-local_flatarchive/issues/new). Use the beta feedback form if offered. GitHub forms depend on the default branch; until the preparation branch is integrated there, copy the template below into a regular issue.
+Open the [beta feedback form](https://github.com/edunover/moodle-local_flatarchive/issues/new?template=beta_feedback.yml) and fill in the fields. A GitHub account is required. You can also find it under Issues → New issue → Beta feedback / Retour bêta. The template below remains available to prepare your feedback.
 
 ```text
 Plugin version/build:
