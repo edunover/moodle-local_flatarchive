@@ -1,18 +1,24 @@
-# Guide de test — Flat Archive 0.3.0-beta.1
+# Guide de test — Flat Archive 0.3.0-beta.2
 
 > **Bêta — essais uniquement.** Logiciel fourni en l’état, sans garantie, dans les limites du droit applicable. Utilisez une instance de test et des données fictives ou anonymisées ; effectuez une sauvegarde avant installation et vérifiez les archives produites. Les limitations de responsabilité ne suppriment pas les droits impératifs. [FR/EN](BETA_WARNING.md).
 
 [English](BETA_TESTING.en.md) · [README](../README.fr.md)
 
-Build **2026101600**, maturité **Bêta**. Cette première campagne vise un petit groupe de testeurs aux cours, versions Moodle et rôles variés. La préversion est publique ; l’invitation organise les retours, elle ne limite pas techniquement l’accès au téléchargement.
+Build **2026111106**, maturité **Bêta**. Cette deuxième bêta regroupe les correctifs des issues #1 à #6 et sollicite une validation ciblée LaTeX et Compilatio. La préversion est publique ; l’invitation organise les retours, elle ne limite pas techniquement l’accès au téléchargement.
 
 ## Préparer votre environnement
 
 Utilisez une instance de test, des comptes fictifs et des données synthétiques ou anonymisées. Conservez une sauvegarde de l’instance avant toute installation ou mise à jour. Notez les versions exactes de Moodle, PHP, du plugin, le thème, le format du cours et les plugins impliqués. Le minimum déclaré est Moodle 4.4 ; la matrice automatisée est détaillée dans le workflow du dépôt.
 
-Téléchargez `local_flatarchive-0.3.0-beta.1.zip` depuis la préversion GitHub. Le fichier `SHA256SUMS.txt` permet de contrôler son intégrité avec `shasum -a 256 local_flatarchive-0.3.0-beta.1.zip` (macOS) ou `sha256sum` (Linux). Comparez le résultat au fichier publié. Ce contrôle n’est pas une signature numérique.
+Téléchargez `local_flatarchive-0.3.0-beta.2.zip` depuis la préversion GitHub. Le fichier `SHA256SUMS.txt` permet de contrôler son intégrité avec `shasum -a 256 local_flatarchive-0.3.0-beta.2.zip` (macOS) ou `sha256sum` (Linux). Comparez le résultat au fichier publié. Ce contrôle n’est pas une signature numérique.
 
 Les archives peuvent contenir des données personnelles. Ne joignez jamais une archive réelle, des noms d’étudiants, notes, remises, mots de passe, jetons ou clés de session à une issue publique. Ne publiez pas une archive sur le domaine authentifié de Moodle.
+
+## Vérifications ciblées de la bêta.2
+
+- **LaTeX — issue #6 :** reprenez le contenu du signalement, avec des formules en ligne et en bloc dans une Page, une zone Texte et média et une description d’activité. Exportez avec et sans Paramètres, puis consultez l’archive décompressée hors ligne. Les notations courantes doivent apparaître en MathML statique ; une notation non prise en charge doit conserver sa source complète avec un avertissement. Précisez le navigateur et sa version, et une formule non sensible en cas de différence. M01 a été validé par le mainteneur sur Moodle 4.5 avec et sans Paramètres dans le build fix.6 ; une confirmation sur le contenu du testeur reste bienvenue. Consultez le [périmètre mathématique](MATH.md).
+- **Test + Compilatio — issue #5 :** sur un site de test où Compilatio est activé pour le Test, reproduisez l’export initial. Incluez une question Composition native et, si possible, une tentative contenant une réponse et une pièce jointe. Vérifiez Questionnaire et solutions, les réponses enregistrées, les fichiers et commentaires de correction autorisés. L’archive doit se générer sans exception liée à l’identifiant d’utilisation 0 ; les réglages Compilatio doivent rester inchangés. **La validation avec Compilatio réel reste attendue et l’issue #5 demeure ouverte.** Q01 a été validé en interne ; les tests automatisés utilisent une intégration antiplagiat simulée. Les rapports et scores Compilatio ne sont pas exportés.
+- Répondez dans l’[issue #6](https://github.com/edunover/moodle-local_flatarchive/issues/6) ou l’[issue #5](https://github.com/edunover/moodle-local_flatarchive/issues/5), en indiquant le build **2026111106**, les versions Moodle/PHP/navigateur, les cas testés et le résultat. Le téléchargement public ne nécessite pas de compte GitHub ; les commentaires en nécessitent un. Un retour privé est également possible à [christophe@edunover.eu](mailto:christophe@edunover.eu), sans archive de cours sensible.
 
 ## Parcours de validation
 
@@ -20,8 +26,8 @@ Pour chaque cas, consignez : **Réussi / Échec / Non testé**, le résultat obt
 
 | Cas | Manipulation | Résultat attendu |
 |---|---|---|
-| Installation neuve | Installez le ZIP via l’installateur Moodle sur une instance sans Flat Archive. | Installation terminée, version 0.3.0-beta.1, accès à Flat Archive et aux paramètres du plugin. |
-| Mise à jour | Sur une autre instance de test ou une copie, mettez à jour depuis 0.2.0, idéalement build 2026101500. | Cours préservés, CSS enregistré conservé, mise à jour terminée. |
+| Installation neuve | Installez le ZIP via l’installateur Moodle sur une instance sans Flat Archive. | Installation terminée, version 0.3.0-beta.2, accès à Flat Archive et aux paramètres du plugin. |
+| Mise à jour | Sur une autre instance de test ou une copie, mettez à jour depuis 0.3.0-beta.1 ou un build beta.1+fix ; conservez aussi le cas de mise à jour depuis 0.2.0 si pertinent. | Cours préservés, CSS enregistré conservé, mise à jour terminée. |
 | Paramètres | Ouvrez Administration du site → Plugins → Plugins locaux → Flat archive, ou le lien administrateur de la page de sélection. | Page accessible ; certains écrans de liste des plugins locaux ne proposent pas ce lien. |
 | Styles | Choisissez chacun des trois modèles, puis Aucun ; modifiez et enregistrez le CSS. Rouvrez la page. | Le choix remplit le champ ; les modifications enregistrées sont conservées ; le style s’applique aux nouvelles archives. |
 | Sélection | Sélectionnez quelques activités, puis utilisez Tout sélectionner/Tout désélectionner. | Activités non prises en charge désactivées ; options du cours également sélectionnables. |
