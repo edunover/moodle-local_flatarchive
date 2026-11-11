@@ -74,6 +74,139 @@ final class data_exporter_test extends \advanced_testcase {
     }
 
     /**
+     * Unconfigured templates preserve entries, navigation and settings without changing source data.
+     *
+     * @dataProvider unconfigured_templates_provider
+     * @param string|null $template Stored template value.
+     * @param string|null $css Stored stylesheet value.
+     * @param bool $withentries Create fields and entries rather than an entirely empty Database.
+     * @param bool $includesettings Export settings as well as content.
+     */
+    public function test_unconfigured_templates(
+        ?string $template,
+        ?string $css,
+        bool $withentries,
+        bool $includesettings
+    ): void {
+        global $DB;
+        $entries = [];
+        if ($withentries) {
+            [$course, $data, $field, $dg] = $this->fixture();
+            foreach (['Énergie & archivage', 'Caractères : < > & é à ç'] as $title) {
+                $id = $dg->create_entry($data, [$field->field->id => $title]);
+                $entries[$id] = $title;
+            }
+        } else {
+            $course = $this->getDataGenerator()->create_course();
+            $data = $this->getDataGenerator()->create_module('data', ['course' => $course->id]);
+            $this->assertFalse($DB->record_exists('data_fields', ['dataid' => $data->id]));
+        }
+        $templates = ['listtemplateheader', 'listtemplate', 'listtemplatefooter', 'singletemplate',
+            'addtemplate', 'asearchtemplate', 'rsstemplate', 'rsstitletemplate', 'jstemplate'];
+        // Persist values after generation so Moodle's defaults cannot mask the SQL NULL case.
+        foreach ($templates as $property) {
+            $DB->set_field('data', $property, $template, ['id' => $data->id]);
+            $this->assertSame($template, $DB->get_field('data', $property, ['id' => $data->id], MUST_EXIST));
+        }
+        $DB->set_field('data', 'csstemplate', $css, ['id' => $data->id]);
+        $this->assertSame($css, $DB->get_field('data', 'csstemplate', ['id' => $data->id], MUST_EXIST));
+        $before = $DB->get_record('data', ['id' => $data->id], '*', MUST_EXIST);
+        $recordsbefore = $DB->get_records('data_records', ['dataid' => $data->id], 'id');
+        $contentconditions = ['fieldid' => $withentries ? $field->field->id : 0];
+        $contentsbefore = $DB->get_records('data_content', $contentconditions, 'id');
+
+        $info = get_fast_modinfo($course);
+        $directory = make_request_directory();
+        $result = data_exporter::render($info->get_cm($data->cmid), $info, $directory, $includesettings);
+        $html = file_get_contents($directory . '/' . $result['filename']);
+        $this->assertCount(1 + count($entries) + (int)$includesettings, $result['filenames']);
+        $cssfile = 'files/' . $data->cmid . '/database.css';
+        $this->assertSame($css ?? '', file_get_contents($directory . '/' . $cssfile));
+        $this->assertStringContainsString('href="' . $cssfile . '"', $html);
+        if (!$withentries) {
+            $this->assertStringContainsString(get_string('dataempty', 'local_flatarchive'), $html);
+        }
+        foreach ($entries as $id => $title) {
+            $entryfile = 'data-' . $data->cmid . '-entry-' . $id . '.html';
+            $this->assertContains($entryfile, $result['filenames']);
+            $this->assertStringContainsString('href="' . $entryfile . '"', $html);
+            $detail = file_get_contents($directory . '/' . $entryfile);
+            foreach ([$html, $detail] as $page) {
+                $this->assertStringContainsString('<dt>Title</dt>', $page);
+                $this->assertStringContainsString(s($title), $page);
+                $this->assertStringNotContainsString('##more##', $page);
+                $this->assertStringNotContainsString('[[Title]]', $page);
+                $this->assertStringContainsString('href="' . $cssfile . '"', $page);
+            }
+            $this->assertStringContainsString('href="' . $result['filename'] . '"', $detail);
+            $this->assertStringContainsString('href="index.html"', $detail);
+        }
+        $settingsfile = 'data-' . $data->cmid . '-settings.html';
+        if ($includesettings) {
+            $this->assertContains($settingsfile, $result['filenames']);
+            $this->assertStringContainsString('href="' . $settingsfile . '"', $html);
+            $settings = file_get_contents($directory . '/' . $settingsfile);
+            $this->assertStringContainsString(get_string('settingstemplates', 'local_flatarchive'), $settings);
+        } else {
+            $this->assertFileDoesNotExist($directory . '/' . $settingsfile);
+            $this->assertStringNotContainsString($settingsfile, $html);
+        }
+        $this->assertEquals($before, $DB->get_record('data', ['id' => $data->id], '*', MUST_EXIST));
+        $this->assertEquals($recordsbefore, $DB->get_records('data_records', ['dataid' => $data->id], 'id'));
+        $this->assertEquals($contentsbefore, $DB->get_records('data_content', $contentconditions, 'id'));
+    }
+
+    /**
+     * Optional templates and styles found in new and existing Database activities (issue #3).
+     *
+     * @return array Template, CSS, entries and settings combinations.
+     */
+    public static function unconfigured_templates_provider(): array {
+        return [
+            'empty database with NULL templates and CSS' => [null, null, false, true],
+            'empty database with empty templates and CSS' => ['', '', false, false],
+            'entries with NULL templates and CSS with settings' => [null, null, true, true],
+            'entries with NULL templates and CSS without settings' => [null, null, true, false],
+            'entries with empty templates and CSS' => ['', '', true, true],
+            'entries with whitespace templates' => [" \n\t ", '', true, false],
+            'entries with NULL templates and custom CSS' => [null, 'dl { color: navy; }', true, true],
+        ];
+    }
+
+    /**
+     * A missing stylesheet must not discard the existing list and single-entry layouts.
+     *
+     * @dataProvider unconfigured_css_provider
+     * @param string|null $css Stored CSS value.
+     */
+    public function test_unconfigured_css_preserves_templates(?string $css): void {
+        global $DB;
+        [$course, $data, $field, $dg] = $this->fixture();
+        $id = $dg->create_entry($data, [$field->field->id => 'Styled entry']);
+        $DB->set_field('data', 'csstemplate', $css, ['id' => $data->id]);
+        $this->assertSame($css, $DB->get_field('data', 'csstemplate', ['id' => $data->id], MUST_EXIST));
+        $before = $DB->get_record('data', ['id' => $data->id], '*', MUST_EXIST);
+        [$directory, , $html] = $this->export($course, $data);
+        $this->assertStringContainsString('class="catalogue"', $html);
+        $entryfile = 'data-' . $data->cmid . '-entry-' . $id . '.html';
+        $this->assertStringContainsString('href="' . $entryfile . '"', $html);
+        $detail = file_get_contents($directory . '/' . $entryfile);
+        $this->assertStringContainsString('class="detail"', $detail);
+        $this->assertStringContainsString('Styled entry', $detail);
+        $this->assertSame('', file_get_contents($directory . '/files/' . $data->cmid . '/database.css'));
+        $this->assertEquals($before, $DB->get_record('data', ['id' => $data->id], '*', MUST_EXIST));
+    }
+
+    /**
+     * Missing CSS representations used by Moodle.
+     *
+     * @return array Nullable or empty CSS values.
+     */
+    public static function unconfigured_css_provider(): array {
+        return ['NULL CSS' => [null], 'empty CSS' => ['']];
+    }
+
+    /**
      * Templates, local links, approval badges and settings are preserved without source writes.
      */
     public function test_templates_pending_entries_and_setting_metadata(): void {
