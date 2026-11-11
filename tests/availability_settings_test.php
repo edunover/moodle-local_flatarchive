@@ -56,8 +56,9 @@ final class availability_settings_test extends \advanced_testcase {
         rebuild_course_cache($course->id, true);
         $info = get_fast_modinfo($course);
         if ($tree !== null && count($tree['c']) > 1) {
-            foreach ([new \core_availability\info_section($info->get_section_info(1)),
-                    new \core_availability\info_module($info->get_cm($page->cmid))] as $availability) {
+            $availabilityitems = [new \core_availability\info_section($info->get_section_info(1)),
+                new \core_availability\info_module($info->get_cm($page->cmid))];
+            foreach ($availabilityitems as $availability) {
                 $this->assertInstanceOf(\core_availability_multiple_messages::class, $availability->get_full_information());
             }
         }

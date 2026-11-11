@@ -307,6 +307,8 @@ final class settings_snapshot {
             return get_string('none');
         }
         $html = \core_availability\info::format_info($information, $availability->get_course());
+        // Retain list structure without converting emphasised activity names to uppercase.
+        $html = strip_tags($html, '<p><br><ul><ol><li><div>');
         return trim(html_to_text($html, 0, false)) ?: get_string('none');
     }
 
