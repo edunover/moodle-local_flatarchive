@@ -51,6 +51,7 @@ final class quiz_question {
         \cm_info $cm,
         string $directory
     ): string {
+        global $CFG, $PAGE;
         $question = $qa->get_question();
         $options->readonly = true;
         $options->context = \context_module::instance($cm->id);
@@ -69,9 +70,17 @@ final class quiz_question {
             }
             return \html_writer::tag('section', $body, ['class' => 'fa-quiz-question']);
         }
-        if (!$qa->get_usage_id()) {
+        if ($question->qtype->name() === 'essay') {
+            require_once($CFG->dirroot . '/question/type/essay/renderer.php');
+            $renderer = new quiz_essay_renderer($PAGE, null);
+            if (!$qa->get_usage_id()) {
+                $html = $renderer->formulation_and_controls($qa, $options) . $renderer->feedback($qa, $options);
+            } else {
+                // Keep Moodle's behaviour/review rules, substituting only the passive essay renderer.
+                $html = $qa->get_behaviour()->render($options, $number, $PAGE->get_renderer('core', 'question'), $renderer);
+            }
+        } else if (!$qa->get_usage_id()) {
             // Authored questionnaire: no unfinished-attempt behaviour should hide its solutions.
-            global $PAGE;
             $renderer = $question->get_renderer($PAGE);
             $html = $renderer->formulation_and_controls($qa, $options) . $renderer->feedback($qa, $options);
         } else {

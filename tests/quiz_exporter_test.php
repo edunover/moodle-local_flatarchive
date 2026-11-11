@@ -26,6 +26,7 @@ use local_flatarchive\archive\quiz_exporter;
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \local_flatarchive\archive\quiz_exporter
  * @covers \local_flatarchive\archive\quiz_question
+ * @covers \local_flatarchive\archive\quiz_essay_renderer
  */
 final class quiz_exporter_test extends \advanced_testcase {
     /**
@@ -38,6 +39,7 @@ final class quiz_exporter_test extends \advanced_testcase {
         $this->setAdminUser();
         require_once($CFG->dirroot . '/mod/quiz/locallib.php');
         require_once($CFG->dirroot . '/question/engine/lib.php');
+        require_once($CFG->dirroot . '/question/type/essay/renderer.php');
     }
 
     /**
@@ -249,6 +251,183 @@ final class quiz_exporter_test extends \advanced_testcase {
         $files = glob($directory . '/files/' . $quiz->cmid . '/quiz/*/essay.png');
         $this->assertCount(1, $files);
         $this->assertSame('PrivateEssayMedia', file_get_contents($files[0]));
+    }
+
+    /**
+     * Register a test integration only in memory, leaving the installed plugin tree untouched.
+     *
+     * @param callable $test Assertions to run with the plagiarism dispatcher enabled
+     */
+    private function with_plagiarism_fixture(callable $test): void {
+        global $CFG;
+        require_once($CFG->libdir . '/plagiarismlib.php');
+        require_once(__DIR__ . '/fixtures/plagiarism/lib.php');
+        set_config('enableplagiarism', 1);
+        set_config('enabled', 1, 'plagiarism_flatarchivefixture');
+        \core_component::get_plugin_list('plagiarism');
+        $property = new \ReflectionProperty(\core_component::class, 'plugins');
+        $original = $property->getValue();
+        $plugins = $original;
+        $plugins['plagiarism']['flatarchivefixture'] = __DIR__ . '/fixtures/plagiarism';
+        $property->setValue(null, $plugins);
+        \plagiarism_plugin_flatarchivefixture::$calls = [];
+        try {
+            $this->assertArrayHasKey('flatarchivefixture', plagiarism_load_available_plugins());
+            $test();
+            $this->assertEquals(1, $CFG->enableplagiarism);
+            $this->assertSame('1', get_config('plagiarism_flatarchivefixture', 'enabled'));
+        } finally {
+            $property->setValue(null, $original);
+            \plagiarism_plugin_flatarchivefixture::$calls = [];
+        }
+    }
+
+    /**
+     * Reproduce the usage-zero exception through the real dispatcher, then export without calling it.
+     */
+    public function test_essay_questionnaire_with_plagiarism_integration(): void {
+        global $DB, $PAGE;
+        [$quiz, , $questions] = $this->fixture(['essay']);
+        $this->with_plagiarism_fixture(function () use ($quiz, $questions, $DB, $PAGE): void {
+            $question = \question_bank::load_question($questions[0]->id);
+            $qa = new \question_attempt($question, 0, null, 1);
+            $qa->set_slot(1);
+            $qa->start('deferredfeedback', 1);
+            $options = new \question_display_options();
+            $options->readonly = true;
+            $options->context = \context_module::instance($quiz->cmid);
+            $native = new \qtype_essay_renderer($PAGE, null);
+            try {
+                $native->formulation_and_controls($qa, $options);
+                $this->fail('The fixture must reproduce the missing question usage exception');
+            } catch (\coding_exception $exception) {
+                $this->assertStringContainsString('Failed to load questions_usage_by_activity 0', $exception->getMessage());
+            }
+            $this->assertCount(1, \plagiarism_plugin_flatarchivefixture::$calls);
+            \plagiarism_plugin_flatarchivefixture::$calls = [];
+            $before = $DB->get_records('question_usages');
+            [$html, , $result] = $this->export($quiz);
+            $this->assertCount(2, $result['filenames']);
+            $this->assertStringContainsString('qtext', $html);
+            $this->assertStringNotContainsString('DO-NOT-EXPORT-PLAGIARISM-REPORT', $html);
+            $this->assertSame([], \plagiarism_plugin_flatarchivefixture::$calls);
+            $this->assertEquals($before, $DB->get_records('question_usages'));
+            $this->assertFalse($DB->record_exists('quiz_attempts', ['quiz' => $quiz->id]));
+        });
+    }
+
+    /**
+     * Native essay responses and files survive without plagiarism calls or changes to recorded data.
+     *
+     * @dataProvider essay_formats_provider
+     * @param string $responseformat Native essay response format
+     */
+    public function test_essay_attempt_with_plagiarism_integration(string $responseformat): void {
+        global $DB;
+        [$quiz, $student, $questions] = $this->fixture(['essay']);
+        $DB->update_record('qtype_essay_options', (object)[
+            'id' => $DB->get_field('qtype_essay_options', 'id', ['questionid' => $questions[0]->id], MUST_EXIST),
+            'responseformat' => $responseformat, 'attachments' => 1,
+        ]);
+        \question_bank::notify_question_edited($questions[0]->id);
+        $generator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
+        $this->setUser($student);
+        $attempt = $generator->create_attempt($quiz->id, $student->id);
+        $attemptobj = \mod_quiz\quiz_attempt::create($attempt->id);
+        $draftid = file_get_unused_draft_itemid();
+        get_file_storage()->create_file_from_string([
+            'contextid' => \context_user::instance($student->id)->id, 'component' => 'user',
+            'filearea' => 'draft', 'itemid' => $draftid, 'filepath' => '/', 'filename' => 'essay-attachment.txt',
+        ], 'Essay attachment bytes');
+        $plain = in_array($responseformat, ['plain', 'monospaced'], true);
+        $answer = $plain ? 'EssayResponse <literal> & texte' : '<p>EssayResponse &amp; texte</p>';
+        if ($responseformat === 'editorfilepicker') {
+            $answer .= '<img src="@@PLUGINFILE@@/essay-image.png" alt="Embedded response">';
+        }
+        $attemptobj->get_question_usage()->process_action(1, [
+            'answer' => $responseformat === 'noinline' ? '' : $answer,
+            'answerformat' => $plain ? FORMAT_PLAIN : FORMAT_HTML,
+            'attachments' => new \question_file_saver($draftid, 'question', 'response_attachments'),
+        ]);
+        $attemptobj->process_finish(time(), false);
+        $attemptobj = \mod_quiz\quiz_attempt::create($attempt->id);
+        $context = \context_module::instance($quiz->cmid);
+        if ($responseformat === 'editorfilepicker') {
+            $step = $attemptobj->get_question_attempt(1)->get_last_step_with_qt_var('answer');
+            get_file_storage()->create_file_from_string([
+                'contextid' => $context->id, 'component' => 'question', 'filearea' => 'response_answer',
+                'itemid' => $step->get_id(), 'filepath' => '/', 'filename' => 'essay-image.png',
+            ], 'Embedded essay bytes');
+        }
+        $this->setAdminUser();
+        $usage = $attemptobj->get_question_usage();
+        $usage->manual_grade(1, 'EssayTeacherComment', 0.5, FORMAT_HTML);
+        \question_engine::save_questions_usage_by_activity($usage);
+
+        $this->with_plagiarism_fixture(function () use ($quiz, $attempt, $student, $responseformat, $plain, $DB): void {
+            $attemptobj = \mod_quiz\quiz_attempt::create($attempt->id);
+            $options = clone $attemptobj->get_display_options(true);
+            $options->context = \context_module::instance($quiz->cmid);
+            // The probe exercises plagiarism links, not history authors (which require preloading on Moodle 4.x).
+            $options->history = \question_display_options::HIDDEN;
+            $probe = $attemptobj->get_question_attempt(1)->render($options, '1');
+            $this->assertStringContainsString('DO-NOT-EXPORT-PLAGIARISM-REPORT', $probe);
+            $this->assertGreaterThanOrEqual(2, count(\plagiarism_plugin_flatarchivefixture::$calls));
+            \plagiarism_plugin_flatarchivefixture::$calls = [];
+            $tables = ['question_usages', 'question_attempts', 'question_attempt_steps', 'question_attempt_step_data',
+                'quiz_attempts', 'quiz_grades', 'config', 'config_plugins'];
+            $before = [];
+            foreach ($tables as $table) {
+                $before[$table] = $DB->get_records($table, null, 'id');
+            }
+            [$html, $directory] = $this->export($quiz);
+            $detail = file_get_contents($directory . '/quiz-' . $quiz->cmid . '-attempt-' . $attempt->id . '.html');
+            $this->assertStringContainsString('EssayTeacherComment', $detail);
+            if ($responseformat !== 'noinline') {
+                $this->assertStringContainsString('EssayResponse', $detail);
+            }
+            if ($plain) {
+                $this->assertStringContainsString('&lt;literal&gt;', $detail);
+            }
+            $this->assertStringNotContainsString('DO-NOT-EXPORT-PLAGIARISM-REPORT', $html);
+            $this->assertStringNotContainsString('@@PLUGINFILE@@', $html);
+            $this->assertSame([], \plagiarism_plugin_flatarchivefixture::$calls);
+            $files = glob($directory . '/files/' . $quiz->cmid . '/quiz/*/essay-attachment.txt');
+            $this->assertCount(1, $files);
+            $this->assertSame('Essay attachment bytes', file_get_contents($files[0]));
+            $this->assertStringContainsString('essay-attachment.txt', $detail);
+            if ($responseformat === 'editorfilepicker') {
+                $images = glob($directory . '/files/' . $quiz->cmid . '/quiz/*/essay-image.png');
+                $this->assertCount(1, $images);
+                $this->assertSame('Embedded essay bytes', file_get_contents($images[0]));
+            }
+            foreach ($tables as $table) {
+                $this->assertEquals($before[$table], $DB->get_records($table, null, 'id'), $table);
+            }
+            // Review restrictions still prevent response text, comments and attachments from being exported.
+            $DB->set_field('quiz', 'reviewattempt', 0, ['id' => $quiz->id]);
+            $this->setUser($student);
+            [$hidden, $hiddendirectory] = $this->export($quiz);
+            $this->assertStringNotContainsString('EssayResponse', $hidden);
+            $this->assertStringNotContainsString('EssayTeacherComment', $hidden);
+            $this->assertSame([], glob($hiddendirectory . '/files/' . $quiz->cmid . '/quiz/*/essay-*'));
+            $this->assertSame([], \plagiarism_plugin_flatarchivefixture::$calls);
+        });
+    }
+
+    /**
+     * All response formats supported by Moodle's native essay question.
+     *
+     * @return array Essay format identifiers
+     */
+    public static function essay_formats_provider(): array {
+        return [
+            'HTML editor' => ['editor'],
+            'HTML editor with embedded files' => ['editorfilepicker'],
+            'plain text' => ['plain'],
+            'monospaced text' => ['monospaced'],
+            'attachments only' => ['noinline'],
+        ];
     }
 
     /**
