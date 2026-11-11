@@ -6,7 +6,7 @@
 
 `local_flatarchive` creates a portable, static HTML snapshot of selected course content. Extract the ZIP and open `index.html`; all other pages and assets are under `resources/`. It is a reading archive, **not a Moodle backup or restore format**.
 
-Current code version: **0.3.0-beta.1+fix.5 / build 2026111104**, maturity **beta**. Minimum Moodle: **4.4**. The CI configuration covers Moodle 4.4–5.3 across their configured PHP versions; a configured matrix is not evidence that every run passed. See the [test runs](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
+Current code version: **0.3.0-beta.1+fix.6 / build 2026111105**, maturity **beta**. Minimum Moodle: **4.4**. The CI configuration covers Moodle 4.4–5.3 across their configured PHP versions; a configured matrix is not evidence that every run passed. See the [test runs](https://github.com/edunover/moodle-local_flatarchive/actions/workflows/tests.yml).
 
 This test build includes the fix for [issue #1](https://github.com/edunover/moodle-local_flatarchive/issues/1) (lessons with a `NULL` description) and [issue #2](https://github.com/edunover/moodle-local_flatarchive/issues/2) (multiple access restrictions in activity, section and Database settings). Restriction descriptions use Moodle's native formatter, then become escaped plain text with preserved AND/OR groupings and no live Moodle links. It also fixes [issue #3](https://github.com/edunover/moodle-local_flatarchive/issues/3): empty or `NULL` Database templates and CSS no longer prevent export. Missing list and single-entry templates use a readable field list with local navigation; existing templates and CSS are preserved, without modifying Moodle data. For [issue #4](https://github.com/edunover/moodle-local_flatarchive/issues/4), course settings now preserve the full category path from root to leaf (for example, `Institution › Faculty › Programme`). Category names are escaped static text, without links to the original Moodle site. The published beta.1 release remains unchanged.
 
@@ -75,6 +75,8 @@ Participation uses Moodle's preferred enabled SQL log reader, retained participa
 Generated HTML is cleaned using Moodle APIs and finalised with a restrictive Content Security Policy. Scripts and forms cannot be used as interactive activities; embedded external applications become links. Native image/audio/video playback remains possible. Remote media and external links may require Internet access.
 
 Original attachments, including HTML/SVG/Office documents and source H5P packages, are preserved rather than disinfected. They are outside the generated-page policy. This plugin is not an antivirus, a content sandbox or a guarantee against every attack. Read [SECURITY.md](SECURITY.md) before deployment.
+
+Common LaTeX formulas are converted to static, native MathML in generated pages, without a JavaScript player or a server TeX installation. Unsupported or invalid formulas remain as source with an explicit notice. This is a bounded subset, not a full LaTeX engine: see [supported notation and limits](docs/MATH.md).
 
 Multilingual content markers such as `{mlang}` and FilterCodes `{multilang xx}` are preserved as source content; no additional cross-language navigation is generated. No claim is made that all third-party question types, field plugins or embedded applications can be rendered faithfully.
 

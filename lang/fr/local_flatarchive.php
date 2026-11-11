@@ -525,3 +525,5 @@ $string['settingssectionnumber'] = 'Numéro de section';
 $string['settingssectiondefaultname'] = 'Utiliser le nom de section par défaut';
 $string['settingssectionscope'] = 'Paramètres standards de la section uniquement. Les réglages supplémentaires des formats de cours tiers ne sont pas inclus.';
 $string['settingsbacksection'] = 'Retour à la section';
+
+$string['mathunrendered'] = 'Formule non rendue : notation non prise en charge, syntaxe incorrecte ou limite de taille. Source LaTeX conservée.';

@@ -90,6 +90,7 @@ final class layout {
                 }
             }
             html_safety::harden($dom);
+            math_content::render($dom);
             appearance::decorate($dom, isset($destinations['shared/institution.css']));
             return $dom->saveHTML();
         } finally {

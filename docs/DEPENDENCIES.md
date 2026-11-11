@@ -10,6 +10,7 @@
 | Moodle question engine | Quiz question/attempt rendering and file permissions | Supplied by Moodle; arbitrary third-party question types are not guaranteed. Native essay rendering uses an archive-only subclass of `qtype_essay_renderer`, preserving review rules while excluding plagiarism callbacks for text and files. |
 | Moodle HTMLPurifier integration | Safe Database template rendering and formatted content | Moodle-owned dependency; not independently bundled here. |
 | PHP | Plugin execution | CI: 8.1–8.4, paired with compatible Moodle branches. Use the requirements of the installed Moodle version. |
+| Native browser MathML | Static mathematical notation in generated HTML | No JavaScript, CDN, TeX binary or additional PHP package. Requires a browser with native MathML support; the TeX source is retained. See [math scope and limits](MATH.md). |
 | PHP DOM/libxml | HTML parsing, link rewriting and final document hardening | PHP extensions; parsers explicitly disable network access with `LIBXML_NONET`. |
 | PHP ZipArchive/libzip | Bounded H5P ZIP inspection and media reads | `zip` extension; update through the PHP/server distribution. |
 | PHP JSON, streams, filesystem and cryptographic randomness | Bounded JSON decoding, checked copies, random workspace tokens | Standard PHP APIs; no subprocess execution by the export runtime. |
