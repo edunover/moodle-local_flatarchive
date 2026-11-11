@@ -368,6 +368,8 @@ final class quiz_exporter_test extends \advanced_testcase {
             $attemptobj = \mod_quiz\quiz_attempt::create($attempt->id);
             $options = clone $attemptobj->get_display_options(true);
             $options->context = \context_module::instance($quiz->cmid);
+            // The probe exercises plagiarism links, not history authors (which require preloading on Moodle 4.x).
+            $options->history = \question_display_options::HIDDEN;
             $probe = $attemptobj->get_question_attempt(1)->render($options, '1');
             $this->assertStringContainsString('DO-NOT-EXPORT-PLAGIARISM-REPORT', $probe);
             $this->assertGreaterThanOrEqual(2, count(\plagiarism_plugin_flatarchivefixture::$calls));
