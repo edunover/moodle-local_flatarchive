@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace local_flatarchive\archive;
 
@@ -74,13 +74,13 @@ final class math_content {
      */
     private static function excluded(\DOMNode $node): bool {
         for ($parent = $node->parentNode; $parent instanceof \DOMElement; $parent = $parent->parentNode) {
-            if (in_array(strtolower($parent->tagName), [
-                'pre', 'code', 'kbd', 'samp', 'script', 'style', 'textarea', 'select', 'option', 'math', 'svg',
-            ], true)) {
+            $excludedtags = ['pre', 'code', 'kbd', 'samp', 'script', 'style', 'textarea',
+                'select', 'option', 'math', 'svg'];
+            if (in_array(strtolower($parent->tagName), $excludedtags, true)) {
                 return true;
             }
-            if (preg_match('/(?:^|\s)(?:tex2jax_ignore|mathjax_ignore|flatarchive-math-unrendered)(?:\s|$)/',
-                $parent->getAttribute('class'))) {
+            $ignored = '/(?:^|\s)(?:tex2jax_ignore|mathjax_ignore|flatarchive-math-unrendered)(?:\s|$)/';
+            if (preg_match($ignored, $parent->getAttribute('class'))) {
                 return true;
             }
         }

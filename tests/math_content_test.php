@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace local_flatarchive;
 
@@ -177,7 +177,7 @@ final class math_content_test extends \advanced_testcase {
             $files[$name] = $directory . '/' . $name;
             local_flatarchive_write_file($files[$name], '<html><body>' . $body . '</body></html>');
         }
-        mkdir($directory . '/files');
+        check_dir_exists($directory . '/files');
         $files['files/original.html'] = $directory . '/files/original.html';
         local_flatarchive_write_file($files['files/original.html'], $source);
         $files = layout::organise($files);

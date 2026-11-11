@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace local_flatarchive\archive;
 
@@ -72,11 +72,15 @@ final class math_parser {
     /** @var int Nesting depth. */
     private int $depth = 0;
 
+    /** @var \DOMDocument Target document. */
+    private \DOMDocument $dom;
+
     /**
      * Bind generated elements to the document being archived.
      * @param \DOMDocument $dom Target document
      */
-    private function __construct(private \DOMDocument $dom) {
+    private function __construct(\DOMDocument $dom) {
+        $this->dom = $dom;
     }
 
     /**
@@ -158,8 +162,10 @@ final class math_parser {
      * @return bool Whether to use under/over scripts
      */
     private function limits(\DOMElement $base): bool {
-        if (in_array($base->localName, ['mi', 'mo'], true) &&
-                in_array($base->textContent, ['∑', '∏', 'lim', 'min', 'max', 'sup', 'inf', 'det', 'gcd'], true)) {
+        if (
+            in_array($base->localName, ['mi', 'mo'], true) &&
+            in_array($base->textContent, ['∑', '∏', 'lim', 'min', 'max', 'sup', 'inf', 'det', 'gcd'], true)
+        ) {
             $base->setAttribute('movablelimits', 'true');
             return true;
         }
