@@ -522,3 +522,5 @@ $string['settingssectionnumber'] = 'Section number';
 $string['settingssectiondefaultname'] = 'Use default section name';
 $string['settingssectionscope'] = 'Standard section settings only. Additional settings provided by third-party course formats are not included.';
 $string['settingsbacksection'] = 'Back to section';
+
+$string['mathunrendered'] = 'Formula not rendered: unsupported notation, invalid syntax or size limit. Original LaTeX retained.';

@@ -518,3 +518,5 @@ $string['settingssectionnumber'] = 'Sectienummer';
 $string['settingssectiondefaultname'] = 'Standaardsectienaam gebruiken';
 $string['settingssectionscope'] = 'Alleen standaardsectie-instellingen. Extra instellingen van cursusformaten van derden zijn niet opgenomen.';
 $string['settingsbacksection'] = 'Terug naar sectie';
+
+$string['mathunrendered'] = 'Formule niet weergegeven: niet-ondersteunde notatie, ongeldige syntaxis of groottelimiet. Originele LaTeX behouden.';

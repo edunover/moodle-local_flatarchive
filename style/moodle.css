@@ -165,3 +165,9 @@ hr { margin: 1rem 0; border: 0; border-top: 1px solid #dee2e6; }
 .fa-report-table { overflow-x: auto; margin: 1rem 0; }
 .fa-report-table th { text-align: left; }
 .fa-report-table th, .fa-report-table td { vertical-align: top; }
+
+/* Passive mathematical notation; no client-side renderer is required. */
+.flatarchive-math { font-size: 1.1em; }
+.flatarchive-math[display="block"] { margin-block: 1em; overflow-x: auto; }
+.flatarchive-math-unrendered { overflow-wrap: anywhere; }
+.flatarchive-math-notice { font-size: .85em; color: #714b00; }
