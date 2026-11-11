@@ -63,7 +63,7 @@ final class lesson_exporter {
             $map[$page->id] = 'lesson-' . $cm->id . '-page-' . $page->id . '.html';
         }
         $badges = \local_flatarchive_visibility_badges($cm, $modinfo);
-        $content = self::text($lesson->intro, $lesson->introformat, 'intro', 0, $cm, $directory);
+        $content = self::text($lesson->intro ?? '', $lesson->introformat, 'intro', 0, $cm, $directory);
         $content .= \html_writer::tag('p', get_string('lessonscope', 'local_flatarchive'));
         $items = [];
         foreach ($pages as $page) {

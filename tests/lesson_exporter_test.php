@@ -86,6 +86,52 @@ final class lesson_exporter_test extends \advanced_testcase {
     }
 
     /**
+     * Optional descriptions must not prevent pages, answers and navigation from being exported.
+     *
+     * @dataProvider introduction_provider
+     * @param string|null $intro Stored lesson description.
+     */
+    public function test_optional_introduction(?string $intro): void {
+        global $DB;
+        [$lesson, $ids] = $this->fixture();
+        $this->answer($lesson, $ids[0], -1);
+        // The module generator supplies a default description, so persist NULL explicitly.
+        $DB->set_field('lesson', 'intro', $intro, ['id' => $lesson->id]);
+        $DB->set_field('lesson', 'introformat', FORMAT_HTML, ['id' => $lesson->id]);
+        $this->assertSame($intro, $DB->get_field('lesson', 'intro', ['id' => $lesson->id], MUST_EXIST));
+
+        [$export, $directory] = $this->export($lesson);
+        $this->assertCount(4, $export['filenames']);
+        $index = file_get_contents($directory . '/' . $export['filename']);
+        if ($intro !== null && $intro !== '') {
+            $this->assertStringContainsString($intro, $index);
+        }
+        foreach ($ids as $id) {
+            $filename = 'lesson-' . $lesson->cmid . '-page-' . $id . '.html';
+            $this->assertStringContainsString('href="' . $filename . '"', $index);
+            $this->assertStringContainsString('<p>Content ', file_get_contents($directory . '/' . $filename));
+        }
+        $page = file_get_contents($directory . '/lesson-' . $lesson->cmid . '-page-' . $ids[0] . '.html');
+        $this->assertStringContainsString('<p>Answer</p>', $page);
+        $this->assertStringContainsString('<p>Feedback</p>', $page);
+        $this->assertStringContainsString('href="lesson-' . $lesson->cmid . '-page-' . $ids[1] . '.html"', $page);
+        $this->assertSame($intro, $DB->get_field('lesson', 'intro', ['id' => $lesson->id], MUST_EXIST));
+    }
+
+    /**
+     * Descriptions found in existing lessons, including a database NULL (issue #1).
+     *
+     * @return array Test descriptions.
+     */
+    public static function introduction_provider(): array {
+        return [
+            'null description' => [null],
+            'empty description' => [''],
+            'HTML description' => ['<p>Résumé de la leçon : <strong>contenu conservé</strong>.</p>'],
+        ];
+    }
+
+    /**
      * Fixed jumps are local, ordered, escaped and do not write lesson state.
      */
     public function test_graph_media_and_no_attempt_changes(): void {
