@@ -64,7 +64,7 @@ final class data_settings {
         $groups = groups_get_all_groups($cm->course, 0, $module->groupingid);
         $rows[get_string('groups')] = $groups ? implode(', ', array_column($groups, 'name')) : get_string('none');
         $availability = new \core_availability\info_module($cm);
-        $rows[self::label('settingsaccess')] = trim(strip_tags($availability->get_full_information())) ?: get_string('none');
+        $rows[self::label('settingsaccess')] = settings_snapshot::access_restrictions($availability);
         $rows[self::label('settingscompletion')] = self::label('settingscompletion' . (int)$module->completion);
         $rows[self::label('settingscompletionview')] = self::yes($module->completionview);
         $rows[self::label('settingscompletiongrade')] = self::yes($module->completiongradeitemnumber !== null);
@@ -166,8 +166,11 @@ final class data_settings {
     private static function table(array $rows): string {
         $body = '';
         foreach ($rows as $label => $value) {
+            $access = $label === self::label('settingsaccess');
+            $content = $access ? s((string)$value) : nl2br(s((string)$value));
+            $attributes = $access ? ['class' => 'flatarchive-settings-access'] : [];
             $body .= \html_writer::tag('tr', \html_writer::tag('th', s($label), ['scope' => 'row']) .
-                \html_writer::tag('td', nl2br(s((string)$value))));
+                \html_writer::tag('td', $content, $attributes));
         }
         return $body ? \html_writer::tag('table', \html_writer::tag('tbody', $body), ['class' => 'fa-settings-table']) : '';
     }

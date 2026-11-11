@@ -119,7 +119,7 @@ final class settings_snapshot {
         $rows[get_string('grouping', 'group')] = $module->groupingid ?
             (string)$DB->get_field('groupings', 'name', ['id' => $module->groupingid]) : get_string('none');
         $availability = new \core_availability\info_module($cm);
-        $rows[self::label('settingsaccess')] = trim(strip_tags($availability->get_full_information())) ?: get_string('none');
+        $rows[self::label('settingsaccess')] = self::access_restrictions($availability);
         $rows[self::label('settingscompletion')] = self::label('settingscompletion' . (int)$module->completion);
         $rows[self::label('settingscompletionview')] = self::value($module->completionview, 'bool', '');
         $rows[self::label('settingscompletiongrade')] = self::value($module->completiongradeitemnumber !== null, 'bool', '');
@@ -268,7 +268,7 @@ final class settings_snapshot {
             self::label('settingsvisibility') => self::label($section->visible ? 'settingsvisible' : 'settingshidden'),
         ];
         $availability = new \core_availability\info_section($section);
-        $rows[self::label('settingsaccess')] = trim(strip_tags($availability->get_full_information())) ?: get_string('none');
+        $rows[self::label('settingsaccess')] = self::access_restrictions($availability);
         $description = \local_flatarchive_copy_pluginfiles_and_rewrite(
             $section->summary ?? '',
             $context,
@@ -293,6 +293,23 @@ final class settings_snapshot {
             $body
         ));
         return $filename;
+    }
+
+    /**
+     * Resolve Moodle's restriction renderables and activity names before producing passive text.
+     *
+     * @param \core_availability\info $availability Activity or section availability
+     * @return string Plain text preserving nested lists and AND/OR labels, without live Moodle links
+     */
+    public static function access_restrictions(\core_availability\info $availability): string {
+        $information = $availability->get_full_information();
+        if (!$information) {
+            return get_string('none');
+        }
+        $html = \core_availability\info::format_info($information, $availability->get_course());
+        // Retain list structure without converting emphasised activity names to uppercase.
+        $html = strip_tags($html, '<p><br><ul><ol><li><div>');
+        return trim(html_to_text($html, 0, false)) ?: get_string('none');
     }
 
     /**
@@ -412,8 +429,11 @@ final class settings_snapshot {
     private static function table(array $rows): string {
         $body = '';
         foreach ($rows as $label => $value) {
+            $access = $label === self::label('settingsaccess');
+            $content = $access ? s((string)$value) : nl2br(s((string)$value));
+            $attributes = $access ? ['class' => 'flatarchive-settings-access'] : [];
             $body .= \html_writer::tag('tr', \html_writer::tag('th', s($label), ['scope' => 'row']) .
-                \html_writer::tag('td', nl2br(s((string)$value))));
+                \html_writer::tag('td', $content, $attributes));
         }
         return \html_writer::tag('table', \html_writer::tag('tbody', $body), ['class' => 'fa-settings-table']);
     }
