@@ -29,7 +29,8 @@ See the [component and sequence diagrams (FR/EN)](UML.md) for a visual overview.
 | `settings_snapshot`, `data_settings` | Whitelisted course/module/database-field settings, descriptions, tags, local links. Values representing passwords are replaced with presence indicators. |
 | `tags`, `index_icons` | Native Moodle tags and module icons. No external icon CDN. |
 | `*_exporter` | Module-specific readable data selection, conversion and files. Public `render(cm, modinfo, directory)` writes an activity snapshot. Resource/Label return a rendered index item; Folder returns item/filename; document exporters return item/filenames. |
-| `quiz_question` | Native question rendering, conversion of interactive controls to reading output and permitted question-file copying. |
+| `quiz_question` | Native question rendering, conversion of interactive controls to reading output and permitted question-file copying. Uses `quiz_essay_renderer` for native essay questions. |
+| `quiz_essay_renderer` | Read-only essay body and attachment rendering without plagiarism callbacks. Reuses native response-format renderers, question behaviour, feedback and manual-comment handling. No site configuration changes or persisted preview usages. |
 | `lesson_attempts` | Recorded attempts, retries, stored responses and scores; no grade recomputation. |
 | `h5p_package` | Bounded ZIP metadata/JSON reading, path and symlink checks, passive asset copying, original package preservation. |
 | `h5p_renderer` | Supported H5P JSON to static HTML; no execution of package libraries. Unsupported content is signalled. |
