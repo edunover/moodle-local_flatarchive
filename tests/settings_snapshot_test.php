@@ -134,6 +134,112 @@ final class settings_snapshot_test extends \advanced_testcase {
     }
 
     /**
+     * Export course-only settings and find the category cell in the generated document.
+     *
+     * @param \stdClass $course Course to export
+     * @return \DOMElement Category value cell
+     */
+    private function category_cell(\stdClass $course): \DOMElement {
+        $result = settings_snapshot::add([], get_fast_modinfo($course), make_request_directory());
+        $this->assertArrayHasKey('course-settings.html', $result['files']);
+        $html = file_get_contents($result['files']['course-settings.html']);
+        $this->assertStringContainsString('href="index.html"', $html);
+        $document = new \DOMDocument();
+        @$document->loadHTML($html);
+        $xpath = new \DOMXPath($document);
+        $cells = $xpath->query('//tr[th="' . get_string('category') . '"]/td');
+        $this->assertCount(1, $cells);
+        $cell = $cells->item(0);
+        // Category names remain text: no live links, markup or executable elements.
+        $this->assertCount(0, $cell->getElementsByTagName('*'));
+        return $cell;
+    }
+
+    /**
+     * Course settings preserve the full category path without requiring category-management rights.
+     *
+     * @dataProvider category_path_provider
+     * @param array $names Names in root-to-leaf order
+     */
+    public function test_course_category_path(array $names): void {
+        global $DB;
+        $this->resetAfterTest();
+        $this->setAdminUser();
+        $generator = $this->getDataGenerator();
+        $parent = 0;
+        foreach ($names as $name) {
+            $category = $generator->create_category(['parent' => $parent]);
+            // Store exact characters, including HTML-like text, without generator normalisation.
+            $DB->set_field('course_categories', 'name', $name, ['id' => $category->id]);
+            $parent = $category->id;
+        }
+        $generator->create_category(['name' => 'Unrelated category']);
+        $course = $generator->create_course(['category' => $parent]);
+        $categoriesbefore = $DB->get_records('course_categories', null, 'id');
+        $coursebefore = $DB->get_record('course', ['id' => $course->id]);
+        $teacher = $generator->create_user();
+        $generator->enrol_user($teacher->id, $course->id, 'editingteacher');
+        $this->setUser($teacher);
+        $this->assertFalse(has_capability('moodle/category:manage', \context_coursecat::instance($parent)));
+
+        $cell = $this->category_cell($course);
+        $this->assertSame(implode(' › ', $names), $cell->textContent);
+        $this->assertEquals($categoriesbefore, $DB->get_records('course_categories', null, 'id'));
+        $this->assertEquals($coursebefore, $DB->get_record('course', ['id' => $course->id]));
+    }
+
+    /**
+     * Category trees relevant to an offline archival snapshot (issue #4).
+     *
+     * @return array Category names in hierarchy order
+     */
+    public static function category_path_provider(): array {
+        return [
+            'root category' => [['Établissement']],
+            'four levels' => [['Établissement', 'Faculté', 'Programme', 'Année 2026']],
+            'special characters and markup' => [[
+                'Établissement & pédagogie', '<script>alert("archive")</script>', 'Programme «été» / "A"',
+            ]],
+            'repeated names at different levels' => [['Formation', 'Formation', 'Formation']],
+        ];
+    }
+
+    /**
+     * A moved subtree follows its current path, not category IDs, names or obsolete ancestors.
+     */
+    public function test_course_category_path_after_move(): void {
+        $this->resetAfterTest();
+        $this->setAdminUser();
+        $generator = $this->getDataGenerator();
+        $oldroot = $generator->create_category(['name' => 'Ancien établissement']);
+        $branch = $generator->create_category(['name' => 'Faculté', 'parent' => $oldroot->id]);
+        $leaf = $generator->create_category(['name' => 'Programme', 'parent' => $branch->id]);
+        $course = $generator->create_course(['category' => $leaf->id]);
+        $this->assertSame('Ancien établissement › Faculté › Programme', $this->category_cell($course)->textContent);
+
+        // The new ancestor has a larger ID than its descendants.
+        $newroot = $generator->create_category(['name' => 'Nouvel établissement']);
+        $branch->change_parent($newroot->id);
+        $this->assertSame('Nouvel établissement › Faculté › Programme', $this->category_cell($course)->textContent);
+    }
+
+    /**
+     * Direct course settings export cannot expose category metadata without course editing permission.
+     */
+    public function test_course_settings_require_management_permission(): void {
+        $this->resetAfterTest();
+        $this->setAdminUser();
+        $generator = $this->getDataGenerator();
+        $category = $generator->create_category(['name' => 'Internal category']);
+        $course = $generator->create_course(['category' => $category->id]);
+        $student = $generator->create_user();
+        $generator->enrol_user($student->id, $course->id, 'student');
+        $this->setUser($student);
+        $this->expectException(\required_capability_exception::class);
+        settings_snapshot::course($course, make_request_directory());
+    }
+
+    /**
      * Empty editors show a marker while image-only descriptions remain real content.
      */
     public function test_empty_and_media_descriptions(): void {

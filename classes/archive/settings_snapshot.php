@@ -203,7 +203,7 @@ final class settings_snapshot {
         global $DB;
         require_capability('moodle/course:update', \context_course::instance($course->id));
         $rows = [get_string('fullnamecourse') => $course->fullname, get_string('shortnamecourse') => $course->shortname];
-        $rows[get_string('category')] = $DB->get_field('course_categories', 'name', ['id' => $course->category]);
+        $rows[get_string('category')] = self::category_path((int)$course->category);
         $component = 'format_' . $course->format;
         $rows[get_string('format')] = get_string_manager()->string_exists('pluginname', $component) ?
             get_string('pluginname', $component) : $course->format;
@@ -243,6 +243,30 @@ final class settings_snapshot {
             $body
         ));
         return $filename;
+    }
+
+    /**
+     * Read raw category names in Moodle's stored root-to-leaf order for an authorised course snapshot.
+     *
+     * @param int $categoryid Course category ID
+     * @return string Plain text path, escaped by the settings table renderer
+     */
+    private static function category_path(int $categoryid): string {
+        global $DB;
+        $category = $DB->get_record('course_categories', ['id' => $categoryid], 'id, path');
+        if (!$category) {
+            return '';
+        }
+        $ids = array_map('intval', explode('/', trim($category->path, '/')));
+        $categories = $DB->get_records_list('course_categories', 'id', $ids, '', 'id, name');
+        $names = [];
+        // Query order is not hierarchy order, especially after a category has been moved.
+        foreach ($ids as $id) {
+            if (isset($categories[$id])) {
+                $names[] = $categories[$id]->name;
+            }
+        }
+        return implode(' › ', $names);
     }
 
     /**
