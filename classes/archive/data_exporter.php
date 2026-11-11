@@ -74,7 +74,7 @@ final class data_exporter {
         if ($data->requiredentriestoview > 0) {
             $list .= \html_writer::tag('p', get_string('datarequiredentries', 'local_flatarchive', $data->requiredentriestoview));
         }
-        $list .= $data->listtemplateheader;
+        $list .= $data->listtemplateheader ?? '';
         foreach ($records as $record) {
             $entryfile = 'data-' . $cm->id . '-entry-' . $record->id . '.html';
             $status = !$record->approved ? \html_writer::span(
@@ -89,7 +89,7 @@ final class data_exporter {
             self::write($entryfile, $body, $data, $cm, $modinfo, $directory, $badges);
             $filenames[] = $entryfile;
         }
-        $list .= $data->listtemplatefooter;
+        $list .= $data->listtemplatefooter ?? '';
         if (!$records) {
             $list .= \html_writer::tag('p', get_string('dataempty', 'local_flatarchive'));
         }
@@ -125,7 +125,8 @@ final class data_exporter {
         string $directory
     ): string {
         global $DB;
-        $template = $data->$view;
+        // Unconfigured templates can be SQL NULL; use the same fallback as an empty template.
+        $template = $data->$view ?? '';
         $replacements = [];
         $fallback = '';
         foreach ($fields as $definition) {
@@ -335,7 +336,7 @@ final class data_exporter {
         // A separate file prevents template CSS from changing any other archived activity.
         $cssfile = 'files/' . $cm->id . '/database.css';
         make_writable_directory($directory . '/files/' . $cm->id);
-        \local_flatarchive_write_file($directory . '/' . $cssfile, $data->csstemplate);
+        \local_flatarchive_write_file($directory . '/' . $cssfile, $data->csstemplate ?? '');
         $html = str_replace('</head>', '<link rel="stylesheet" href="' . $cssfile . '"></head>', $html);
         \local_flatarchive_write_file($directory . '/' . $filename, $html);
     }
